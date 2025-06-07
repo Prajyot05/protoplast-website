@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AnimatedCursor from "react-animated-cursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AnimatedCursor
+          innerSize={10}
+          outerSize={45}
+          color="255, 0, 255"
+          outerAlpha={0.4}
+          innerScale={1.5}
+          outerScale={2}
+          outerStyle={{
+            mixBlendMode: "exclusion",
+          }}
+          clickables={["a", "button", "input", "select", "textarea"]} // Make cursor change on clickables
+        />
         {children}
       </body>
     </html>
