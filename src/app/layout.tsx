@@ -29,6 +29,7 @@ export default function RootLayout({
       <body
         id="top"
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <AnimatedCursor
           innerSize={10}

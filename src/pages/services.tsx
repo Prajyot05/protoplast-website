@@ -147,16 +147,15 @@ export default function Services({ onServiceClick }: ServicesProps) {
                 {/* Icon */}
                 <div className="mb-8 flex justify-center">
                   <div className="w-20 h-20 border-2 border-gray-600 rounded-full flex items-center justify-center group-hover:border-green-400 transition-colors duration-300">
-                    {/* <Icon className="w-8 h-8 text-gray-400 group-hover:text-green-400 transition-colors duration-300" /> */}
                     {service.icon}
                   </div>
                 </div>
 
                 {/* Content */}
-                <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-green-400 transition-colors duration-300">
+                <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-green-400 transition-colors duration-300 h-14">
                   {service.title}
                 </h3>
-                <p className="text-gray-400 leading-relaxed mb-8">
+                <p className="text-gray-400 leading-relaxed mb-8 h-14">
                   {service.description}
                 </p>
                 <button className="inline-flex items-center text-white group-hover:text-green-400 transition-colors duration-300 text-sm font-medium">

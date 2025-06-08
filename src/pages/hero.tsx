@@ -85,9 +85,11 @@ export default function Hero({ onServiceClick }: HeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <Button variant="explore" className="py-8">
-            <Link href="https://wa.me/919404570482">Start free today</Link>
-          </Button>
+          <Link target="_blank" href="https://wa.me/919404570482">
+            <Button variant="explore" className="py-8">
+              Start free today
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

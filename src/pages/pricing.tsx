@@ -81,13 +81,17 @@ export default function Pricing({ onServiceClick }: PricingProps) {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               onClick={() => onServiceClick(item.id as ServiceKey, true)}
             >
-              <h3 className="text-xl font-bold text-green-400 mb-4">
-                {item.title}
-              </h3>
-              <p className="text-2xl font-bold text-white mb-4">{item.price}</p>
-              <p className="text-gray-400 mb-6 leading-relaxed">
-                {item.description}
-              </p>
+              <div>
+                <h3 className="text-xl font-bold h-10 text-green-400 mb-4">
+                  {item.title}
+                </h3>
+                <p className="text-2xl h-14 font-bold text-white mb-4">
+                  {item.price}
+                </p>
+                <p className="text-gray-400 mb-6 h-10 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
               <button className="w-full py-3 border border-gray-600 text-white rounded hover:border-green-400 hover:text-green-400 transition-all duration-300 text-sm font-medium">
                 Details
               </button>
