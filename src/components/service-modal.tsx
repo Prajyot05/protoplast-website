@@ -1,10 +1,29 @@
 "use client";
 
+import { useRef } from "react";
 import { X } from "lucide-react";
+import { useClickOutside } from "@/hooks/use-click-outside";
 import { serviceDetails, pricingDetails } from "@/lib/service-data";
+import { ServiceKey } from "@/types/service";
+
+interface Section {
+  title: string;
+  content?: string;
+  items?: string[];
+  table?: {
+    headers: string[];
+    rows: string[][];
+  };
+}
+
+interface ServiceData {
+  title: string;
+  description: string;
+  sections?: Section[];
+}
 
 interface ServiceModalProps {
-  serviceId: string;
+  serviceId: ServiceKey;
   isPricing: boolean;
   onClose: () => void;
 }
@@ -14,15 +33,21 @@ export default function ServiceModal({
   isPricing,
   onClose,
 }: ServiceModalProps) {
-  const data = isPricing
+  const data: ServiceData | undefined = isPricing
     ? pricingDetails[serviceId]
     : serviceDetails[serviceId];
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useClickOutside(modalRef, onClose);
 
   if (!data) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="relative bg-gray-900 rounded-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-green-400/20">
+      <div
+        ref={modalRef}
+        className="relative bg-gray-900 rounded-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-green-400/20"
+      >
         {/* Close Button */}
         <button
           onClick={onClose}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="20" y="60" width="60" height="25" rx="2" />
+    <rect x="35" y="15" width="30" height="45" rx="2" />
+    <line x1="50" y1="35" x2="50" y2="60" class="printer-filament" />
+    <rect x="40" y="85" width="20" height="5" />
+    <circle cx="50" cy="60" r="5" class="printer-nozzle" />
+</svg>

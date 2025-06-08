@@ -2,19 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Hero from "@/components/hero";
-import Services from "@/components/services";
-import Pricing from "@/components/pricing";
-import About from "@/components/about";
-import Footer from "@/components/footer";
+import Hero from "@/pages/hero";
+import Services from "@/pages/services";
+import Pricing from "@/pages/pricing";
+import About from "@/pages/about";
+import Footer from "@/pages/footer";
 import ServiceModal from "@/components/service-modal";
 import Header from "@/components/header";
+import Testimonials from "@/pages/testimonials";
+import { ServiceKey } from "@/types/service";
 
 export default function Home() {
-  const [activeService, setActiveService] = useState<string | null>(null);
+  const [activeService, setActiveService] = useState<ServiceKey | null>(null);
   const [isPricingModal, setIsPricingModal] = useState(false);
+  console.log("active service: ", activeService);
 
-  const openServiceModal = (serviceId: string, isPricing = false) => {
+  const openServiceModal = (serviceId: ServiceKey, isPricing = false) => {
     setActiveService(serviceId);
     setIsPricingModal(isPricing);
   };
@@ -56,6 +59,7 @@ export default function Home() {
       <Services onServiceClick={openServiceModal} />
       <Pricing onServiceClick={openServiceModal} />
       <About />
+      <Testimonials />
       <Footer />
 
       {activeService && (
