@@ -1,26 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import Image from "next/image";
+import { Link as ScrollLink } from "react-scroll";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMenuOpen(false);
-  };
 
   const navItems = [
     { label: "Solutions", id: "services" },
     { label: "Pricing", id: "pricing" },
     { label: "About", id: "about" },
+    { label: "Testimonials", id: "testimonials" },
   ];
 
   return (
@@ -33,25 +26,31 @@ export default function Header() {
       <div className="container mx-auto px-6 py-4">
         <nav className="flex items-center justify-between">
           {/* Logo Section */}
-          <Link href="/" className="flex items-center">
+          <ScrollLink to="top" smooth={true} duration={100}>
             <Image
               alt="logo"
               src="/logo-text-white.svg"
               width={120}
               height={50}
             />
-          </Link>
+          </ScrollLink>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-12">
             {navItems.map((item) => (
-              <button
+              <ScrollLink
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="text-white hover:text-green-400 transition-colors text-sm font-medium"
+                to={item.id}
+                spy={true}
+                smooth={true}
+                offset={-100}
+                duration={100}
+                onClick={() => setIsMenuOpen(false)}
+                className="text-white hover:text-green-400 transition-colors text-sm font-medium cursor-pointer"
+                activeClass="text-green-400"
               >
                 {item.label}
-              </button>
+              </ScrollLink>
             ))}
           </div>
 
@@ -98,13 +97,19 @@ export default function Header() {
             >
               <div className="flex flex-col space-y-4">
                 {navItems.map((item) => (
-                  <button
+                  <ScrollLink
                     key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className="text-white hover:text-green-400 transition-colors text-left text-sm font-medium"
+                    to={item.id}
+                    spy={true}
+                    smooth={true}
+                    offset={-70}
+                    duration={500}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-white hover:text-green-400 transition-colors text-left text-sm font-medium cursor-pointer"
+                    activeClass="text-green-400"
                   >
                     {item.label}
-                  </button>
+                  </ScrollLink>
                 ))}
               </div>
             </motion.div>

@@ -23,7 +23,7 @@ export default function Services({ onServiceClick }: ServicesProps) {
             viewBox="0 0 100 100"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            strokeWidth="2"
             className="w-[50px] h-[50px]"
           >
             <rect x="20" y="60" width="60" height="25" rx="2" />
@@ -53,7 +53,7 @@ export default function Services({ onServiceClick }: ServicesProps) {
             viewBox="0 0 100 100"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            strokeWidth="2"
             className="w-[50px] h-[50px]"
           >
             <rect x="15" y="15" width="70" height="70" rx="2" />
@@ -91,18 +91,18 @@ export default function Services({ onServiceClick }: ServicesProps) {
             viewBox="0 0 100 100"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            strokeWidth="2"
             className="w-[50px] h-[50px]"
           >
-            <circle cx="50" cy="50" r="35" fill="none" stroke-width="1" />
+            <circle cx="50" cy="50" r="35" fill="none" strokeWidth="1" />
             <circle cx="50" cy="50" r="5" />
             <path
               d="M50 15 L85 50 L50 85 L15 50 Z"
               className="cutter-blade"
               fill="none"
             />
-            <path d="M30 30 L70 70" stroke-width="3" />
-            <path d="M30 70 L70 30" stroke-width="3" />
+            <path d="M30 30 L70 70" strokeWidth="3" />
+            <path d="M30 70 L70 30" strokeWidth="3" />
           </svg>
         </div>
       ),

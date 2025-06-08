@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   Mail,
   Phone,
@@ -10,14 +9,16 @@ import {
   Linkedin,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { Link as ScrollLink } from "react-scroll";
 
 export default function Footer() {
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const navItems = [
+    { label: "Solutions", id: "services" },
+    { label: "Pricing", id: "pricing" },
+    { label: "About", id: "about" },
+    { label: "Testimonials", id: "testimonials" },
+  ];
 
   return (
     <footer className="bg-gray-950 border-t border-gray-800">
@@ -31,7 +32,7 @@ export default function Footer() {
               width={120}
               height={50}
             />
-            <p className="text-gray-400 leading-relaxe pt-2 text-left">
+            <p className="text-gray-400 leading-relaxed pt-2 text-left">
               Bringing your ideas to life with advanced manufacturing solutions.
             </p>
           </div>
@@ -42,30 +43,21 @@ export default function Footer() {
               Quick Links
             </h4>
             <ul className="space-y-3">
-              <li>
-                <button
-                  onClick={() => scrollToSection("services")}
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                >
-                  Solutions
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection("pricing")}
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                >
-                  Pricing
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection("about")}
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                >
-                  About Us
-                </button>
-              </li>
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <ScrollLink
+                    to={item.id}
+                    spy={true}
+                    smooth={true}
+                    offset={-70}
+                    duration={500}
+                    activeClass="text-green-400"
+                    className="text-gray-400 hover:text-green-400 transition-colors cursor-pointer"
+                  >
+                    {item.label}
+                  </ScrollLink>
+                </li>
+              ))}
             </ul>
           </div>
 
