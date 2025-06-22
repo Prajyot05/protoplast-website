@@ -2,6 +2,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html,
+body {
+  background-color: #030712;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

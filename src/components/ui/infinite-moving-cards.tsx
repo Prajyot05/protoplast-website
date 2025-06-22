@@ -23,28 +23,6 @@ export const InfiniteMovingCards = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    const addAnimation = () => {
-      if (containerRef.current && scrollerRef.current) {
-        const scrollerContent = Array.from(scrollerRef.current.children);
-
-        scrollerContent.forEach((item) => {
-          const duplicatedItem = item.cloneNode(true);
-          if (scrollerRef.current) {
-            scrollerRef.current.appendChild(duplicatedItem);
-          }
-        });
-
-        getDirection();
-        getSpeed();
-        setStart(true);
-      }
-    };
-    addAnimation();
-  }, []);
-
-  const [start, setStart] = useState(false);
-
   const getDirection = () => {
     if (containerRef.current) {
       if (direction === "left") {
@@ -71,6 +49,29 @@ export const InfiniteMovingCards = ({
       }
     }
   };
+
+  useEffect(() => {
+    const addAnimation = () => {
+      if (containerRef.current && scrollerRef.current) {
+        const scrollerContent = Array.from(scrollerRef.current.children);
+
+        scrollerContent.forEach((item) => {
+          const duplicatedItem = item.cloneNode(true);
+          if (scrollerRef.current) {
+            scrollerRef.current.appendChild(duplicatedItem);
+          }
+        });
+
+        getDirection();
+        getSpeed();
+        setStart(true);
+      }
+    };
+    addAnimation();
+  }, [getDirection, getSpeed]);
+
+  const [start, setStart] = useState(false);
+
   return (
     <div
       ref={containerRef}
@@ -82,33 +83,46 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
+          "flex w-max min-w-full shrink-0 flex-nowrap gap-6 py-6",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
         {items.map((item, idx) => (
           <li
-            className="relative w-[350px] max-w-full shrink-0 rounded-2xl border border-b-0 px-8 py-6 md:w-[450px] border-zinc-700 bg-[linear-gradient(180deg,#27272a,#18181b)]"
             key={idx}
+            className="relative w-[350px] md:w-[450px] shrink-0 rounded-2xl border border-green-400/20 bg-gradient-to-br from-[#0f1114] to-[#030712] p-6 shadow-lg transition-shadow hover:shadow-green-300/10"
           >
-            <blockquote>
-              <div
-                aria-hidden="true"
-                className="user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
-              ></div>
-              <span className="relative z-20 text-sm leading-[1.6] font-normal text-gray-100">
+            <blockquote className="relative z-10 flex flex-col justify-between h-full">
+              {/* Top border accent glow */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C1FF72] to-transparent opacity-40 rounded-t-xl" />
+
+              {/* Quotation mark icon */}
+              <div className="mb-4 text-green-300 text-3xl font-bold leading-none">
+                &ldquo;
+              </div>
+
+              {/* Quote */}
+              <p className="text-white text-base md:text-lg leading-relaxed font-light">
                 {item.quote}
-              </span>
-              <div className="relative z-20 mt-6 flex flex-row items-center">
-                <span className="flex flex-col gap-1">
-                  <span className="text-sm leading-[1.6] font-normal text-gray-400">
+              </p>
+
+              {/* Divider line */}
+              <div className="mt-6 border-t border-green-400/10" />
+
+              {/* Person Info */}
+              <div className="flex items-center gap-4 mt-auto">
+                {/* Image Placeholder */}
+                <div className="w-12 h-12 rounded-full bg-black border border-gray-700 flex-shrink-0 shadow-inner shadow-gray-800 group-hover:shadow-[#C1FF72]/40 transition"></div>
+
+                <div className="flex flex-col">
+                  <span className="text-[#C1FF72] font-semibold text-sm md:text-base">
                     {item.name}
                   </span>
-                  <span className="text-sm leading-[1.6] font-normal text-gray-400">
+                  <span className="text-gray-400 text-xs md:text-sm">
                     {item.title}
                   </span>
-                </span>
+                </div>
               </div>
             </blockquote>
           </li>

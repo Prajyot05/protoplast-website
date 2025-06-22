@@ -23,7 +23,7 @@ export default function Header() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-6 py-3 md:py-4">
         <nav className="flex items-center justify-between">
           {/* Logo Section */}
           <ScrollLink to="top" smooth={true} duration={100}>
@@ -32,6 +32,7 @@ export default function Header() {
               src="/logo-text-white.svg"
               width={120}
               height={50}
+              className="hidden md:block"
             />
           </ScrollLink>
 

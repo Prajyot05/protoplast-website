@@ -1,17 +1,31 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { ServiceKey } from "@/types/service";
+import WhatsappButton from "@/components/whatsapp-button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ServiceModal from "@/components/services/service-modal";
 
-interface PricingProps {
-  onServiceClick: (serviceId: ServiceKey, isPricing?: boolean) => void;
-}
-
-export default function Pricing({ onServiceClick }: PricingProps) {
+export default function Pricing() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeServiceId, setActiveServiceId] = useState<ServiceKey | null>(
+    null
+  );
+
+  const handleOpen = (serviceId: ServiceKey) => {
+    setActiveServiceId(serviceId);
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setActiveServiceId(null);
+  };
 
   const pricingData = [
     {
@@ -79,7 +93,7 @@ export default function Pricing({ onServiceClick }: PricingProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              onClick={() => onServiceClick(item.id as ServiceKey, true)}
+              onClick={() => handleOpen(item.id as ServiceKey)}
             >
               <div>
                 <h3 className="text-xl font-bold h-10 text-green-400 mb-4">
@@ -114,9 +128,9 @@ export default function Pricing({ onServiceClick }: PricingProps) {
           </p>
           <Link
             href="https://wa.me/919404570482"
-            className="inline-flex items-center px-8 py-4 bg-green-500 text-white font-semibold rounded hover:bg-green-400 transition-all duration-300 text-sm"
+            className="inline-flex items-center"
           >
-            <svg
+            {/* <svg
               className="w-5 h-5 mr-3"
               fill="currentColor"
               viewBox="0 0 24 24"
@@ -124,10 +138,26 @@ export default function Pricing({ onServiceClick }: PricingProps) {
               <path d="M17.6 6.32A8.86 8.86 0 0 0 12.05 4 8.95 8.95 0 0 0 3.1 12.95a8.93 8.93 0 0 0 1.32 4.69L3 22l4.47-1.17a8.95 8.95 0 0 0 13.53-7.88 8.85 8.85 0 0 0-3.4-6.63zm-5.55 13.68a7.45 7.45 0 0 1-3.79-1.04l-.27-.16-2.82.74.75-2.75-.18-.28a7.43 7.43 0 0 1 9.78-10.19 7.36 7.36 0 0 1 2.83 5.52 7.45 7.45 0 0 1-7.46 8.16z" />
               <path d="M9.06 7.76c-.16-.09-.59-.29-.68-.32-.09-.03-.16-.05-.22.05-.07.09-.26.32-.32.39-.06.07-.11.08-.2 0-.1-.08-.43-.17-.82-.54a3 3 0 0 1-.56-.7c-.06-.1 0-.15.04-.2l.14-.16c.05-.06.07-.1.1-.17.03-.07.01-.13-.01-.18-.03-.05-.22-.52-.3-.72-.07-.2-.15-.17-.21-.17h-.18c-.07 0-.17.03-.26.14-.09.11-.34.35-.34.85s.35.98.4 1.05c.04.07.62.95 1.5 1.33.21.09.38.14.5.18.21.07.41.06.56.03.17-.03.52-.21.6-.42.06-.2.06-.38.04-.42-.02-.03-.09-.08-.18-.12z" />
             </svg>
-            Contact us on WhatsApp
+            Contact us on WhatsApp */}
+            <WhatsappButton />
           </Link>
         </motion.div>
       </div>
+
+      {/* Modal */}
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="max-w-2xl">
+          <div className="text-sm text-muted-foreground">
+            {activeServiceId && (
+              <ServiceModal
+                serviceId={activeServiceId}
+                isPricing={true}
+                onClose={() => setIsOpen(false)}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
