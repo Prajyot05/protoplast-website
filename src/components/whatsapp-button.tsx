@@ -2,11 +2,15 @@
 
 import { motion } from "framer-motion";
 
-export default function WhatsappButton() {
+interface WhatsappButtonProps {
+  className?: string;
+}
+
+export default function WhatsappButton({ className }: WhatsappButtonProps) {
   return (
     <motion.button
       whileTap={{ scale: 0.98, x: 2, y: 2 }}
-      className="group relative flex h-[45px] w-[45px] items-center justify-start overflow-hidden rounded-full border-none bg-[#00d757] shadow-md transition-all duration-300 hover:w-[150px] hover:rounded-[40px]"
+      className={`group relative flex h-[45px] w-[45px] items-center justify-start overflow-hidden rounded-full border-none bg-[#00d757] shadow-md transition-all duration-300 hover:w-[150px] hover:rounded-[40px] ${className}`}
     >
       <div className="flex w-full items-center justify-center transition-all duration-300 group-hover:w-[30%] group-hover:pl-[10px]">
         <svg className="w-[25px]" viewBox="0 0 16 16">
