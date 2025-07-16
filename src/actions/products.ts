@@ -6,7 +6,8 @@ import Product from "@/models/Product";
 // Get all products
 export async function getAllProducts() {
   await connectDB();
-  const products = await Product.find().populate("category");
+  // const products = await Product.find().populate("category");
+  const products = await Product.find();
   return products;
 }
 
@@ -24,12 +25,13 @@ export async function createProduct(data: {
   description: string;
   price: number;
   stock: number;
-  category: string;
+  category?: string;
   images: string[];
   specs?: Record<string, string>;
   featured?: boolean;
 }) {
   await connectDB();
+  console.log("DATA BEING SENT: ", data);
   const product = await Product.create(data);
   return product;
 }
