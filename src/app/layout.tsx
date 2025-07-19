@@ -4,6 +4,7 @@ import "./globals.css";
 import AnimatedCursor from "react-animated-cursor";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,8 +49,27 @@ export default function RootLayout({
             outerStyle={{
               mixBlendMode: "exclusion",
             }}
-            clickables={["a", "button", "input", "select", "textarea"]} // Make cursor change on clickables
+            clickables={["a", "button", "input", "select", "textarea"]}
           />
+
+          <Toaster
+            theme="dark"
+            toastOptions={{
+              className:
+                "bg-black border border-green-500 text-white rounded-md shadow-lg transition-all duration-700 ease-in-out",
+              style: {
+                backgroundColor: "#000000",
+                borderColor: "#22c55e",
+                color: "#ffffff",
+                boxShadow: "0 4px 12px rgba(0, 255, 0, 0.3)",
+                borderRadius: "8px",
+                transition: "all 0.7s ease-in-out",
+              },
+            }}
+            richColors
+            closeButton
+          />
+
           {children}
         </body>
       </html>

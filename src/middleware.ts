@@ -2,32 +2,39 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 // Publicly accessible routes
-const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/", 
+  "/sign-in(.*)", 
+  "/sign-up(.*)"
+]);
 
 // Admin-only routes
 const isAdminRoute = createRouteMatcher(["/dashboard(.*)"]);
 
+// Protected user routes (requires authentication)
+const isProtectedRoute = createRouteMatcher([
+  "/cart(.*)",
+  "/product/(.*)", // Protect individual product pages
+]);
+
 export default clerkMiddleware(async (auth, req) => {
-  // If it is an admin route and user is not an admin → redirect to home page
-  if (
-    isAdminRoute(req) &&
-    (await auth()).sessionClaims?.metadata?.role !== "admin"
-  ) {
-    const url = new URL("/", req.url);
-    return NextResponse.redirect(url);
+  const { sessionClaims } = await auth();
+
+  // Admin protection
+  if (isAdminRoute(req) && sessionClaims?.metadata?.role !== "admin") {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // For all non-public routes → login is required
+  // Require login for protected routes
   if (!isPublicRoute(req)) {
-    await auth.protect(); // Auto redirects to Clerk sign-in if not authenticated
+    await auth.protect();
   }
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
+    // Exclude internal/static files from middleware
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
+    "/(api|trpc)(.*)", // Always apply to API routes
   ],
 };

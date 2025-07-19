@@ -3,6 +3,7 @@ import { Roles } from "./roles";
 declare global {
   //@ts-expect-error
   var mongoose: {
+    Types: any;
     conn: typeof mongoose | null;
     promise: Promise<typeof mongoose> | null;
   };
