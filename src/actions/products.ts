@@ -3,18 +3,7 @@
 import { connectDB } from "@/lib/db";
 import Product from "@/models/Product";
 import { revalidatePath } from "next/cache";
-import { auth } from "@clerk/nextjs/server";
-
-export async function requireAdmin() {
-  const { userId, sessionClaims } = await auth();
-  const role = sessionClaims?.metadata?.role;
-
-  if (!userId || role !== "admin") {
-    return { success: false, error: "Unauthorized" };
-  }
-  return { success: true };
-}
-
+import { requireAdmin } from "@/lib/auth";
 
 // Get all products
 export async function getAllProducts() {
@@ -74,7 +63,6 @@ export async function createProduct(data: {
   }
   try {
     await connectDB();
-
     const product = await Product.create(data);
 
     revalidatePath("/dashboard");
@@ -86,8 +74,6 @@ export async function createProduct(data: {
     };
   } catch (error) {
     console.error("Error creating product:", error);
-
-    // Handle specific MongoDB errors
     if (
       typeof error === "object" &&
       error !== null &&
@@ -99,7 +85,6 @@ export async function createProduct(data: {
         error: "Product with this title already exists",
       };
     }
-
     return {
       success: false,
       error: "Failed to create product",
@@ -121,16 +106,12 @@ export async function updateProduct(
   }>
 ) {
   const authCheck = await requireAdmin();
-    if(!authCheck.success) {
-      return { success: false, error: authCheck.error };
-    }
+  if (!authCheck.success) {
+    return { success: false, error: authCheck.error };
+  }
   try {
     await connectDB();
-
-    const updated = await Product.findByIdAndUpdate(id, updates, {
-      new: true,
-    }).lean();
-
+    const updated = await Product.findByIdAndUpdate(id, updates, { new: true }).lean();
     if (!updated) {
       return {
         success: false,
@@ -138,7 +119,6 @@ export async function updateProduct(
       };
     }
 
-    // Revalidate the products page
     revalidatePath("/products");
     revalidatePath("/");
     revalidatePath("/cart");
@@ -149,8 +129,6 @@ export async function updateProduct(
     };
   } catch (error) {
     console.error("Error updating product:", error);
-
-    // Handle specific MongoDB errors
     if (
       typeof error === "object" &&
       error !== null &&
@@ -162,7 +140,6 @@ export async function updateProduct(
         error: "Product with this title already exists",
       };
     }
-
     return {
       success: false,
       error: "Failed to update product",
@@ -172,15 +149,13 @@ export async function updateProduct(
 
 // Delete product
 export async function deleteProduct(id: string) {
+  const authCheck = await requireAdmin();
+  if (!authCheck.success) {
+    return { success: false, error: authCheck.error };
+  }
   try {
-    const authCheck = await requireAdmin();
-    if(!authCheck.success) {
-      return { success: false, error: authCheck.error };
-    }
     await connectDB();
-
     const deleted = await Product.findByIdAndDelete(id).lean();
-
     if (!deleted) {
       return {
         success: false,

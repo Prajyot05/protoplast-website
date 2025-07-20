@@ -1,18 +1,18 @@
-// src/actions/razorpay.ts
 import Razorpay from "razorpay";
 import crypto from "crypto";
 
 // 1) Centralize Razorpay client instantiation
 export const razorpay = new Razorpay({
-  key_id:    process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+  key_id:     process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
   key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
 // 2) Typed payload for order creation
 export interface CreateOrderInput {
-  amount: number;       // in paise
-  currency?: "INR";     // defaulted below
-  receipt: string;
+  amount:   number;              // in paise
+  currency?: "INR";              // defaulted below
+  receipt:  string;
+  notes?:   Record<string,string>; // ← allow passing notes
 }
 
 // 3) Helper to create an order
@@ -21,12 +21,13 @@ export async function createOrder(input: CreateOrderInput) {
     amount:   input.amount,
     currency: input.currency ?? "INR",
     receipt:  input.receipt,
+    notes:    input.notes,        // ← include any notes you pass
   });
 }
 
 // 4) Helper to verify a payment signature
 export function verifySignature(
-  orderId: string,
+  orderId:   string,
   paymentId: string,
   signature: string
 ): boolean {

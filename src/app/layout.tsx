@@ -5,7 +5,6 @@ import AnimatedCursor from "react-animated-cursor";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,11 +21,12 @@ export const metadata: Metadata = {
     "Your one-stop solution for advanced manufacturing. We provide top-quality services to bring your ideas to life with precision and efficiency. Click buttons above for details.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <ClerkProvider
       appearance={{

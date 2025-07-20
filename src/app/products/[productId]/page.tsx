@@ -12,16 +12,18 @@ export const metadata = {
   title: "Product Details",
 }
 
-export default async function ProductPage({ params }: PageProps) {
-  const result = await getProductById(params.productId)
-  if (!result.success || !result.data) notFound()
+export default async function ProductPage(props: PageProps) {
+  const { params } = props; 
+  const result = await getProductById(params.productId);
+  
+  if (!result.success || !result.data) notFound();
 
-  const product: ProductType = result.data
+  const product: ProductType = result.data;
 
   return (
     <>
       <Header />
       <ProductDetailsClient product={product} />
     </>
-  )
+  );
 }
