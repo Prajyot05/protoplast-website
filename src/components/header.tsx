@@ -8,7 +8,7 @@ import {
   SignedIn,
   UserButton,
 } from "@clerk/nextjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Bell, ShoppingCart } from "lucide-react";
@@ -28,6 +28,17 @@ export default function Header() {
   const totalItems = useLocalProduct((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
   );
+
+  useEffect(() => {
+  if (typeof window !== "undefined") {
+    const isSuccess = localStorage.getItem("payment_success");
+    if (isSuccess === "true") {
+      useLocalProduct.getState().clearCart(); 
+      localStorage.removeItem("payment_success"); 
+    }
+  }
+}, []);
+
 
   const isAdminPath = pathname?.startsWith("/dashboard");
   const role = user?.publicMetadata?.role;

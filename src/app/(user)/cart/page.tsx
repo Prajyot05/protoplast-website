@@ -137,9 +137,10 @@ export default function CartPage() {
           });
           const { status } = await verifyRes.json();
           if (status === "verified") {
+            localStorage.setItem("payment_success", "true");
             toast.success("Payment successful!");
             clearCart();
-            router.push("/thank-you");
+            router.push("/thankyou");
           } else {
             toast.error("Payment verification failed");
           }
@@ -162,7 +163,7 @@ export default function CartPage() {
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="flex items-center gap-4 mb-8">
-            <Link href="/products">
+            <Link href="/products/687a816fa6b0f6a663493f5d">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Continue Shopping
@@ -176,7 +177,7 @@ export default function CartPage() {
               <h2 className="text-2xl font-semibold mb-2">
                 Your cart is empty
               </h2>
-              <Link href="/products">
+              <Link href="/products/687a816fa6b0f6a663493f5d">
                 <Button className="bg-green-600 text-white">
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Start Shopping
@@ -199,7 +200,7 @@ export default function CartPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <Link href="/products">
+              <Link href="/products/687a816fa6b0f6a663493f5d">
                 <Button variant="ghost" size="sm">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Continue Shopping
