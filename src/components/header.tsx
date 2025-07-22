@@ -1,50 +1,55 @@
-"use client"
+"use client";
 
-import { usePathname, useRouter } from "next/navigation"
-import { useUser, SignUpButton, SignedOut, SignedIn, UserButton } from "@clerk/nextjs"
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Bell, ShoppingCart, Settings } from "lucide-react"
-import { Link as ScrollLink } from "react-scroll"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { useLocalProduct } from "@/stores/useLocalProduct"
-import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation";
+import {
+  useUser,
+  SignUpButton,
+  SignedOut,
+  SignedIn,
+  UserButton,
+} from "@clerk/nextjs";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, ShoppingCart , ShoppingBag} from "lucide-react";
+import { Link as ScrollLink } from "react-scroll";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useLocalProduct } from "@/stores/useLocalProduct";
+import Link from "next/link";
 
 export default function Header() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const { user, isLoaded } = useUser()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const isMobile = useIsMobile()
+  const router = useRouter();
+  const pathname = usePathname();
+  const { user, isLoaded } = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
   const totalItems = useLocalProduct((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
-  )
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const isSuccess = localStorage.getItem("payment_success")
+      const isSuccess = localStorage.getItem("payment_success");
       if (isSuccess === "true") {
-        useLocalProduct.getState().clearCart()
-        localStorage.removeItem("payment_success")
+        useLocalProduct.getState().clearCart();
+        localStorage.removeItem("payment_success");
       }
     }
-  }, [])
+  }, []);
 
-  const isAdminPath = pathname?.startsWith("/dashboard")
-  const role = user?.publicMetadata?.role
+  const isAdminPath = pathname?.startsWith("/dashboard");
+  const role = user?.publicMetadata?.role;
 
   const navItems = [
     { label: "Solutions", id: "services" },
     { label: "Pricing", id: "pricing" },
     { label: "About", id: "about" },
     { label: "Testimonials", id: "testimonials" },
-  ]
+  ];
 
-  if (!isLoaded) return null
+  if (!isLoaded) return null;
 
   // --- Admin Header (no nav items) ---
   if (isAdminPath && role === "admin") {
@@ -63,7 +68,6 @@ export default function Header() {
                 onClick={() => router.push("/")}
               />
             </div>
-
             {/* Right Side - Admin Tools */}
             <div className="flex items-center gap-4">
               {/* Quick Stats */}
@@ -73,31 +77,6 @@ export default function Header() {
                   <span className="text-xs text-gray-300">System Online</span>
                 </div>
               </div>
-
-              {/* Notifications */}
-              <div className="relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-300 hover:text-white hover:bg-gray-800/50 relative"
-                >
-                  <Bell className="w-5 h-5" />
-                  <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 bg-red-500 text-white text-xs flex items-center justify-center">
-                    3
-                  </Badge>
-                </Button>
-              </div>
-
-              {/* Settings */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-gray-300 hover:text-white hover:bg-gray-800/50"
-                onClick={() => router.push("/dashboard/settings")}
-              >
-                <Settings className="w-5 h-5" />
-              </Button>
-
               {/* Admin Profile */}
               <div className="flex items-center gap-3 bg-gray-800/30 px-3 py-2 rounded-lg border border-gray-700/50">
                 <Avatar className="w-8 h-8">
@@ -119,7 +98,7 @@ export default function Header() {
           </div>
         </div>
       </motion.header>
-    )
+    );
   }
 
   // --- Landing Page Header ---
@@ -128,10 +107,17 @@ export default function Header() {
       <div className="container mx-auto px-6 py-3 md:py-4">
         <nav className="flex items-center justify-between">
           {/* Desktop Logo */}
-          <div className="hidden md:block cursor-pointer" onClick={() => router.push("/")}>
-            <Image alt="Logo" src="/logo-text-white.svg" width={120} height={50} />
+          <div
+            className="hidden md:block cursor-pointer"
+            onClick={() => router.push("/")}
+          >
+            <Image
+              alt="Logo"
+              src="/logo-text-white.svg"
+              width={120}
+              height={50}
+            />
           </div>
-
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-12">
             {navItems.map((item) => (
@@ -149,7 +135,6 @@ export default function Header() {
                 {item.label}
               </ScrollLink>
             ))}
-
             <SignedOut>
               <SignUpButton>
                 <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-[#5a3de6] transition-colors">
@@ -157,9 +142,19 @@ export default function Header() {
                 </button>
               </SignUpButton>
             </SignedOut>
-
             <SignedIn>
               <div className="flex items-center gap-4 relative">
+                {/* Orders Link */}
+                <Link href="/orders">
+                  <div className="flex items-center gap-2 mr-3 text-white hover:text-green-400 transition-colors cursor-pointer group">
+                    <ShoppingBag className="w-5 h-5" />
+                    <span className="text-sm font-medium hidden lg:block">
+                      Orders
+                    </span>
+                  </div>
+                </Link>
+
+                {/* Cart Link */}
                 <Link href="/cart">
                   <div className="relative cursor-pointer mr-5 group">
                     <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
@@ -170,6 +165,7 @@ export default function Header() {
                     )}
                   </div>
                 </Link>
+
                 <UserButton
                   appearance={{
                     elements: {
@@ -181,7 +177,6 @@ export default function Header() {
               </div>
             </SignedIn>
           </div>
-
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -212,7 +207,6 @@ export default function Header() {
             </AnimatePresence>
           </button>
         </nav>
-
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMenuOpen && (
@@ -227,13 +221,17 @@ export default function Header() {
               <div
                 className="cursor-pointer mb-6"
                 onClick={() => {
-                  router.push("/")
-                  setIsMenuOpen(false)
+                  router.push("/");
+                  setIsMenuOpen(false);
                 }}
               >
-                <Image alt="Logo" src="/logo-text-white.svg" width={100} height={40} />
+                <Image
+                  alt="Logo"
+                  src="/logo-text-white.svg"
+                  width={100}
+                  height={40}
+                />
               </div>
-
               {/* Mobile Nav Items */}
               <div className="flex flex-col space-y-4">
                 {navItems.map((item) => (
@@ -252,20 +250,31 @@ export default function Header() {
                   </ScrollLink>
                 ))}
               </div>
-
-              {/* Mobile Cart + User */}
+              {/* Mobile Cart + Orders + User */}
               <SignedIn>
                 <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-800">
-                  <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative cursor-pointer group">
-                      <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
-                      {totalItems > 0 && (
-                        <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
-                          {totalItems > 9 ? "9+" : totalItems}
-                        </Badge>
-                      )}
-                    </div>
-                  </Link>
+                  <div className="flex items-center gap-6">
+                    {/* Mobile Orders */}
+                    <Link href="/orders" onClick={() => setIsMenuOpen(false)}>
+                      <div className="flex items-center gap-2 text-white hover:text-green-400 transition-colors cursor-pointer">
+                        <ShoppingBag className="w-5 h-5" />
+                        <span className="text-sm font-medium">Orders</span>
+                      </div>
+                    </Link>
+
+                    {/* Mobile Cart */}
+                    <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
+                      <div className="relative cursor-pointer group">
+                        <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
+                        {totalItems > 0 && (
+                          <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
+                            {totalItems > 9 ? "9+" : totalItems}
+                          </Badge>
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+
                   <UserButton
                     appearance={{
                       elements: {
@@ -275,7 +284,6 @@ export default function Header() {
                   />
                 </div>
               </SignedIn>
-
               <SignedOut>
                 <div className="mt-6 pt-6 border-t border-gray-800">
                   <SignUpButton>
@@ -290,5 +298,5 @@ export default function Header() {
         </AnimatePresence>
       </div>
     </motion.header>
-  )
+  );
 }

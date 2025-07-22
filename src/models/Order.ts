@@ -1,5 +1,5 @@
-import { Schema, model, models, Document, Types } from "mongoose";
-import { IAddress } from "./Address";
+import { Schema, model, models, type Document, type Types } from "mongoose";
+import type { IAddress } from "./Address";
 
 interface OrderedProduct {
   product: Types.ObjectId;
@@ -8,7 +8,7 @@ interface OrderedProduct {
 }
 
 export interface IOrder extends Document {
-  user: Types.ObjectId;
+  user: string; // Changed from Types.ObjectId to string
   address: Types.ObjectId | IAddress;
   products: OrderedProduct[];
   totalAmount: number;
@@ -19,8 +19,8 @@ export interface IOrder extends Document {
 
 const OrderedProductSchema = new Schema<OrderedProduct>(
   {
-    product:         { type: Schema.Types.ObjectId, ref: "Product", required: true },
-    quantity:        { type: Number, required: true },
+    product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+    quantity: { type: Number, required: true },
     priceAtPurchase: { type: Number, required: true },
   },
   { _id: false }
@@ -28,10 +28,10 @@ const OrderedProductSchema = new Schema<OrderedProduct>(
 
 const OrderSchema = new Schema<IOrder>(
   {
-    user:            { type: Schema.Types.ObjectId, ref: "User", required: true },
-    address:         { type: Schema.Types.ObjectId, ref: "Address", required: true },
-    products:        { type: [OrderedProductSchema], required: true },
-    totalAmount:     { type: Number, required: true },
+    user: { type: String, required: true }, // Changed from Schema.Types.ObjectId to String
+    address: { type: Schema.Types.ObjectId, ref: "Address", required: true },
+    products: { type: [OrderedProductSchema], required: true },
+    totalAmount: { type: Number, required: true },
     status: {
       type: String,
       enum: ["pending", "paid", "shipped", "delivered", "cancelled"],

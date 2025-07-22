@@ -7,43 +7,74 @@ import Order from "@/models/Order";
 import { connectDB } from "@/lib/db";
 
 export async function POST(req: Request) {
+  console.log("⏳ POST /api/razorpay-test/order called");
   const { userId } = await auth();
-  if (!userId)
+  console.log("🔑 Auth userId:", userId);
+  if (!userId) {
+    console.error("❌ Unauthorized: no userId");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { cart, promoCode, shipping } = await req.json();
+  console.log("📦 Payload:", { cart, promoCode, shipping });
 
+  // Validate cart
+  if (!Array.isArray(cart) || cart.length === 0) {
+    console.error("❌ Cart invalid or empty");
+    return NextResponse.json({ error: "Cart is empty or invalid" }, { status: 400 });
+  }
+
+  // Validate shipping
+  const requiredFields = ["fullName", "phone", "street", "city", "state", "zip", "country"];
+  for (const field of requiredFields) {
+    if (!shipping?.[field]) {
+      console.error(`❌ Missing shipping field: ${field}`);
+      return NextResponse.json({ error: `Missing shipping field: ${field}` }, { status: 400 });
+    }
+  }
+
+  // Promo
   const promoMap: Record<string, number> = {
     SAVE10: 10,
     WELCOME15: 15,
     FIRST20: 20,
     TEST100: 100,
   };
-  const discountPct = promoMap[promoCode] ?? 0;
+  const discountPct = promoMap[promoCode?.toUpperCase?.()] ?? 0;
+  console.log("🏷️ Promo code pct:", discountPct);
 
+  // Calculate totals
   let subtotal = 0;
+  const productDetails: Array<{ id: string; quantity: number; price: number }> = [];
+
   for (const item of cart) {
     const result = await getProductById(item.id);
-    if (!result.success)
-      return NextResponse.json({ error: "Invalid product" }, { status: 400 });
-
+    if (!result.success) {
+      console.error("❌ Invalid product:", item.id);
+      return NextResponse.json({ error: `Invalid product: ${item.id}` }, { status: 400 });
+    }
     const product = result.data;
     if (item.quantity > product.stock) {
-      return NextResponse.json({ error: "Exceeds stock" }, { status: 400 });
+      console.error("❌ Exceeds stock for:", product.name);
+      return NextResponse.json({ error: `Exceeds stock for: ${product.name}` }, { status: 400 });
     }
-
     subtotal += product.price * item.quantity;
+    productDetails.push({ id: item.id, quantity: item.quantity, price: product.price });
   }
 
   const discount = (subtotal * discountPct) / 100;
-  const tax = subtotal * 0.18;
-  const shippingFee = 0; // for testing purpose only
-  const total = subtotal + tax + shippingFee - discount;
+  const taxableAmount = subtotal - discount;
+  const tax = taxableAmount * 0.18;
+  const shippingFee = 0; // testing
+  const total = taxableAmount + tax + shippingFee;
+
+  console.log("💰 Calculations:", { subtotal, discount, taxableAmount, tax, shippingFee, total });
 
   try {
     await connectDB();
+    console.log("✅ Connected to DB");
 
-    // 2) Save shipping address
+    // Save address
     const addressDoc = await Address.create({
       user: userId,
       type: "shipping",
@@ -55,36 +86,40 @@ export async function POST(req: Request) {
       zip: shipping.zip,
       country: shipping.country,
     });
+    console.log("📍 Address saved:", addressDoc._id);
 
-    // 3) Create Razorpay order
+    // Create Razorpay order
     const razorOrder = await createOrder({
-      amount: Math.round(total * 100),
+      amount: Math.round(total * 100), // paisa
       receipt: `rcpt_${Date.now()}`,
-      notes: {
-        userId,
-        cart: JSON.stringify(cart),
-        promoCode: promoCode || "",
-      },
+      notes: { userId, cart: JSON.stringify(cart), promoCode: promoCode || "" },
     });
-    // 4) Create our Order record
+    console.log("🔗 Razorpay order created:", razorOrder);
+
+    // Create our Order record
     const orderDoc = await Order.create({
       user: userId,
       address: addressDoc._id,
-      products: cart.map((i: any) => ({
-        product: i.id,
-        quantity: i.quantity,
-        priceAtPurchase: Math.round(subtotal * 100) / 100, // or fetch per‑item price
+      products: productDetails.map(p => ({
+        product: p.id,
+        quantity: p.quantity,
+        priceAtPurchase: p.price,
       })),
-      totalAmount: total,
+      totalAmount: Math.round(total * 100) / 100,
       paymentIntentId: razorOrder.id,
     });
+    console.log("🗂️ Order record created:", orderDoc._id);
 
-    return NextResponse.json({
-      razorpay: razorOrder,
-      ourOrderId: orderDoc._id,
-    });
+    // FINAL RESPONSE
+    const responsePayload = {
+      id: razorOrder.id,
+      amount: razorOrder.amount,
+      currency: razorOrder.currency
+    };
+    console.log("➡️ Responding with:", responsePayload);
+    return NextResponse.json(responsePayload);
   } catch (err: any) {
-    console.error("Order creation error:", err);
+    console.error("💥 Order creation error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

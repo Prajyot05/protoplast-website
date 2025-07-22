@@ -1,7 +1,7 @@
-import { Schema, model, models, Document, Types } from "mongoose";
+import { Schema, model, models, type Document } from "mongoose";
 
 export interface IAddress extends Document {
-  user: Types.ObjectId;
+  user: string; // Changed from Types.ObjectId to string
   type: "shipping" | "billing";
   fullName: string;
   phone: string;
@@ -15,7 +15,7 @@ export interface IAddress extends Document {
 
 const AddressSchema = new Schema<IAddress>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: String, required: true }, // Changed from Schema.Types.ObjectId to String
     type: {
       type: String,
       enum: ["shipping", "billing"],
@@ -32,6 +32,5 @@ const AddressSchema = new Schema<IAddress>(
   { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Prevent model overwrite errors in dev
 const Address = models.Address || model<IAddress>("Address", AddressSchema);
 export default Address;
