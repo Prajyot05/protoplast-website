@@ -5,18 +5,20 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Menu, X, LayoutDashboard, Package, Users, ArrowUpDown } from "lucide-react"
+import { Menu, X, ShoppingBag , Package, Users, ArrowUpDown } from "lucide-react"
 
 const links = [
   { label: "Products", href: "/dashboard", icon: Package },
   { label: "Transactions", href: "/dashboard/transactions", icon: ArrowUpDown },
   { label: "Users", href: "/dashboard/users", icon: Users },
+  { label: "Orders", href: "/dashboard/orders", icon: ShoppingBag },
 ]
 
 export default function AdminSidebar() {
   const pathname = usePathname()
   const isMobile = useIsMobile()
   const [isOpen, setIsOpen] = useState(false)
+
 
   useEffect(() => {
     if (isMobile) {

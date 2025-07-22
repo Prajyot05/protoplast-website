@@ -1,4 +1,5 @@
 import { Schema, model, models, Document, Types } from "mongoose";
+import { IAddress } from "./Address";
 
 interface OrderedProduct {
   product: Types.ObjectId;
@@ -8,9 +9,9 @@ interface OrderedProduct {
 
 export interface IOrder extends Document {
   user: Types.ObjectId;
+  address: Types.ObjectId | IAddress;
   products: OrderedProduct[];
   totalAmount: number;
-  shippingAddress: Types.ObjectId;
   status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
   paymentIntentId: string;
   createdAt: Date;
@@ -18,8 +19,8 @@ export interface IOrder extends Document {
 
 const OrderedProductSchema = new Schema<OrderedProduct>(
   {
-    product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
-    quantity: { type: Number, required: true },
+    product:         { type: Schema.Types.ObjectId, ref: "Product", required: true },
+    quantity:        { type: Number, required: true },
     priceAtPurchase: { type: Number, required: true },
   },
   { _id: false }
@@ -27,14 +28,10 @@ const OrderedProductSchema = new Schema<OrderedProduct>(
 
 const OrderSchema = new Schema<IOrder>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    products: { type: [OrderedProductSchema], required: true },
-    totalAmount: { type: Number, required: true },
-    shippingAddress: {
-      type: Schema.Types.ObjectId,
-      ref: "Address",
-      required: true,
-    },
+    user:            { type: Schema.Types.ObjectId, ref: "User", required: true },
+    address:         { type: Schema.Types.ObjectId, ref: "Address", required: true },
+    products:        { type: [OrderedProductSchema], required: true },
+    totalAmount:     { type: Number, required: true },
     status: {
       type: String,
       enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
@@ -45,6 +42,5 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Prevent model overwrite errors in dev
 const Order = models.Order || model<IOrder>("Order", OrderSchema);
 export default Order;
