@@ -1,4 +1,3 @@
-// src/app/(user)/cart/page.tsx
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,7 +19,6 @@ import {
   Truck,
   Shield,
   Tag,
-  User,
   Mail,
   UserIcon,
 } from "lucide-react";
@@ -33,13 +31,14 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-
-import { useLocalProduct } from "@/stores/useLocalProcut";
+import { useProductStore } from "@/stores/useProductStore";
+import { useLocalProduct } from "@/stores/useLocalProduct";
 import { toast } from "sonner";
-
 import Script from "next/script";
+import type { ProductType } from "@/models/Product";
 
 export default function CartPage() {
+  const { updateInStore } = useProductStore();
   const router = useRouter();
   const { user } = useUser();
   const {
@@ -55,16 +54,15 @@ export default function CartPage() {
   const [discount, setDiscount] = useState(0);
   const [isPayLoading, setIsPayLoading] = useState(false);
 
-  // Pricing calculations
   const subtotal = getTotalPrice();
   const tax = subtotal * 0.18;
-  const shipping: number = subtotal > 5000 ? 0 : 0; //will change logic later
+  const shipping: number = 0;
   const discountAmount = (subtotal * discount) / 100;
   const total = subtotal + tax + shipping - discountAmount;
 
-  const handleQuantityChange = (productId: string, newQty: number) => {
-    if (newQty < 1) return;
-    updateQuantity(productId, newQty);
+  const handleQuantityChange = (id: string, qty: number) => {
+    if (qty < 1) return;
+    updateQuantity(id, qty);
     toast.success("Quantity updated");
   };
 
@@ -97,23 +95,19 @@ export default function CartPage() {
     setIsPayLoading(true);
 
     try {
-      // 1) Create order
+      // 1) Create order on your backend
       const orderRes = await fetch("/api/razorpay-test/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          cart: cart.map((item) => ({
-            id: item._id,
-            quantity: item.quantity,
-          })),
+          cart: cart.map((item) => ({ id: item._id, quantity: item.quantity })),
           promoCode,
         }),
       });
-
       if (!orderRes.ok) throw new Error("Order creation failed");
       const order = await orderRes.json();
 
-      // 2) Open Checkout
+      // 2) Open Razorpay checkout
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
         amount: order.amount,
@@ -129,15 +123,26 @@ export default function CartPage() {
           razorpay_payment_id: string;
           razorpay_signature: string;
         }) => {
-          // 3) Verify payment
+          // — build your cart payload again —
+          const cartPayload = cart.map((item) => ({
+            id:       item._id,
+            quantity: item.quantity,
+          }));
+
+          // 3) Verify & reduce stock on the server
           const verifyRes = await fetch("/api/razorpay-test/verify", {
-            method: "POST",
+            method:  "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(resp),
+            body:    JSON.stringify({
+              ...resp,
+              cart: cartPayload,
+            }),
           });
-          const { status } = await verifyRes.json();
+          const { status, updatedProducts } = await verifyRes.json();
+
           if (status === "verified") {
-            localStorage.setItem("payment_success", "true");
+            // update your client store
+            updatedProducts.forEach((p: ProductType) => updateInStore(p));
             toast.success("Payment successful!");
             clearCart();
             router.push("/thankyou");
@@ -157,7 +162,6 @@ export default function CartPage() {
     }
   };
 
-  // Empty cart UI
   if (!cart.length) {
     return (
       <div className="min-h-screen bg-background">
@@ -190,7 +194,6 @@ export default function CartPage() {
     );
   }
 
-  // Main cart UI
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" async />
@@ -244,7 +247,7 @@ export default function CartPage() {
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left: items */}
+            {/* Items */}
             <div className="lg:col-span-2 space-y-4">
               {user && (
                 <Card>
@@ -346,7 +349,7 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Right: summary */}
+            {/* Summary */}
             <div className="space-y-6">
               <Card>
                 <CardHeader>

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { verifySignature, razorpay } from "@/actions/razorpay";
+import { verifySignature } from "@/actions/razorpay";
+import { razorpay } from "@/lib/razorpayclient";
 import { connectDB } from "@/lib/db";
 import Transaction from "@/models/Transaction";
+import { reduceProductStockBatch } from "@/actions/products";
 
 export async function POST(req: Request) {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-    await req.json();
+  const body = await req.json();
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, cart } = body;
 
   // 1) Verify signature
   const valid = verifySignature(
@@ -32,16 +34,39 @@ export async function POST(req: Request) {
     {
       orderId:   razorpay_order_id,
       paymentId: razorpay_payment_id,
-      userId:    order.notes?.userId ?? null,       // ← the user who created the order
-      amount:    Number(payment.amount) / 100,     // convert paise → rupees
+      userId:    order.notes?.userId ?? null,
+      amount:    Number(payment.amount) / 100,
       currency:  payment.currency,
       method:    payment.method,
       status:    payment.status,
-      metadata:  payment,                  // store full payment object if you like
+      metadata:  payment,
     },
     { upsert: true, new: true }
   );
 
   console.log("✅ Payment verified and stored:", razorpay_payment_id);
+  console.log("Order details:", order);
+  console.log("Payment details:", payment);
+  console.log("Transaction stored in MongoDB", {
+    paymentId: razorpay_payment_id,
+    orderId: razorpay_order_id,
+    userId: order.notes?.userId ?? null,
+    amount: Number(payment.amount) / 100,
+    currency: payment.currency,
+    method: payment.method,
+    status: payment.status,
+  });
+  console.log("🧾 Razorpay verify request received");
+  console.log("Cart passed:", cart);
+
+  // Reduce stock in MongoDB
+  if (Array.isArray(cart) && cart.length > 0) {
+    console.log("🔧 Reducing stock for:", cart);
+    await reduceProductStockBatch(cart);
+    console.log("✅ Stock reduction complete");
+  } else {
+    console.warn("⚠️ No cart items to reduce stock for");
+  }
+
   return NextResponse.json({ status: "verified" });
 }

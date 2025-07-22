@@ -147,6 +147,53 @@ export async function updateProduct(
   }
 }
 
+
+export async function reduceProductStockForPayment(id: string, quantity: number) {
+  try {
+    await connectDB();
+    
+    const product = await Product.findById(id);
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+    
+    // Check if enough stock is available
+    if (product.stock < quantity) {
+      return { success: false, error: "Insufficient stock" };
+    }
+    
+    const updated = await Product.findByIdAndUpdate(
+      id,
+      { $inc: { stock: -quantity } },
+      { new: true }
+    ).lean();
+
+    revalidatePath("/");
+    revalidatePath("/products");
+    revalidatePath("/cart");
+    revalidatePath("/dashboard");
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(updated)),
+    };
+  } catch (error) {
+    console.error("Error reducing stock:", error);
+    return { success: false, error: "Failed to reduce stock" };
+  }
+}
+
+// Keep the existing function for admin operations
+export async function reduceProductStock(id: string, quantity: number) {
+  const authCheck = await requireAdmin();
+  if (!authCheck.success) return { success: false, error: authCheck.error };
+  
+  return await reduceProductStockForPayment(id, quantity);
+}
+
+
+
+
 // Delete product
 export async function deleteProduct(id: string) {
   const authCheck = await requireAdmin();
@@ -176,5 +223,13 @@ export async function deleteProduct(id: string) {
       success: false,
       error: "Failed to delete product",
     };
+  }
+}
+
+export async function reduceProductStockBatch(cart: { id: string; quantity: number }[]) {
+  for (const item of cart) {
+    await Product.findByIdAndUpdate(item.id, {
+      $inc: { stock: -item.quantity },
+    });
   }
 }

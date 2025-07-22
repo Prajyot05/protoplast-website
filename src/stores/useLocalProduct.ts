@@ -1,4 +1,3 @@
-// ✅ Inside: /stores/useLocalProduct.ts
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import type { ProductType } from "@/models/Product"

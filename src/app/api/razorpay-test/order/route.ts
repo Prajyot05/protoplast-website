@@ -39,7 +39,11 @@ export async function POST(req: Request) {
     const order = await createOrder({
       amount: Math.round(total * 100),
       receipt: `rcpt_${Date.now()}`,
-      notes: {userId},   // ← here we tag the order with the user
+      notes: {
+        userId: userId,
+        cart: JSON.stringify(cart),
+        promoCode: promoCode || "",
+      }   
     });
     return NextResponse.json(order);
   } catch (err: any) {

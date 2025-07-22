@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Star,
@@ -23,13 +24,20 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useLocalProduct } from "@/stores/useLocalProcut";
+import { useLocalProduct } from "@/stores/useLocalProduct";
+import { useProductStore } from "@/stores/useProductStore";
 
 export default function ProductDetailsClient({
-  product,
+  product: initialProduct,
 }: {
   product: ProductType;
 }) {
+  const productInStore = useProductStore((state) =>
+    state.productList.find((p) => p._id === initialProduct._id)
+  );
+
+  const router = useRouter();
+  const product = productInStore || initialProduct;
   const [mainIndex, setMainIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -447,15 +455,19 @@ export default function ProductDetailsClient({
                   onClick={() => {
                     addToCart(product, quantity);
                     setQuantity(1);
-                    toast.success(
-                      `${product.title} added to cart!`
-                    );
+                    toast.success(`${product.title} added to cart!`);
                   }}
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Add to Cart
                 </Button>
                 <Button
+                  onClick={() => {
+                    addToCart(product, quantity);
+                    setQuantity(1);
+                    toast.success(`${product.title} added to cart!`);
+                    router.push("/cart");
+                  }}
                   size="lg"
                   disabled={product.stock === 0}
                   className="flex-1 bg-green-600 hover:bg-green-700 text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"

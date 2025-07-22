@@ -18,6 +18,7 @@ export interface ProductFormProps {
   product?: ProductType;
   open: boolean;
   setOpen: (open: boolean) => void;
+  onSubmitted?: () => void; 
 }
 
 const normalizeImage = (url: string) => {
@@ -46,7 +47,7 @@ const formSchema = z.object({
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
-export default function ProductForm({ product, open, setOpen }: ProductFormProps) {
+export default function ProductForm({ product, open, setOpen, onSubmitted }: ProductFormProps) {
   const { addToStore, updateInStore } = useProductStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -128,7 +129,7 @@ export default function ProductForm({ product, open, setOpen }: ProductFormProps
           toast.success("Product updated successfully!");
         } else {
           addToStore(result.data);
-          toast.success("Product created successfully!");
+          if (onSubmitted) onSubmitted(); 
         }
         
         // Close the form and reset
