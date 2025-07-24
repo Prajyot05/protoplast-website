@@ -29,5 +29,5 @@
     ".next/types/**/*.ts",
     "src/components/ui/wavy-background.jsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".vscode", ".next"]
 }

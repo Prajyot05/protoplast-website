@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models, Document, Types } from "mongoose";
+import { Schema, model, models, Document, Types } from "mongoose";
 
 export interface IPcbServiceRequest extends Document {
   user: Types.ObjectId;
