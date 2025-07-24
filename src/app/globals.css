@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+.input,
+.textarea {
+  @apply w-full rounded-md bg-background text-foreground border border-border px-3 py-2 text-sm
+         placeholder-muted-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition;
+}
+
+.input:hover,
+.textarea:hover {
+  @apply border-green-500;
+}
+
+/* Number input styling */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  @apply appearance-none;
+}
+
+
+
 @custom-variant dark (&:is(.dark *));
 
 html,

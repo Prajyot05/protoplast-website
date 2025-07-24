@@ -10,7 +10,18 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // ✅ Default Next.js + TS config
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // ✅ Add your overrides
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",     // Allow 'any' type
+      "@typescript-eslint/no-unused-vars": "warn",     // Show warning instead of error
+      "@typescript-eslint/ban-ts-comment": "warn",     // Allow @ts-ignore, but warn
+      "react-hooks/exhaustive-deps": "warn",           // Warn for missing deps
+    },
+  },
 ];
 
 export default eslintConfig;

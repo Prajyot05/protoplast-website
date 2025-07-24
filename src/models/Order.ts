@@ -1,4 +1,5 @@
-import { Schema, model, models, Document, Types } from "mongoose";
+import { Schema, model, models, type Document, type Types } from "mongoose";
+import type { IAddress } from "./Address";
 
 interface OrderedProduct {
   product: Types.ObjectId;
@@ -7,10 +8,10 @@ interface OrderedProduct {
 }
 
 export interface IOrder extends Document {
-  user: Types.ObjectId;
+  user: string; // Changed from Types.ObjectId to string
+  address: Types.ObjectId | IAddress;
   products: OrderedProduct[];
   totalAmount: number;
-  shippingAddress: Types.ObjectId;
   status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
   paymentIntentId: string;
   createdAt: Date;
@@ -27,14 +28,10 @@ const OrderedProductSchema = new Schema<OrderedProduct>(
 
 const OrderSchema = new Schema<IOrder>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: String, required: true }, // Changed from Schema.Types.ObjectId to String
+    address: { type: Schema.Types.ObjectId, ref: "Address", required: true },
     products: { type: [OrderedProductSchema], required: true },
     totalAmount: { type: Number, required: true },
-    shippingAddress: {
-      type: Schema.Types.ObjectId,
-      ref: "Address",
-      required: true,
-    },
     status: {
       type: String,
       enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
@@ -45,6 +42,5 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Prevent model overwrite errors in dev
 const Order = models.Order || model<IOrder>("Order", OrderSchema);
 export default Order;

@@ -1,6 +1,6 @@
-import { Schema, model, models, Document } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-export interface IUser extends Document {
+export interface IUser {
   clerkId: string;
   email: string;
   name: string;
@@ -23,6 +23,6 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-// Avoid model overwrite errors in Next.js (hot reload)
+// Prevents model overwrite on hot reload
 const User = models.User || model<IUser>("User", UserSchema);
 export default User;

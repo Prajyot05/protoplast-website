@@ -1,3 +1,4 @@
+import SyncUser from "@/components/sync-user";
 import Hero from "@/pages/hero";
 import Services from "@/pages/services";
 import Pricing from "@/pages/pricing";
@@ -10,6 +11,7 @@ import CTA from "@/pages/cta";
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-gray-950">
+      <SyncUser />
       <Header />
       <Hero />
       <Services />
