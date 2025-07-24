@@ -270,7 +270,7 @@ export default function CartPage() {
         theme: { color: "#22c55e" },
       };
 
-      // @ts-ignore
+      // @ts-expect-error: it is not typed correctly yet
       new window.Razorpay(options).open();
     } catch (err: any) {
       console.error("Order creation error:", err);

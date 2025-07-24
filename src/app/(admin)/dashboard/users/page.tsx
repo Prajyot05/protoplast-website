@@ -29,7 +29,7 @@ export default function UsersPage() {
           setUsers(userData)
           console.log("Users are: ", userData)
         }
-      } catch (err) {
+      } catch  {
         setError("Failed to load users")
       } finally {
         setLoading(false)

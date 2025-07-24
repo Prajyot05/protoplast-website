@@ -92,7 +92,7 @@ export default function ProductForm({ product, open, setOpen, onSubmitted }: Pro
         supportedFilaments: product?.specs?.supportedFilaments ?? "",
       });
     }
-  }, [product]);
+  }, [product, form]);
 
   const onSubmit = async (values: ProductFormValues) => {
     setIsSubmitting(true);

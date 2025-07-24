@@ -79,7 +79,7 @@ export default function ShowAllProducts({
       } else {
         toast.error(result.error || "Failed to delete product");
       }
-    } catch (err) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setProductToDelete(null);

@@ -1,8 +1,6 @@
-import { currentUser } from "@clerk/nextjs/server";
 import Header from "@/components/header";
 
 export default async function UserDashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await currentUser();
 
   return (
     <>

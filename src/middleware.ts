@@ -8,13 +8,13 @@ const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"]);
 const isAdminRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 // Protected user routes (requires authentication)
-const isProtectedRoute = createRouteMatcher([
-  "/cart(.*)",
-  "/product/(.*)", // Protect individual product pages
-]);
+// const isProtectedRoute = createRouteMatcher([
+//   "/cart(.*)",
+//   "/product/(.*)", // Protect individual product pages
+// ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth();
+  const { sessionClaims } = await auth();
 
   if (isAdminRoute(req) && sessionClaims?.metadata?.role !== "admin") {
     return NextResponse.redirect(new URL("/", req.url));

@@ -1,7 +1,7 @@
 import { Roles } from "./roles";
 
 declare global {
-  // @ts-expect-error
+  // @ts-expect-error: needed to bypass missing global type
   const mongoose: {
     Types: any;
     conn: typeof mongoose | null;

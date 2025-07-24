@@ -51,7 +51,7 @@ export default function OrderDetailModal({ open, onClose, order }: Props) {
       } else {
         toast.error(result.error || "Failed to update order status")
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to update order status")
     } finally {
       setIsUpdating(false)

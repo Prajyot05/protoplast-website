@@ -27,7 +27,7 @@ export default function AdminDashboard() {
         } else {
           setError(result.error || "Failed to load products")
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load products")
       } finally {
         setLoading(false)

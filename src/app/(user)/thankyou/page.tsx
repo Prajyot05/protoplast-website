@@ -40,7 +40,7 @@ export default function ThankYouPage() {
 
     // f) (optional) Clean up your saved cartDetails
     localStorage.removeItem("cartItems");
-  }, []);
+  }, [clearCart, reduceStockForCart, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
