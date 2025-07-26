@@ -11,7 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingCart , ShoppingBag} from "lucide-react";
+import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -44,9 +44,9 @@ export default function Header() {
 
   const navItems = [
     { label: "Solutions", id: "services" },
-    { label: "Pricing", id: "pricing" },
+    // { label: "Pricing", id: "pricing" },
     { label: "About", id: "about" },
-    { label: "Testimonials", id: "testimonials" },
+    // { label: "Testimonials", id: "testimonials" },
   ];
 
   if (!isLoaded) return null;
