@@ -75,7 +75,7 @@ export default function ProductDetailsClient({
                 src={product.images[mainIndex] || "/placeholder.svg"}
                 alt={product.title}
                 fill
-                className="object-cover transition-all duration-500 group-hover:scale-105"
+                className="object-contain transition-all duration-500 group-hover:scale-105"
                 priority
               />
 
