@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import AnimatedCursor from "react-animated-cursor";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Protoplast Studio",
   description:
-    "Your one-stop solution for advanced manufacturing. We provide top-quality services to bring your ideas to life with precision and efficiency. Click buttons above for details.",
+    "Your one-stop solution for advanced manufacturing. We provide top-quality services to bring your ideas to life with precision and efficiency.",
 };
 
 export default async function RootLayout({
@@ -26,50 +21,29 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-      }}
-    >
+    <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body
-          id="top"
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          suppressHydrationWarning
-        >
-          <AnimatedCursor
-            innerSize={10}
-            outerSize={45}
-            color="255, 0, 255"
-            outerAlpha={0.4}
-            innerScale={1.5}
-            outerScale={2}
-            outerStyle={{
-              mixBlendMode: "exclusion",
-            }}
-            clickables={["a", "button", "input", "select", "textarea"]}
-          />
-
+        <head>
+          <link rel="preload" href="/fonts/OverusedGrotesk-VF.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        </head>
+        <body id="top" className={`${inter.variable} antialiased`} suppressHydrationWarning>
           <Toaster
-            theme="dark"
+            theme="light"
             toastOptions={{
               className:
-                "bg-black border border-green-500 text-white rounded-md shadow-lg transition-all duration-700 ease-in-out",
+                "bg-white border border-green-500 text-black rounded-md shadow-lg transition-all duration-300",
               style: {
-                backgroundColor: "#000000",
+                backgroundColor: "#ffffff",
                 borderColor: "#22c55e",
-                color: "#ffffff",
-                boxShadow: "0 4px 12px rgba(0, 255, 0, 0.3)",
-                borderRadius: "8px",
-                transition: "all 0.7s ease-in-out",
+                color: "#000000",
+                boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
+                borderRadius: "4px",
               },
             }}
             richColors
             closeButton
           />
-
           {children}
         </body>
       </html>

@@ -10,7 +10,6 @@ import {
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,10 +23,19 @@ export default function Header() {
   const pathname = usePathname();
   const { user, isLoaded } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const isMobile = useIsMobile();
   const totalItems = useLocalProduct((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
   );
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,10 +51,9 @@ export default function Header() {
   const role = user?.publicMetadata?.role;
 
   const navItems = [
-    { label: "Solutions", id: "services" },
-    // { label: "Pricing", id: "pricing" },
+    { label: "Services", id: "services" },
     { label: "About", id: "about" },
-    // { label: "Testimonials", id: "testimonials" },
+    { label: "Contact", id: "contact" },
   ];
 
   if (!isLoaded) return null;
@@ -54,31 +61,27 @@ export default function Header() {
   // --- Admin Header (no nav items) ---
   if (isAdminPath && role === "admin") {
     return (
-      <motion.header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-gray-950/90 backdrop-blur-md border-b border-gray-800/50">
-        <div className="container mx-auto px-4 py-3 md:py-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950 border-b border-gray-800">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
             <div className="flex items-center gap-6">
               <Image
-                src="/logo-text-white.svg"
+                src="/logo-text-black.svg"
                 alt="Logo"
                 width={isMobile ? 90 : 120}
                 height={40}
-                className="flex-shrink-0 cursor-pointer"
+                className="flex-shrink-0 cursor-pointer invert"
                 onClick={() => router.push("/")}
               />
             </div>
-            {/* Right Side - Admin Tools */}
             <div className="flex items-center gap-4">
-              {/* Quick Stats */}
               <div className="hidden lg:flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-gray-800/50 px-3 py-1.5 rounded-lg border border-gray-700/50">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="flex items-center gap-2 bg-gray-800/50 px-3 py-1.5 rounded border border-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-xs text-gray-300">System Online</span>
                 </div>
               </div>
-              {/* Admin Profile */}
-              <div className="flex items-center gap-3 bg-gray-800/30 px-3 py-2 rounded-lg border border-gray-700/50">
+              <div className="flex items-center gap-3 bg-gray-800/30 px-3 py-2 rounded border border-gray-700">
                 <Avatar className="w-8 h-8">
                   <AvatarImage src={user?.imageUrl ?? ""} alt="Admin profile" />
                   <AvatarFallback className="bg-green-500/20 text-green-400">
@@ -97,29 +100,35 @@ export default function Header() {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
     );
   }
 
   // --- Landing Page Header ---
   return (
-    <motion.header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black/20 backdrop-blur-md">
-      <div className="container mx-auto px-6 py-3 md:py-4">
-        <nav className="flex items-center justify-between">
-          {/* Desktop Logo */}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-sm" : "bg-white/80 backdrop-blur-sm"
+      }`}
+    >
+      <div className="container mx-auto px-6">
+        <nav className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
           <div
-            className="hidden md:block cursor-pointer"
+            className="cursor-pointer flex-shrink-0"
             onClick={() => router.push("/")}
           >
             <Image
-              alt="Logo"
-              src="/logo-text-white.svg"
-              width={120}
-              height={50}
+              alt="Protoplast Logo"
+              src="/logo-text-black.svg"
+              width={isMobile ? 100 : 130}
+              height={40}
+              className="h-8 md:h-10 w-auto"
             />
           </div>
+
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <ScrollLink
                 key={item.id}
@@ -128,25 +137,28 @@ export default function Header() {
                 smooth={true}
                 offset={-100}
                 duration={100}
-                onClick={() => setIsMenuOpen(false)}
-                className="text-white hover:text-green-400 transition-colors text-sm font-medium cursor-pointer"
-                activeClass="text-green-400"
+                className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-wide"
+                activeClass="text-black"
               >
                 {item.label}
               </ScrollLink>
             ))}
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="hidden md:flex items-center gap-6">
             <SignedOut>
               <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-[#5a3de6] transition-colors">
+                <button className="btn-outline text-sm py-2 px-5">
                   Sign Up
                 </button>
               </SignUpButton>
             </SignedOut>
+
             <SignedIn>
-              <div className="flex items-center gap-4 relative">
-                {/* Orders Link */}
-                <Link href="/orders">
-                  <div className="flex items-center gap-2 mr-3 text-white hover:text-green-400 transition-colors cursor-pointer group">
+              <div className="flex items-center gap-5">
+                <Link href="/orders" className="group">
+                  <div className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors">
                     <ShoppingBag className="w-5 h-5" />
                     <span className="text-sm font-medium hidden lg:block">
                       Orders
@@ -154,149 +166,102 @@ export default function Header() {
                   </div>
                 </Link>
 
-                {/* Cart Link */}
-                <Link href="/cart">
-                  <div className="relative cursor-pointer mr-5 group">
-                    <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
-                    {totalItems > 0 && (
-                      <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
-                        {totalItems > 9 ? "9+" : totalItems}
-                      </Badge>
-                    )}
-                  </div>
+                <Link href="/cart" className="relative group">
+                  <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-black transition-colors" />
+                  {totalItems > 0 && (
+                    <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+                      {totalItems > 9 ? "9+" : totalItems}
+                    </Badge>
+                  )}
                 </Link>
 
                 <UserButton
                   appearance={{
                     elements: {
                       avatarBox:
-                        "w-10 h-10 border-2 border-green-400/30 hover:border-green-400/60 transition-colors",
+                        "w-9 h-9 border border-gray-200 hover:border-green-500 transition-colors",
                     },
                   }}
                 />
               </div>
             </SignedIn>
           </div>
+
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white hover:text-green-400 transition-colors"
+            className="md:hidden text-black hover:text-green-600 transition-colors p-2"
+            aria-label="Toggle menu"
           >
-            <AnimatePresence mode="wait">
-              {isMenuOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X size={24} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Menu size={24} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </nav>
+
         {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              className="md:hidden mt-6 py-6 border-t border-gray-800"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Mobile Logo */}
-              <div
-                className="cursor-pointer mb-6"
-                onClick={() => {
-                  router.push("/");
-                  setIsMenuOpen(false);
-                }}
-              >
-                <Image
-                  alt="Logo"
-                  src="/logo-text-white.svg"
-                  width={100}
-                  height={40}
+        {isMenuOpen && (
+          <div className="md:hidden py-6 border-t border-gray-100">
+            <div className="flex flex-col gap-4">
+              {navItems.map((item) => (
+                <ScrollLink
+                  key={item.id}
+                  to={item.id}
+                  spy={true}
+                  smooth={true}
+                  offset={-70}
+                  duration={500}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide py-2"
+                  activeClass="text-black"
+                >
+                  {item.label}
+                </ScrollLink>
+              ))}
+            </div>
+
+            <SignedIn>
+              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
+                <div className="flex items-center gap-6">
+                  <Link href="/orders" onClick={() => setIsMenuOpen(false)}>
+                    <div className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors">
+                      <ShoppingBag className="w-5 h-5" />
+                      <span className="text-sm font-medium">Orders</span>
+                    </div>
+                  </Link>
+
+                  <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
+                    <div className="relative">
+                      <ShoppingCart className="w-5 h-5 text-gray-600 hover:text-black transition-colors" />
+                      {totalItems > 0 && (
+                        <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+                          {totalItems > 9 ? "9+" : totalItems}
+                        </Badge>
+                      )}
+                    </div>
+                  </Link>
+                </div>
+
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-9 h-9 border border-gray-200",
+                    },
+                  }}
                 />
               </div>
-              {/* Mobile Nav Items */}
-              <div className="flex flex-col space-y-4">
-                {navItems.map((item) => (
-                  <ScrollLink
-                    key={item.id}
-                    to={item.id}
-                    spy={true}
-                    smooth={true}
-                    offset={-70}
-                    duration={500}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-white hover:text-green-400 transition-colors text-left text-sm font-medium cursor-pointer"
-                    activeClass="text-green-400"
-                  >
-                    {item.label}
-                  </ScrollLink>
-                ))}
+            </SignedIn>
+
+            <SignedOut>
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <SignUpButton>
+                  <button className="w-full btn-primary text-sm py-3">
+                    Sign Up
+                  </button>
+                </SignUpButton>
               </div>
-              {/* Mobile Cart + Orders + User */}
-              <SignedIn>
-                <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-800">
-                  <div className="flex items-center gap-6">
-                    {/* Mobile Orders */}
-                    <Link href="/orders" onClick={() => setIsMenuOpen(false)}>
-                      <div className="flex items-center gap-2 text-white hover:text-green-400 transition-colors cursor-pointer">
-                        <ShoppingBag className="w-5 h-5" />
-                        <span className="text-sm font-medium">Orders</span>
-                      </div>
-                    </Link>
-
-                    {/* Mobile Cart */}
-                    <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
-                      <div className="relative cursor-pointer group">
-                        <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
-                        {totalItems > 0 && (
-                          <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
-                            {totalItems > 9 ? "9+" : totalItems}
-                          </Badge>
-                        )}
-                      </div>
-                    </Link>
-                  </div>
-
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        avatarBox: "w-10 h-10 border-2 border-green-400/30",
-                      },
-                    }}
-                  />
-                </div>
-              </SignedIn>
-              <SignedOut>
-                <div className="mt-6 pt-6 border-t border-gray-800">
-                  <SignUpButton>
-                    <button className="w-full bg-[#6c47ff] text-white rounded-full font-medium text-sm h-12 px-5 cursor-pointer hover:bg-[#5a3de6] transition-colors">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
-                </div>
-              </SignedOut>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </SignedOut>
+          </div>
+        )}
       </div>
-    </motion.header>
+    </header>
   );
 }

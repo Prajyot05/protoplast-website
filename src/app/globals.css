@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+/* 
+ * Font: Overused Grotesk
+ * Download from: https://github.com/nicholasbydesign/overused-grotesk
+ * Place OverusedGrotesk-VF.woff2 in /public/fonts/
+ * Or use a similar grotesque font like Inter or Space Grotesk as fallback
+ */
+@font-face {
+  font-family: "Overused Grotesk";
+  src: url("/fonts/OverusedGrotesk-VF.woff2") format("woff2-variations");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallback: Using system fonts that are similar */
+:root {
+  --font-primary: "Overused Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 .input,
 .textarea {
   @apply w-full rounded-md bg-background text-foreground border border-border px-3 py-2 text-sm
@@ -17,13 +36,11 @@ input[type="number"]::-webkit-outer-spin-button {
   @apply appearance-none;
 }
 
-
-
 @custom-variant dark (&:is(.dark *));
 
 html,
 body {
-  background-color: #030712;
+  background-color: #ffffff;
 }
 
 @layer base {
@@ -32,7 +49,43 @@ body {
   }
 
   body {
-    @apply bg-gray-950 text-white;
+    font-family: var(--font-primary);
+    @apply bg-white text-black;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -1.56px;
+  }
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -1.56px;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  @media screen and (max-width: 767px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    h2 {
+      font-size: 2rem;
+    }
   }
 }
 
@@ -60,25 +113,25 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-900;
+  background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-green-500 rounded-full;
+  background: #22c55e;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-green-400;
+  background: #16a34a;
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #22c55e #111827;
+  scrollbar-color: #22c55e #f1f1f1;
 }
 
 @theme inline {
-  --animate-aurora: aurora 60s linear infinite;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -110,88 +163,81 @@ body {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  @keyframes aurora {
-    from {
-      background-position: 50% 50%, 50% 50%;
-    }
-    to {
-      background-position: 350% 50%, 350% 50%;
-    }
-  }
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* :root { */
-.dark {
+/* Light theme (default for landing) */
+:root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #000000;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b7280;
+  --accent: #22c55e;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #22c55e;
+  --chart-1: #22c55e;
+  --chart-2: #16a34a;
+  --chart-3: #15803d;
+  --chart-4: #166534;
+  --chart-5: #14532d;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #22c55e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #22c55e;
 }
 
-:root {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* Dark theme for admin dashboard */
+.dark {
+  --background: #030712;
+  --foreground: #ffffff;
+  --card: #111827;
+  --card-foreground: #ffffff;
+  --popover: #111827;
+  --popover-foreground: #ffffff;
+  --primary: #22c55e;
+  --primary-foreground: #000000;
+  --secondary: #1f2937;
+  --secondary-foreground: #ffffff;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #22c55e;
+  --accent-foreground: #000000;
+  --destructive: #ef4444;
+  --border: #374151;
+  --input: #374151;
+  --ring: #22c55e;
+  --chart-1: #22c55e;
+  --chart-2: #16a34a;
+  --chart-3: #15803d;
+  --chart-4: #166534;
+  --chart-5: #14532d;
+  --sidebar: #111827;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #22c55e;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1f2937;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #374151;
+  --sidebar-ring: #22c55e;
 }
 
 @layer base {
@@ -214,117 +260,62 @@ body {
   }
 }
 
-/* Service Cards Icons Animations */
-
-.service-card:hover .service-icon {
-  animation: gentleShake 0.5s infinite;
+/* Service card hover effects */
+.service-card {
+  transition: all 0.3s ease;
 }
 
-@keyframes gentleShake {
-  /* Used by .service-card:hover .service-icon */
-  0%,
-  100% {
+.service-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Section label styling */
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b7280;
+  border-left: 2px solid #22c55e;
+  padding-left: 0.75rem;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-black text-white px-6 py-3 font-medium transition-all duration-300;
+}
+
+.btn-primary:hover {
+  @apply bg-gray-800;
+}
+
+.btn-outline {
+  @apply border border-black text-black px-6 py-3 font-medium transition-all duration-300;
+}
+
+.btn-outline:hover {
+  @apply bg-black text-white;
+}
+
+/* Values marquee animation */
+@keyframes marquee {
+  0% {
     transform: translateX(0);
   }
-  25% {
-    transform: translateX(-3px);
-  }
-  75% {
-    transform: translateX(3px);
-  }
-}
-
-@keyframes dash {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.printer-filament {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: dash 4s linear infinite;
-}
-
-@keyframes pulse {
-  0%,
   100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.7;
+    transform: translateX(-50%);
   }
 }
 
-.printer-nozzle {
-  animation: pulse 2s ease-in-out infinite;
-  transform-origin: center;
+.animate-marquee {
+  animation: marquee 20s linear infinite;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.7;
-  }
+/* Smooth image transitions */
+.image-hover {
+  transition: transform 0.5s ease;
 }
 
-.component-pulse {
-  animation: pulse 2s ease-in-out infinite;
-  transform-origin: center;
-}
-
-@keyframes trace {
-  /* Used by .trace-animation */
-  0% {
-    stroke-dasharray: 0 300;
-  }
-  100% {
-    stroke-dasharray: 300 0;
-  }
-}
-
-.trace-animation {
-  animation: trace 3s linear infinite;
-  stroke-dasharray: 300;
-  stroke-width: 1;
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-}
-
-.led-blink {
-  animation: blink 1s ease-in-out infinite;
-}
-
-.circuit-pulse {
-  animation: blink 2s ease-in-out infinite;
-}
-
-@keyframes rotate {
-  /* Used by .cutter-blade */
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.cutter-blade {
-  animation: rotate 8s linear infinite;
-  transform-origin: center;
+.image-hover:hover {
+  transform: scale(1.02);
 }

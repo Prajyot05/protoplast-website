@@ -1,121 +1,113 @@
-import ServicesClient from "@/components/services/services-client";
+"use client";
+
+import { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { ServiceKey } from "@/types/service";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ServiceModal from "@/components/services/service-modal";
 
 export default function Services() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeServiceId, setActiveServiceId] = useState<ServiceKey | null>(null);
+
+  const handleOpen = (serviceId: ServiceKey) => {
+    setActiveServiceId(serviceId);
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setActiveServiceId(null);
+  };
+
   const services = [
     {
       id: "3d-printing",
-      icon: (
-        <div className="service-icon text-gray-400 group-hover:text-green-400 transition-colors duration-300">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-[50px] h-[50px]"
-          >
-            <rect x="20" y="60" width="60" height="25" rx="2" />
-            <rect x="35" y="15" width="30" height="45" rx="2" />
-            <line
-              x1="50"
-              y1="35"
-              x2="50"
-              y2="60"
-              className="printer-filament"
-            />
-            <rect x="40" y="85" width="20" height="5" />
-            <circle cx="50" cy="60" r="5" className="printer-nozzle" />
-          </svg>
-        </div>
-      ),
-      title: "3D Printing & Prototyping",
+      title: "3D Printing",
       description:
         "High-precision, rapid prototypes for product development, medical applications, and industrial needs.",
     },
     {
       id: "pcb-design",
-      icon: (
-        <div className="service-icon text-gray-400 group-hover:text-green-400 transition-colors duration-300">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-[50px] h-[50px]"
-          >
-            <rect x="15" y="15" width="70" height="70" rx="2" />
-            <circle cx="30" cy="30" r="5" className="component-pulse" />
-            <circle cx="70" cy="30" r="5" className="component-pulse" />
-            <circle cx="30" cy="70" r="5" className="component-pulse" />
-            <circle cx="70" cy="70" r="5" className="component-pulse" />
-            <path
-              d="M30 30 L70 30 L70 70 L30 70 Z"
-              className="trace-animation"
-              fill="none"
-            />
-            <circle
-              cx="50"
-              cy="50"
-              r="3"
-              className="led-blink"
-              fill="currentColor"
-            />
-            <line x1="40" y1="40" x2="60" y2="40" className="circuit-pulse" />
-            <line x1="40" y1="60" x2="60" y2="60" className="circuit-pulse" />
-          </svg>
-        </div>
-      ),
-      title: "PCB Designing & Manufacturing",
+      title: "PCB Manufacturing",
       description:
         "Custom circuit board design, prototyping, and production for electronics projects of all scales.",
     },
     {
       id: "cnc-cutting",
-      icon: (
-        <div className="service-icon text-gray-400 group-hover:text-green-400 transition-colors duration-300">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-[50px] h-[50px]"
-          >
-            <circle cx="50" cy="50" r="35" fill="none" strokeWidth="1" />
-            <circle cx="50" cy="50" r="5" />
-            <path
-              d="M50 15 L85 50 L50 85 L15 50 Z"
-              className="cutter-blade"
-              fill="none"
-            />
-            <path d="M30 30 L70 70" strokeWidth="3" />
-            <path d="M30 70 L70 30" strokeWidth="3" />
-          </svg>
-        </div>
-      ),
-      title: "CNC Cutting & Machining",
+      title: "CNC Machining",
       description:
         "Precision cutting for metals, plastics, and composites for both personal and commercial projects.",
     },
   ];
 
   return (
-    <section id="services" className="py-24">
+    <section id="services" className="py-24 bg-white">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
-            Our Services
+        {/* Section Header */}
+        <div className="mb-16">
+          <div className="section-label mb-4">OUR SERVICES</div>
+          <h2 className="text-black mb-6">
+            Our Capabilities
           </h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Your one-stop solution for advanced manufacturing. We provide
-            top-quality services to bring your ideas to life with precision and
-            efficiency. Click buttons above for details.
+          <p className="text-gray-600 max-w-2xl leading-relaxed">
+            Comprehensive manufacturing solutions tailored to your project&apos;s needs, from initial prototype to final production.
           </p>
         </div>
 
-        <ServicesClient services={services} />
+        {/* Services List */}
+        <div className="space-y-4">
+          {services.map((service, index) => (
+            <div
+              key={service.id}
+              onClick={() => handleOpen(service.id as ServiceKey)}
+              className="group cursor-pointer border-t border-gray-200 py-12 hover:bg-gray-50 transition-colors duration-300"
+            >
+              <div className="grid md:grid-cols-12 gap-8 items-center">
+                {/* Number */}
+                <div className="md:col-span-2 text-4xl font-light text-gray-300 group-hover:text-green-500 transition-colors duration-300">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+
+                {/* Title */}
+                <div className="md:col-span-4">
+                  <h3 className="text-3xl font-medium text-black group-hover:text-green-600 transition-colors duration-300">
+                    {service.title}
+                  </h3>
+                </div>
+
+                {/* Description */}
+                <div className="md:col-span-4">
+                  <p className="text-gray-600 leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <div className="md:col-span-2 flex justify-end">
+                  <div className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center 
+                                group-hover:bg-green-500 group-hover:border-green-500 group-hover:text-white transition-all duration-300">
+                    <ArrowUpRight className="w-5 h-5 transform group-hover:rotate-45 transition-transform duration-300" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Modal */}
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="max-w-2xl bg-white border-gray-200">
+          {activeServiceId && (
+            <ServiceModal
+              serviceId={activeServiceId}
+              isPricing={false}
+              onClose={() => setIsOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

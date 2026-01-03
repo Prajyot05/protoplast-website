@@ -1,123 +1,111 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import {
-  Printer,
-  Settings,
-  Cpu,
-  DraftingCompassIcon as Drafting,
-} from "lucide-react";
+import { Printer, Settings, Cpu, PenTool } from "lucide-react";
+import Link from "next/link";
 
 export default function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const coreValues = [
+    "Innovation",
+    "Precision",
+    "Quality",
+    "Reliability",
+    "Innovation",
+    "Precision",
+    "Quality",
+    "Reliability",
+  ];
 
   const services = [
     { icon: Printer, label: "3D Printing" },
     { icon: Settings, label: "CNC Cutting" },
     { icon: Cpu, label: "PCB Design" },
-    { icon: Drafting, label: "CAD Modeling" },
+    { icon: PenTool, label: "CAD Modeling" },
   ];
 
   return (
-    <section id="about" ref={sectionRef}>
+    <section id="about" className="py-24 bg-white">
       <div className="container mx-auto px-6">
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
-            About Us
-          </h2>
-          <p className="text-lg text-gray-400">
-            The story behind Protoplast.3D
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
-          {/* Story Content */}
-          <motion.div
-            className="space-y-6"
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <h3 className="text-3xl font-bold text-white mb-8">
-              Our Story – Protoplast.3D
+        {/* Manifesto / Vision */}
+        <div className="py-24 border-t border-gray-200">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <p className="text-sm md:text-base text-green-600 font-medium uppercase tracking-widest">
+              The Vision
+            </p>
+            <h3 className="text-3xl md:text-5xl font-medium leading-tight text-black">
+              We envision a future where <span className="text-gray-400">manufacturing adapts to imagination</span>, not the other way around.
             </h3>
-
-            <p className="text-gray-400 leading-relaxed">
-              It all started with a simple question:{" "}
-              <span className="text-green-400 font-semibold">
-                Why should innovation be limited by access to manufacturing?
-              </span>
+            <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
+              Democratizing production by bringing industrial-grade capabilities to every engineer, startup, and business.
             </p>
+          </div>
+        </div>
 
-            <p className="text-gray-400 leading-relaxed">
-              We saw engineers struggling to bring their ideas to life, startups
-              delaying product launches due to high prototyping costs, and
-              businesses dependent on slow, expensive manufacturing methods.
-              That&apos;s when{" "}
-              <span className="text-green-400 font-semibold">
-                Protoplast.3D
-              </span>{" "}
-              was born—out of a need to bridge the gap between creativity and
-              production.
-            </p>
+        {/* Our Story - Sticky Layout */}
+        <div className="py-24 border-t border-gray-200">
+          <div className="grid lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <div className="sticky top-32">
+                <h3 className="text-6xl md:text-8xl font-bold text-gray-100 mb-4 -ml-1">01</h3>
+                <h3 className="text-2xl font-medium text-black mb-4">Our Journey</h3>
+                <p className="text-gray-500 leading-relaxed">
+                  From a simple question to a comprehensive manufacturing hub.
+                </p>
+              </div>
+            </div>
 
-            <p className="text-gray-400 leading-relaxed">
-              What began as a small initiative has grown into a{" "}
-              <span className="text-green-400 font-semibold">
-                cutting-edge digital manufacturing hub
-              </span>
-              . From{" "}
-              <span className="text-green-400 font-semibold">
-                3D printing to CNC cutting, PCB designing to CAD modeling
-              </span>
-              , we&apos;ve built a space where{" "}
-              <span className="text-green-400 font-semibold">
-                ideas take shape, products evolve, and businesses scale faster
-                than ever before
-              </span>
-              .
-            </p>
+            <div className="lg:col-span-8 space-y-20">
+              <div className="group">
+                <h4 className="text-xl font-medium text-black mb-4 flex items-center gap-3">
+                  <span className="w-8 h-px bg-green-500"></span>
+                  The Spark
+                </h4>
+                <p className="text-gray-600 leading-relaxed text-lg pl-11">
+                  It began with a frustration: why is professional manufacturing so inaccessible? We saw brilliant ideas dying on the drawing board because prototyping was too slow or too expensive. We decided to change that.
+                </p>
+              </div>
 
-            <p className="text-gray-400 leading-relaxed">
-              At Protoplast.3D, we believe{" "}
-              <span className="text-green-400 font-semibold">
-                the future isn&apos;t something you wait for—it&apos;s something
-                you create.
-              </span>{" "}
-              And we&apos;re here to help you build it.
-            </p>
-          </motion.div>
+              <div className="group">
+                <h4 className="text-xl font-medium text-black mb-4 flex items-center gap-3">
+                  <span className="w-8 h-px bg-gray-300 group-hover:bg-green-500 transition-colors"></span>
+                  The Evolution
+                </h4>
+                <p className="text-gray-600 leading-relaxed text-lg pl-11">
+                  What started as a garage operation has grown into a digital manufacturing ecosystem. We&apos;ve integrated 3D printing, CNC machining, and PCB design into a single, fluid workflow.
+                </p>
+              </div>
 
-          {/* Visual Elements */}
-          <motion.div
-            className="grid grid-cols-2 gap-8"
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            {services.map((service) => {
-              const Icon = service.icon;
+              <div className="group">
+                <h4 className="text-xl font-medium text-black mb-4 flex items-center gap-3">
+                  <span className="w-8 h-px bg-gray-300 group-hover:bg-green-500 transition-colors"></span>
+                  The Future
+                </h4>
+                <p className="text-gray-600 leading-relaxed text-lg pl-11">
+                  We aren&apos;t just building parts; we&apos;re building the infrastructure for the next generation of hardware innovation. Excellence in every layer, cut, and circuit.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              return (
-                <div
-                  key={service.label}
-                  className="text-center p-8 border border-gray-800 rounded-lg hover:border-green-400 transition-colors duration-300"
-                >
-                  <div className="w-16 h-16 border-2 border-gray-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:border-green-400 transition-colors duration-300">
-                    <Icon className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <p className="text-white font-medium">{service.label}</p>
-                </div>
-              );
-            })}
-          </motion.div>
+        {/* Core Values Marquee */}
+        <div className="py-12 border-t border-gray-200 overflow-hidden">
+          <div className="flex items-center gap-8">
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+              Our Core Values
+            </span>
+            <div className="flex-1 overflow-hidden">
+              <div className="flex gap-16 animate-marquee">
+                {[...coreValues, ...coreValues].map((value, index) => (
+                  <span
+                    key={index}
+                    className="text-2xl md:text-3xl font-medium text-gray-300 whitespace-nowrap hover:text-green-500 transition-colors duration-300"
+                  >
+                    {value}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
