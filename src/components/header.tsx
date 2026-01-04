@@ -130,19 +130,37 @@ export default function Header() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
-              <ScrollLink
-                key={item.id}
-                to={item.id}
-                spy={true}
-                smooth={true}
-                offset={-100}
-                duration={100}
-                className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-wide"
-                activeClass="text-black"
-              >
-                {item.label}
-              </ScrollLink>
+              pathname === "/" ? (
+                <ScrollLink
+                  key={item.id}
+                  to={item.id}
+                  spy={true}
+                  smooth={true}
+                  offset={-100}
+                  duration={100}
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-wide"
+                  activeClass="text-black"
+                >
+                  {item.label}
+                </ScrollLink>
+              ) : (
+                <Link
+                  key={item.id}
+                  href={`/#${item.id}`}
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-wide"
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
+            <Link
+              href="/products"
+              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-wide ${
+                pathname?.startsWith("/products") ? "text-black" : "text-gray-600 hover:text-black"
+              }`}
+            >
+              Products
+            </Link>
           </div>
 
           {/* Right Side Actions */}
@@ -202,20 +220,40 @@ export default function Header() {
           <div className="md:hidden py-6 border-t border-gray-100">
             <div className="flex flex-col gap-4">
               {navItems.map((item) => (
-                <ScrollLink
-                  key={item.id}
-                  to={item.id}
-                  spy={true}
-                  smooth={true}
-                  offset={-70}
-                  duration={500}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide py-2"
-                  activeClass="text-black"
-                >
-                  {item.label}
-                </ScrollLink>
+                pathname === "/" ? (
+                  <ScrollLink
+                    key={item.id}
+                    to={item.id}
+                    spy={true}
+                    smooth={true}
+                    offset={-70}
+                    duration={500}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide py-2"
+                    activeClass="text-black"
+                  >
+                    {item.label}
+                  </ScrollLink>
+                ) : (
+                  <Link
+                    key={item.id}
+                    href={`/#${item.id}`}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide py-2"
+                  >
+                    {item.label}
+                  </Link>
+                )
               ))}
+              <Link
+                href="/products"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-sm font-medium transition-colors uppercase tracking-wide py-2 ${
+                  pathname?.startsWith("/products") ? "text-black" : "text-gray-600 hover:text-black"
+                }`}
+              >
+                Products
+              </Link>
             </div>
 
             <SignedIn>

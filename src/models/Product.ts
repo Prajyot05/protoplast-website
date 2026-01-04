@@ -32,6 +32,18 @@ const ProductSchema = new Schema<IProduct>(
 );
 
 const Product = models.Product || model<IProduct>("Product", ProductSchema);
-export type ProductType = InferSchemaType<typeof ProductSchema>;
+
+export type ProductType = {
+  _id: string;
+  title: string;
+  description?: string;
+  price: number;
+  stock: number;
+  images: string[];
+  specs?: Record<string, string>;
+  featured: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
 
 export default Product;

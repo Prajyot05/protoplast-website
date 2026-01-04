@@ -54,7 +54,7 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <Link href="/products/687a816fa6b0f6a663493f5d">
+              <Link href="/products">
                 <button className="btn-primary inline-flex items-center gap-2 shadow-lg shadow-green-500/20">
                   Explore Products
                   <ArrowUpRight className="w-4 h-4" />

@@ -283,16 +283,16 @@ export default function CartPage() {
   // Redirect if not signed in
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <Card>
+          <Card className="border-gray-100 shadow-sm">
             <CardContent className="flex flex-col items-center py-16">
-              <UserIcon className="h-16 w-16 text-muted-foreground mb-4" />
-              <h2 className="text-2xl font-semibold mb-2">Sign in required</h2>
-              <p className="text-muted-foreground mb-4">
+              <UserIcon className="h-16 w-16 text-gray-300 mb-4" />
+              <h2 className="text-2xl font-medium text-black mb-2">Sign in required</h2>
+              <p className="text-gray-500 mb-4">
                 Please sign in to view your cart
               </p>
-              <Button onClick={() => router.push("/sign-in")}>Sign In</Button>
+              <Button onClick={() => router.push("/sign-in")} className="bg-black text-white hover:bg-gray-800">Sign In</Button>
             </CardContent>
           </Card>
         </div>
@@ -302,25 +302,25 @@ export default function CartPage() {
 
   if (!cart.length) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="flex items-center gap-4 mb-8">
-            <Link href="/products/687a816fa6b0f6a663493f5d">
-              <Button variant="ghost" size="sm">
+            <Link href="/products">
+              <Button variant="ghost" size="sm" className="text-gray-500 hover:text-black">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Continue Shopping
               </Button>
             </Link>
-            <h1 className="text-3xl font-bold">Shopping Cart</h1>
+            <h1 className="text-3xl font-medium text-black">Shopping Cart</h1>
           </div>
-          <Card>
+          <Card className="border-gray-100 shadow-sm">
             <CardContent className="flex flex-col items-center py-16">
-              <div className="text-6xl mb-4">🛒</div>
-              <h2 className="text-2xl font-semibold mb-2">
+              <div className="text-6xl mb-4 grayscale opacity-50">🛒</div>
+              <h2 className="text-2xl font-medium text-black mb-2">
                 Your cart is empty
               </h2>
-              <Link href="/products/687a816fa6b0f6a663493f5d">
-                <Button className="bg-green-600 text-white">
+              <Link href="/products">
+                <Button className="bg-black text-white hover:bg-gray-800 mt-4">
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Start Shopping
                 </Button>
@@ -335,19 +335,19 @@ export default function CartPage() {
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" async />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <Link href="/products/687a816fa6b0f6a663493f5d">
-                <Button variant="ghost" size="sm">
+              <Link href="/products">
+                <Button variant="ghost" size="sm" className="text-gray-500 hover:text-black">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Continue Shopping
                 </Button>
               </Link>
-              <h1 className="text-3xl font-bold">Shopping Cart</h1>
-              <Badge variant="secondary">
+              <h1 className="text-3xl font-medium text-black">Shopping Cart</h1>
+              <Badge variant="secondary" className="bg-gray-100 text-gray-700">
                 {getTotalItems()} {getTotalItems() === 1 ? "item" : "items"}
               </Badge>
             </div>
@@ -356,24 +356,27 @@ export default function CartPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-red-500 bg-transparent"
+                  className="text-red-500 border-red-100 hover:bg-red-50 hover:text-red-600"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Clear Cart
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Clear your cart?</DialogTitle>
+              <DialogContent className="sm:max-w-md bg-white px-6 py-4">
+                <DialogHeader className="mb-4">
+                  <DialogTitle className="text-xl font-medium">Clear your cart?</DialogTitle>
                 </DialogHeader>
-                <p>This will remove all items permanently.</p>
-                <DialogFooter>
+                <p className="text-gray-500 mb-6">
+                  This will remove all items from your cart permanently. This action cannot be undone.
+                </p>
+                <DialogFooter className="gap-2 sm:gap-0">
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline" className="rounded-lg">Cancel</Button>
                   </DialogClose>
                   <DialogClose asChild>
                     <Button
                       variant="destructive"
+                      className="rounded-lg"
                       onClick={() => {
                         clearCart();
                         toast.success("Cart cleared");
@@ -392,20 +395,20 @@ export default function CartPage() {
             <div className="lg:col-span-2 space-y-6">
               {/* Customer Info */}
               {user && (
-                <Card>
+                <Card className="border-gray-100 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-lg font-medium">
                       <UserIcon className="h-5 w-5" />
                       Customer Information
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2">
+                  <CardContent className="space-y-2 text-gray-600">
                     <div className="flex items-center gap-2">
-                      <UserIcon className="h-4 w-4" />
+                      <UserIcon className="h-4 w-4 text-gray-400" />
                       <span>{user.fullName || "Name not provided"}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
+                      <Mail className="h-4 w-4 text-gray-400" />
                       <span>{user.primaryEmailAddress?.emailAddress}</span>
                     </div>
                   </CardContent>
@@ -413,9 +416,9 @@ export default function CartPage() {
               )}
 
               {/* Address Section */}
-              <Card>
+              <Card className="border-gray-100 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+                  <CardTitle className="flex items-center justify-between text-lg font-medium">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-5 w-5" />
                       Delivery Address
@@ -424,6 +427,7 @@ export default function CartPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => setShowAddressForm(!showAddressForm)}
+                      className="text-sm"
                     >
                       {showAddressForm ? "Hide" : "Add/Edit"} Address
                     </Button>
@@ -432,20 +436,20 @@ export default function CartPage() {
                 <CardContent>
                   {!showAddressForm && shippingAddress.fullName ? (
                     <div className="space-y-2">
-                      <div className="font-medium">
+                      <div className="font-medium text-black">
                         {shippingAddress.fullName}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-gray-500">
                         {shippingAddress.street}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-gray-500">
                         {shippingAddress.city}, {shippingAddress.state}{" "}
                         {shippingAddress.zip}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-gray-500">
                         {shippingAddress.country}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Phone className="h-4 w-4" />
                         {shippingAddress.phone}
                       </div>
@@ -454,13 +458,13 @@ export default function CartPage() {
                     <div className="space-y-6">
                       {/* Shipping Address */}
                       <div className="space-y-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-gray-900">
                           <Home className="h-4 w-4" />
-                          <h3 className="font-semibold">Shipping Address</h3>
+                          <h3 className="font-medium">Shipping Address</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="shipping-name">Full Name *</Label>
+                            <Label htmlFor="shipping-name" className="text-gray-600">Full Name *</Label>
                             <Input
                               id="shipping-name"
                               value={shippingAddress.fullName}
@@ -468,10 +472,11 @@ export default function CartPage() {
                                 handleAddressChange("fullName", e.target.value)
                               }
                               placeholder="Enter full name"
+                              className="bg-white border-gray-200 focus:border-green-500"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="shipping-phone">
+                            <Label htmlFor="shipping-phone" className="text-gray-600">
                               Phone Number *
                             </Label>
                             <Input
@@ -481,11 +486,12 @@ export default function CartPage() {
                                 handleAddressChange("phone", e.target.value)
                               }
                               placeholder="Enter phone number"
+                              className="bg-white border-gray-200 focus:border-green-500"
                             />
                           </div>
                         </div>
                         <div>
-                          <Label htmlFor="shipping-street">
+                          <Label htmlFor="shipping-street" className="text-gray-600">
                             Street Address *
                           </Label>
                           <Textarea
@@ -496,11 +502,12 @@ export default function CartPage() {
                             }
                             placeholder="Enter street address"
                             rows={2}
+                            className="bg-white border-gray-200 focus:border-green-500"
                           />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <Label htmlFor="shipping-city">City *</Label>
+                            <Label htmlFor="shipping-city" className="text-gray-600">City *</Label>
                             <Input
                               id="shipping-city"
                               value={shippingAddress.city}
@@ -508,17 +515,18 @@ export default function CartPage() {
                                 handleAddressChange("city", e.target.value)
                               }
                               placeholder="Enter city"
+                              className="bg-white border-gray-200 focus:border-green-500"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="shipping-state">State *</Label>
+                            <Label htmlFor="shipping-state" className="text-gray-600">State *</Label>
                             <Select
                               value={shippingAddress.state}
                               onValueChange={(value) =>
                                 handleAddressChange("state", value)
                               }
                             >
-                              <SelectTrigger>
+                              <SelectTrigger className="bg-white border-gray-200">
                                 <SelectValue placeholder="Select state" />
                               </SelectTrigger>
                               <SelectContent>
@@ -531,7 +539,7 @@ export default function CartPage() {
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="shipping-zip">PIN Code *</Label>
+                            <Label htmlFor="shipping-zip" className="text-gray-600">PIN Code *</Label>
                             <Input
                               id="shipping-zip"
                               value={shippingAddress.zip}
@@ -539,13 +547,14 @@ export default function CartPage() {
                                 handleAddressChange("zip", e.target.value)
                               }
                               placeholder="Enter PIN code"
+                              className="bg-white border-gray-200 focus:border-green-500"
                             />
                           </div>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <Alert>
+                    <Alert className="bg-orange-50 border-orange-100 text-orange-800">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
                         Please add your delivery address to continue with the
@@ -558,38 +567,42 @@ export default function CartPage() {
 
               {/* Cart Items */}
               <div className="space-y-4">
-                <h2 className="text-xl font-semibold">Order Items</h2>
+                <h2 className="text-xl font-medium text-black">Order Items</h2>
                 {cart.map((item) => (
-                  <Card key={item._id}>
+                  <Card key={item._id} className="border-gray-100 shadow-sm overflow-hidden">
                     <CardContent className="flex gap-4 p-6">
-                      <div className="relative w-24 h-24">
+                      <div className="relative w-24 h-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
                         <Image
                           src={item.images?.[0] || "/placeholder.svg"}
                           alt={item.title}
                           fill
-                          className="object-cover rounded"
+                          className="object-contain p-2"
                         />
                       </div>
                       <div className="flex-1">
-                        <div className="flex justify-between">
-                          <h3 className="font-semibold">{item.title}</h3>
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-medium text-black text-lg">{item.title}</h3>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-500">
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="sm:max-w-md">
-                              <DialogHeader>
-                                <DialogTitle>Remove this item?</DialogTitle>
+                            <DialogContent className="sm:max-w-md bg-white py-4 px-6">
+                              <DialogHeader className="mb-4">
+                                <DialogTitle className="text-xl font-medium">Remove this item?</DialogTitle>
                               </DialogHeader>
-                              <DialogFooter>
+                              <p className="text-gray-500 mb-6">
+                                Are you sure you want to remove <span className="font-medium text-black">{item.title}</span> from your cart?
+                              </p>
+                              <DialogFooter className="gap-2 sm:gap-0">
                                 <DialogClose asChild>
-                                  <Button variant="outline">Cancel</Button>
+                                  <Button variant="outline" className="rounded-lg">Cancel</Button>
                                 </DialogClose>
                                 <DialogClose asChild>
                                   <Button
                                     variant="destructive"
+                                    className="rounded-lg"
                                     onClick={() =>
                                       handleRemoveItem(item._id, item.title)
                                     }
@@ -601,11 +614,11 @@ export default function CartPage() {
                             </DialogContent>
                           </Dialog>
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-gray-500 line-clamp-1">
                           {item.description}
                         </p>
                         <div className="flex items-center justify-between mt-4">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center border border-gray-200 rounded-lg">
                             <Button
                               variant="ghost"
                               size="sm"
@@ -616,10 +629,11 @@ export default function CartPage() {
                                 )
                               }
                               disabled={item.quantity <= 1}
+                              className="h-8 w-8 p-0 hover:bg-gray-50"
                             >
-                              <Minus className="h-4 w-4" />
+                              <Minus className="h-3 w-3" />
                             </Button>
-                            <span className="w-8 text-center">
+                            <span className="w-8 text-center text-sm font-medium">
                               {item.quantity}
                             </span>
                             <Button
@@ -632,15 +646,16 @@ export default function CartPage() {
                                 )
                               }
                               disabled={item.quantity >= item.stock}
+                              className="h-8 w-8 p-0 hover:bg-gray-50"
                             >
-                              <Plus className="h-4 w-4" />
+                              <Plus className="h-3 w-3" />
                             </Button>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-green-600">
+                            <div className="font-bold text-black text-lg">
                               ₹{(item.price * item.quantity).toLocaleString()}
                             </div>
-                            <div className="text-xs text-muted-foreground">
+                            <div className="text-xs text-gray-500">
                               ₹{item.price.toLocaleString()} each
                             </div>
                           </div>
@@ -654,9 +669,9 @@ export default function CartPage() {
 
             {/* Summary */}
             <div className="space-y-6">
-              <Card>
+              <Card className="border-gray-100 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-lg font-medium">
                     <Tag className="h-5 w-5" />
                     Promo Code
                   </CardTitle>
@@ -669,23 +684,24 @@ export default function CartPage() {
                       onChange={(e) =>
                         setPromoCode(e.target.value.toUpperCase())
                       }
+                      className="bg-white border-gray-200 focus:border-green-500"
                     />
-                    <Button onClick={handleApplyPromo} disabled={!promoCode}>
+                    <Button onClick={handleApplyPromo} disabled={!promoCode} className="bg-black text-white hover:bg-gray-800">
                       Apply
                     </Button>
                   </div>
                   {discount > 0 && (
-                    <p className="text-green-600">✓ {discount}% off applied</p>
+                    <p className="text-green-600 text-sm font-medium">✓ {discount}% off applied</p>
                   )}
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-gray-100 shadow-sm">
                 <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
+                  <CardTitle className="text-lg font-medium">Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal ({getTotalItems()} items)</span>
                     <span>₹{subtotal.toLocaleString()}</span>
                   </div>
@@ -695,29 +711,29 @@ export default function CartPage() {
                       <span>-₹{discountAmount.toLocaleString()}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm text-gray-600">
                     <span>GST (18%)</span>
                     <span>₹{tax.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm text-gray-600">
                     <span>Shipping</span>
                     <span>
                       {shipping === 0 ? (
-                        <span className="text-green-600">Free</span>
+                        <span className="text-green-600 font-medium">Free</span>
                       ) : (
                         `₹${shipping.toLocaleString()}`
                       )}
                     </span>
                   </div>
-                  <Separator />
-                  <div className="flex justify-between font-bold text-lg">
+                  <Separator className="bg-gray-100" />
+                  <div className="flex justify-between font-bold text-lg text-black">
                     <span>Total</span>
                     <span>₹{total.toLocaleString()}</span>
                   </div>
 
                   {/* Address validation warning */}
                   {!validateAddress(shippingAddress) && (
-                    <Alert>
+                    <Alert className="bg-orange-50 border-orange-100 text-orange-800">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
                         Please complete your address information before
@@ -727,7 +743,7 @@ export default function CartPage() {
                   )}
 
                   <Button
-                    className="w-full"
+                    className="w-full h-12 text-base bg-black hover:bg-gray-800 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
                     onClick={handleProceedToPayment}
                     disabled={isPayLoading || !validateAddress(shippingAddress)}
                   >
@@ -743,7 +759,7 @@ export default function CartPage() {
                 </CardContent>
               </Card>
 
-              <div className="flex gap-4 text-xs text-muted-foreground">
+              <div className="flex gap-4 text-xs text-gray-400 justify-center">
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   Secure Payment
