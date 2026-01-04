@@ -41,7 +41,7 @@ export default async function OrdersPage() {
   const deliveredCount = orders?.filter((o: any) => o.status === "delivered").length || 0
 
   return (
-    <div className="min-h-screen bg-white text-black font-sans flex flex-col">
+    <div className="min-h-screen bg-white text-black flex flex-col">
       <Header />
       
       <div className="flex-grow">

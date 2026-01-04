@@ -10,10 +10,9 @@ import {
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
+import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLocalProduct } from "@/stores/useLocalProduct";
 import Link from "next/link";
@@ -49,6 +48,7 @@ export default function Header() {
 
   const isAdminPath = pathname?.startsWith("/dashboard");
   const role = user?.publicMetadata?.role;
+  const isLandingPage = pathname === "/";
 
   const navItems = [
     { label: "Services", id: "services" },
@@ -56,10 +56,8 @@ export default function Header() {
     { label: "Contact", id: "contact" },
   ];
 
-  if (!isLoaded) return null;
-
   // --- Admin Header (no nav items) ---
-  if (isAdminPath && role === "admin") {
+  if (isLoaded && isAdminPath && role === "admin") {
     return (
       <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950 border-b border-gray-800">
         <div className="container mx-auto px-6 py-4">
@@ -108,7 +106,7 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-sm" : "bg-white/80 backdrop-blur-sm"
+        (isScrolled || !isLandingPage) ? "bg-white shadow-sm" : "bg-white/80 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-6">
@@ -129,6 +127,14 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
+            <Link
+              href="/"
+              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+                pathname === "/" ? "text-green-600" : "text-gray-600 hover:text-black"
+              }`}
+            >
+              Home
+            </Link>
             {navItems.map((item) => (
               pathname === "/" ? (
                 <ScrollLink
@@ -138,8 +144,8 @@ export default function Header() {
                   smooth={true}
                   offset={-100}
                   duration={100}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-wide"
-                  activeClass="text-black"
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                  activeClass="text-green-600"
                 >
                   {item.label}
                 </ScrollLink>
@@ -147,7 +153,7 @@ export default function Header() {
                 <Link
                   key={item.id}
                   href={`/#${item.id}`}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-wide"
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
                 >
                   {item.label}
                 </Link>
@@ -155,8 +161,8 @@ export default function Header() {
             ))}
             <Link
               href="/products"
-              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-wide ${
-                pathname?.startsWith("/products") ? "text-black" : "text-gray-600 hover:text-black"
+              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+                pathname?.startsWith("/products") ? "text-green-600" : "text-gray-600 hover:text-black"
               }`}
             >
               Products
@@ -164,40 +170,49 @@ export default function Header() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-8">
             <SignedOut>
               <SignUpButton>
-                <button className="btn-outline text-sm py-2 px-5">
+                <button className="text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors">
                   Sign Up
                 </button>
               </SignUpButton>
             </SignedOut>
 
             <SignedIn>
-              <div className="flex items-center gap-5">
-                <Link href="/orders" className="group">
-                  <div className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors">
-                    <ShoppingBag className="w-5 h-5" />
-                    <span className="text-sm font-medium hidden lg:block">
-                      Orders
-                    </span>
-                  </div>
+              <div className="flex items-center gap-8">
+                <Link href="/orders" className="group flex items-center gap-2">
+                  <ShoppingBag className={`w-4 h-4 transition-colors ${
+                    pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`} />
+                  <span className={`text-sm font-medium uppercase tracking-tight transition-colors ${
+                    pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`}>
+                    Orders
+                  </span>
                 </Link>
 
-                <Link href="/cart" className="relative group">
-                  <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-black transition-colors" />
-                  {totalItems > 0 && (
-                    <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
-                      {totalItems > 9 ? "9+" : totalItems}
-                    </Badge>
-                  )}
+                <Link href="/cart" className="relative group flex items-center gap-2">
+                  <ShoppingCart className={`w-4 h-4 transition-colors ${
+                    pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`} />
+                  <span className={`text-sm font-medium uppercase tracking-tight transition-colors ${
+                    pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`}>
+                    Cart
+                    {totalItems > 0 && (
+                      <span className="ml-1 text-green-600 font-bold">
+                        ({totalItems})
+                      </span>
+                    )}
+                  </span>
                 </Link>
 
                 <UserButton
                   appearance={{
                     elements: {
                       avatarBox:
-                        "w-9 h-9 border border-gray-200 hover:border-green-500 transition-colors",
+                        "w-8 h-8 border border-gray-100 hover:border-green-500 transition-colors",
                     },
                   }}
                 />
@@ -208,17 +223,26 @@ export default function Header() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-black hover:text-green-600 transition-colors p-2"
+            className="md:hidden text-xs font-bold tracking-widest uppercase p-2"
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? "Close" : "Menu"}
           </button>
         </nav>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-gray-100">
-            <div className="flex flex-col gap-4">
+          <div className="md:hidden py-10 border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex flex-col gap-6">
+              <Link
+                href="/"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-2xl font-medium uppercase tracking-tighter ${
+                  pathname === "/" ? "text-green-600" : "text-black hover:text-green-600"
+                }`}
+              >
+                Home
+              </Link>
               {navItems.map((item) => (
                 pathname === "/" ? (
                   <ScrollLink
@@ -229,8 +253,8 @@ export default function Header() {
                     offset={-70}
                     duration={500}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide py-2"
-                    activeClass="text-black"
+                    className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
+                    activeClass="text-green-600"
                   >
                     {item.label}
                   </ScrollLink>
@@ -239,7 +263,7 @@ export default function Header() {
                     key={item.id}
                     href={`/#${item.id}`}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide py-2"
+                    className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
                   >
                     {item.label}
                   </Link>
@@ -248,8 +272,8 @@ export default function Header() {
               <Link
                 href="/products"
                 onClick={() => setIsMenuOpen(false)}
-                className={`text-sm font-medium transition-colors uppercase tracking-wide py-2 ${
-                  pathname?.startsWith("/products") ? "text-black" : "text-gray-600 hover:text-black"
+                className={`text-2xl font-medium uppercase tracking-tighter ${
+                  pathname?.startsWith("/products") ? "text-green-600" : "text-black hover:text-green-600"
                 }`}
               >
                 Products
@@ -257,41 +281,43 @@ export default function Header() {
             </div>
 
             <SignedIn>
-              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
-                <div className="flex items-center gap-6">
-                  <Link href="/orders" onClick={() => setIsMenuOpen(false)}>
-                    <div className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors">
-                      <ShoppingBag className="w-5 h-5" />
-                      <span className="text-sm font-medium">Orders</span>
-                    </div>
-                  </Link>
+              <div className="flex flex-col gap-6 mt-10 pt-10 border-t border-gray-100">
+                <Link href="/orders" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${
+                  pathname === "/orders" ? "text-green-600" : "text-black hover:text-green-600"
+                }`}>
+                  <ShoppingBag className="w-6 h-6" />
+                  Orders
+                </Link>
 
-                  <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative">
-                      <ShoppingCart className="w-5 h-5 text-gray-600 hover:text-black transition-colors" />
-                      {totalItems > 0 && (
-                        <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
-                          {totalItems > 9 ? "9+" : totalItems}
-                        </Badge>
-                      )}
-                    </div>
-                  </Link>
+                <Link href="/cart" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${
+                  pathname === "/cart" ? "text-green-600" : "text-black hover:text-green-600"
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <ShoppingCart className="w-6 h-6" />
+                    Cart
+                  </div>
+                  {totalItems > 0 && (
+                    <span className="text-green-600">({totalItems})</span>
+                  )}
+                </Link>
+
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-sm text-gray-500 uppercase tracking-widest">Account</span>
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-10 h-10 border border-gray-100",
+                      },
+                    }}
+                  />
                 </div>
-
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-9 h-9 border border-gray-200",
-                    },
-                  }}
-                />
               </div>
             </SignedIn>
 
             <SignedOut>
-              <div className="mt-6 pt-6 border-t border-gray-100">
+              <div className="mt-10 pt-10 border-t border-gray-100">
                 <SignUpButton>
-                  <button className="w-full btn-primary text-sm py-3">
+                  <button className="w-full bg-black text-white text-xl font-medium py-5 uppercase tracking-tighter">
                     Sign Up
                   </button>
                 </SignUpButton>
