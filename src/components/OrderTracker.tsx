@@ -2,74 +2,80 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Package, Truck, CheckCircle, Clock, XCircle, Calendar, CreditCard, ExternalLink } from "lucide-react"
+import { Package, Truck, CheckCircle, Clock, XCircle, Calendar, CreditCard, ExternalLink, ChevronRight } from "lucide-react"
 import type { OrderType } from "@/types/order"
+import { Button } from "@/components/ui/button"
+import { OrderDetailsModal } from "@/components/OrderDetailsModal"
+import { useState } from "react"
+import Image from "next/image"
 
 interface Props {
   order: OrderType
 }
 
 export default function OrderTracker({ order }: Props) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const getStatusInfo = (status: string) => {
     switch (status) {
       case "pending":
         return {
           icon: Clock,
-          color: "text-yellow-400",
-          bgColor: "bg-gradient-to-br from-yellow-500/20 to-yellow-600/10",
-          borderColor: "border-yellow-500/30",
-          badgeClass: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-          message: "Order is being processed",
-          estimatedDays: "1-2 business days to confirm",
+          color: "text-yellow-600",
+          bgColor: "bg-yellow-50",
+          borderColor: "border-yellow-100",
+          badgeClass: "bg-yellow-100 text-yellow-700 hover:bg-yellow-200",
+          message: "Processing",
+          estimatedDays: "Confirming...",
         }
       case "paid":
         return {
           icon: CreditCard,
-          color: "text-emerald-400",
-          bgColor: "bg-gradient-to-br from-emerald-500/20 to-emerald-600/10",
-          borderColor: "border-emerald-500/30",
-          badgeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-          message: "Payment confirmed, preparing for shipment",
-          estimatedDays: "2-3 business days to ship",
+          color: "text-emerald-600",
+          bgColor: "bg-emerald-50",
+          borderColor: "border-emerald-100",
+          badgeClass: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200",
+          message: "Paid",
+          estimatedDays: "Shipping soon",
         }
       case "shipped":
         return {
           icon: Truck,
-          color: "text-blue-400",
-          bgColor: "bg-gradient-to-br from-blue-500/20 to-blue-600/10",
-          borderColor: "border-blue-500/30",
-          badgeClass: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-          message: "Order is on the way",
-          estimatedDays: "3-5 business days for delivery",
+          color: "text-blue-600",
+          bgColor: "bg-blue-50",
+          borderColor: "border-blue-100",
+          badgeClass: "bg-blue-100 text-blue-700 hover:bg-blue-200",
+          message: "Shipped",
+          estimatedDays: "On the way",
         }
       case "delivered":
         return {
           icon: CheckCircle,
-          color: "text-green-400",
-          bgColor: "bg-gradient-to-br from-green-500/20 to-green-600/10",
-          borderColor: "border-green-500/30",
-          badgeClass: "bg-green-500/20 text-green-400 border-green-500/30",
-          message: "Order delivered successfully",
+          color: "text-green-600",
+          bgColor: "bg-green-50",
+          borderColor: "border-green-100",
+          badgeClass: "bg-green-100 text-green-700 hover:bg-green-200",
+          message: "Delivered",
           estimatedDays: "Completed",
         }
       case "cancelled":
         return {
           icon: XCircle,
-          color: "text-red-400",
-          bgColor: "bg-gradient-to-br from-red-500/20 to-red-600/10",
-          borderColor: "border-red-500/30",
-          badgeClass: "bg-red-500/20 text-red-400 border-red-500/30",
-          message: "Order has been cancelled",
-          estimatedDays: "Refund in 5-7 business days",
+          color: "text-red-600",
+          bgColor: "bg-red-50",
+          borderColor: "border-red-100",
+          badgeClass: "bg-red-100 text-red-700 hover:bg-red-200",
+          message: "Cancelled",
+          estimatedDays: "Refunded",
         }
       default:
         return {
           icon: Package,
-          color: "text-gray-400",
-          bgColor: "bg-gradient-to-br from-gray-500/20 to-gray-600/10",
-          borderColor: "border-gray-500/30",
-          badgeClass: "bg-gray-500/20 text-gray-400 border-gray-500/30",
-          message: "Status unknown",
+          color: "text-gray-600",
+          bgColor: "bg-gray-50",
+          borderColor: "border-gray-100",
+          badgeClass: "bg-gray-100 text-gray-700 hover:bg-gray-200",
+          message: "Unknown",
           estimatedDays: "Contact support",
         }
     }
@@ -80,115 +86,109 @@ export default function OrderTracker({ order }: Props) {
 
   const getProgressPercentage = (status: string) => {
     switch (status) {
-      case "pending":
-        return 25
-      case "paid":
-        return 50
-      case "shipped":
-        return 75
-      case "delivered":
-        return 100
-      case "cancelled":
-        return 0
-      default:
-        return 0
+      case "pending": return 25
+      case "paid": return 50
+      case "shipped": return 75
+      case "delivered": return 100
+      case "cancelled": return 0
+      default: return 0
     }
   }
 
   const progress = getProgressPercentage(order.status)
 
   return (
-    <Card className="bg-gray-800/50 border-gray-700/50 backdrop-blur-xl hover:bg-gray-800/70 transition-all duration-300 group overflow-hidden relative">
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-      <CardHeader className="pb-3 relative z-10">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-700/50 rounded-lg flex items-center justify-center border border-gray-600/30">
-              <Package className="w-5 h-5 text-gray-300" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white">#{order._id.slice(-8).toUpperCase()}</h3>
-              <p className="text-sm text-gray-400 flex items-center gap-1 mt-1">
-                <Calendar className="w-3 h-3" />
-                {new Date(order.createdAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          </div>
-          <Badge className={`${statusInfo.badgeClass} border font-medium px-3 py-1 text-sm`}>
-            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-4 relative z-10">
-        {/* Status Section */}
-        <div className={`p-3 rounded-lg ${statusInfo.bgColor} border ${statusInfo.borderColor}`}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full bg-gray-800/30">
-              <StatusIcon className={`w-4 h-4 ${statusInfo.color}`} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-white text-sm truncate">{statusInfo.message}</h4>
-              <p className="text-xs text-gray-400 truncate">{statusInfo.estimatedDays}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        {order.status !== "cancelled" && (
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-medium text-gray-300">Progress</span>
-              <span className="text-xs font-medium text-gray-400">{progress}%</span>
-            </div>
-            <div className="w-full bg-gray-700/50 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-700 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 gap-3 pt-2">
-          <div className="bg-gray-700/30 rounded-lg p-3 border border-gray-600/20">
-            <p className="text-xs text-gray-400">Amount</p>
-            <p className="text-lg font-bold text-white">₹{order.totalAmount.toLocaleString()}</p>
-          </div>
-          <div className="bg-gray-700/30 rounded-lg p-3 border border-gray-600/20">
-            <p className="text-xs text-gray-400">Items</p>
-            <p className="text-lg font-bold text-white">{order.products.reduce((sum, p) => sum + p.quantity, 0)}</p>
-          </div>
-        </div>
-
-        {/* Products Preview */}
-        <div className="space-y-2">
-          <p className="text-xs font-medium text-gray-300">Products:</p>
-          <div className="space-y-1 max-h-20 overflow-y-auto">
-            {order.products.slice(0, 2).map((item, index) => (
-              <div key={index} className="flex justify-between items-center text-xs bg-gray-700/20 rounded p-2">
-                <span className="text-gray-300 truncate flex-1 mr-2">{item.product.title}</span>
-                <span className="text-gray-400 whitespace-nowrap">×{item.quantity}</span>
+    <OrderDetailsModal 
+      order={order} 
+      open={isModalOpen} 
+      onOpenChange={setIsModalOpen}
+      trigger={
+        <Card className="bg-white border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer overflow-hidden relative">
+          <div className={`absolute top-0 left-0 w-1 h-full ${statusInfo.bgColor.replace('bg-', 'bg-').replace('50', '500')} opacity-20 group-hover:opacity-100 transition-opacity`} />
+          
+          <CardHeader className="pb-3 pl-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${statusInfo.bgColor}`}>
+                  <StatusIcon className={`w-5 h-5 ${statusInfo.color}`} />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-black group-hover:text-green-600 transition-colors truncate max-w-[180px]">
+                    {order.products[0]?.product.title || "Order"}
+                    {order.products.length > 1 && ` + ${order.products.length - 1} more`}
+                  </h3>
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    
+                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                    {new Date(order.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
               </div>
-            ))}
-            {order.products.length > 2 && (
-              <p className="text-xs text-gray-400 text-center py-1">+{order.products.length - 2} more items</p>
-            )}
-          </div>
-        </div>
+              <Badge className={`${statusInfo.badgeClass} border-0 font-medium px-2.5 py-0.5 text-xs capitalize shadow-none`}>
+                {order.status}
+              </Badge>
+            </div>
+          </CardHeader>
 
-        {/* Action Button */}
-        <button className="w-full mt-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 border border-blue-500/30 rounded-lg p-2 text-sm text-blue-400 font-medium transition-all duration-200 flex items-center justify-center gap-2 group">
-          View Details
-          <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-        </button>
-      </CardContent>
-    </Card>
+          <CardContent className="space-y-4 pl-6">
+            {/* Progress Bar */}
+            {order.status !== "cancelled" && (
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-medium text-gray-600">{statusInfo.message}</span>
+                  <span className="text-gray-400">{statusInfo.estimatedDays}</span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-1000 ease-out ${
+                      order.status === 'delivered' ? 'bg-green-500' : 'bg-black'
+                    }`}
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Products Preview - Mini */}
+            <div className="flex items-center gap-2 pt-2">
+              <div className="flex -space-x-2 overflow-hidden py-1">
+                {order.products.slice(0, 3).map((item, index) => (
+                  <div key={index} className="relative w-8 h-8 rounded-full border-2 border-white bg-gray-50 flex items-center justify-center overflow-hidden">
+                    {item.product.images && item.product.images[0] ? (
+                      <Image
+                        src={item.product.images[0]}
+                        alt={item.product.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Package className="w-4 h-4 text-gray-300" />
+                    )}
+                  </div>
+                ))}
+                {order.products.length > 3 && (
+                  <div className="relative w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-500">
+                    +{order.products.length - 3}
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 text-right">
+                <p className="text-sm font-bold text-black">₹{order.totalAmount.toLocaleString()}</p>
+              </div>
+            </div>
+
+            {/* Hover Action */}
+            <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+              <div className="bg-black text-white p-2 rounded-full shadow-lg">
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      }
+    />
   )
 }

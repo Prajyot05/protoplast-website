@@ -78,27 +78,26 @@ export default function ProductsClientView({ products }: ProductsClientViewProps
   return (
     <div className="space-y-8">
       {/* Search and Filter Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-2xl border border-gray-100">
-        <div className="relative w-full md:max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-12">
+        <div className="relative w-full md:max-w-xl group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-green-600 transition-colors" />
           <Input
-            placeholder="Search products..."
+            placeholder="Search our collection..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white border-gray-200 focus:border-green-500 focus:ring-green-500/20"
+            className="pl-12 h-14 bg-white border-gray-200 rounded-2xl text-lg focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all shadow-sm hover:shadow-md"
           />
         </div>
         
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="flex items-center gap-2 text-sm text-gray-500 whitespace-nowrap">
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Sort by:</span>
-          </div>
+        <div className="flex items-center gap-4 w-full md:w-auto">
           <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-            <SelectTrigger className="w-full md:w-[180px] bg-white border-gray-200">
-              <SelectValue placeholder="Sort by" />
+            <SelectTrigger className="h-14 px-6 rounded-2xl bg-white border-gray-200 text-gray-600 hover:border-black transition-all w-full md:w-[220px] shadow-sm">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                <SelectValue placeholder="Sort by" />
+              </div>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl border-gray-100 shadow-xl">
               <SelectItem value="featured">Featured</SelectItem>
               <SelectItem value="newest">Newest Arrivals</SelectItem>
               <SelectItem value="price-asc">Price: Low to High</SelectItem>
