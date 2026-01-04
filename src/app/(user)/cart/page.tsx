@@ -35,6 +35,9 @@ import {
   Phone,
   Home,
   AlertCircle,
+  ChevronRight,
+  ShoppingBag,
+  ArrowRight,
 } from "lucide-react";
 import {
   Dialog,
@@ -51,6 +54,8 @@ import { useLocalProduct } from "@/stores/useLocalProduct";
 import { toast } from "sonner";
 import Script from "next/script";
 import type { ProductType } from "@/models/Product";
+import Header from "@/components/header";
+import Footer from "@/pages/footer";
 
 interface AddressForm {
   fullName: string;
@@ -283,51 +288,75 @@ export default function CartPage() {
   // Redirect if not signed in
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <Card className="border-gray-100 shadow-sm">
-            <CardContent className="flex flex-col items-center py-16">
-              <UserIcon className="h-16 w-16 text-gray-300 mb-4" />
-              <h2 className="text-2xl font-medium text-black mb-2">Sign in required</h2>
-              <p className="text-gray-500 mb-4">
-                Please sign in to view your cart
-              </p>
-              <Button onClick={() => router.push("/sign-in")} className="bg-black text-white hover:bg-gray-800">Sign In</Button>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header />
+        <div className="flex-grow flex items-center justify-center p-4">
+          <div className="text-center py-32 bg-gray-50 rounded-3xl border border-gray-100 border-dashed animate-in zoom-in-95 duration-500 max-w-2xl w-full">
+            <div className="bg-white p-6 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 shadow-sm border border-gray-100">
+              <UserIcon className="w-10 h-10 text-gray-300" />
+            </div>
+            <h3 className="text-3xl font-medium text-black mb-3 tracking-tight">Sign in required</h3>
+            <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
+              Please sign in to view your cart and proceed with your purchase.
+            </p>
+            <Button onClick={() => router.push("/sign-in")} className="bg-black text-white hover:bg-gray-800 rounded-full px-10 py-6 text-lg shadow-lg shadow-black/10 transition-all hover:scale-105 active:scale-95">
+              Sign In to Continue
+            </Button>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (!cart.length) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <div className="flex items-center gap-4 mb-8">
-            <Link href="/products">
-              <Button variant="ghost" size="sm" className="text-gray-500 hover:text-black">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Continue Shopping
-              </Button>
-            </Link>
-            <h1 className="text-3xl font-medium text-black">Shopping Cart</h1>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header />
+        <div className="flex-grow">
+          {/* Breadcrumb */}
+          <div className="pt-4 pb-4 border-b border-gray-100">
+            <div className="container mx-auto px-6 max-w-7xl">
+              <nav className="flex items-center space-x-2 text-sm text-gray-500">
+                <Link href="/" className="hover:text-black transition-colors flex items-center gap-1">
+                  <Home className="h-4 w-4" />
+                </Link>
+                <ChevronRight className="h-4 w-4" />
+                <span className="text-black font-medium">Cart</span>
+              </nav>
+            </div>
           </div>
-          <Card className="border-gray-100 shadow-sm">
-            <CardContent className="flex flex-col items-center py-16">
-              <div className="text-6xl mb-4 grayscale opacity-50">🛒</div>
-              <h2 className="text-2xl font-medium text-black mb-2">
-                Your cart is empty
-              </h2>
-              <Link href="/products">
-                <Button className="bg-black text-white hover:bg-gray-800 mt-4">
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Start Shopping
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+
+          {/* Header Section */}
+          <section className="py-16 px-6 bg-white">
+            <div className="container mx-auto max-w-7xl">
+              <h1 className="text-black text-5xl md:text-7xl font-medium leading-tight tracking-tight mb-6">
+                Your <span className="text-green-600">Cart</span>
+              </h1>
+              <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl">
+                Review your items and proceed to checkout
+              </p>
+            </div>
+          </section>
+
+          <div className="container mx-auto px-6 max-w-7xl py-12">
+            <div className="text-center py-32 bg-gray-50 rounded-3xl border border-gray-100 border-dashed animate-in zoom-in-95 duration-500">
+              <div className="bg-white p-6 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 shadow-sm border border-gray-100">
+                <ShoppingBag className="w-10 h-10 text-gray-300" />
+              </div>
+              <h3 className="text-3xl font-medium text-black mb-3 tracking-tight">Your cart is empty</h3>
+              <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
+                Looks like you haven't added anything to your cart yet. Explore our products to find something you love.
+              </p>
+              <Button asChild className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10 py-6 text-lg shadow-lg shadow-green-600/20 transition-all hover:shadow-green-600/40 hover:-translate-y-1">
+                <Link href="/products">
+                  Start Shopping <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -335,136 +364,147 @@ export default function CartPage() {
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" async />
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Link href="/products">
-                <Button variant="ghost" size="sm" className="text-gray-500 hover:text-black">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Continue Shopping
-                </Button>
-              </Link>
-              <h1 className="text-3xl font-medium text-black">Shopping Cart</h1>
-              <Badge variant="secondary" className="bg-gray-100 text-gray-700">
-                {getTotalItems()} {getTotalItems() === 1 ? "item" : "items"}
-              </Badge>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header />
+        <div className="flex-grow">
+          {/* Breadcrumb */}
+          <div className="pt-4 pb-4 border-b border-gray-100">
+            <div className="container mx-auto px-6 max-w-7xl">
+              <nav className="flex items-center space-x-2 text-sm text-gray-500">
+                <Link href="/" className="hover:text-black transition-colors flex items-center gap-1">
+                  <Home className="h-4 w-4" />
+                </Link>
+                <ChevronRight className="h-4 w-4" />
+                <span className="text-black font-medium">Cart</span>
+              </nav>
             </div>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-red-500 border-red-100 hover:bg-red-50 hover:text-red-600"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Clear Cart
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md bg-white px-6 py-4">
-                <DialogHeader className="mb-4">
-                  <DialogTitle className="text-xl font-medium">Clear your cart?</DialogTitle>
-                </DialogHeader>
-                <p className="text-gray-500 mb-6">
-                  This will remove all items from your cart permanently. This action cannot be undone.
-                </p>
-                <DialogFooter className="gap-2 sm:gap-0">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="rounded-lg">Cancel</Button>
-                  </DialogClose>
-                  <DialogClose asChild>
-                    <Button
-                      variant="destructive"
-                      className="rounded-lg"
-                      onClick={() => {
-                        clearCart();
-                        toast.success("Cart cleared");
-                      }}
-                    >
-                      Clear Cart
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Items and Address */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Customer Info */}
-              {user && (
-                <Card className="border-gray-100 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg font-medium">
-                      <UserIcon className="h-5 w-5" />
-                      Customer Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2 text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <UserIcon className="h-4 w-4 text-gray-400" />
-                      <span>{user.fullName || "Name not provided"}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                      <span>{user.primaryEmailAddress?.emailAddress}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+          {/* Header Section */}
+          <section className="py-16 px-6 bg-white">
+            <div className="container mx-auto max-w-7xl">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div className="max-w-4xl">
+                  <h1 className="text-black text-5xl md:text-7xl font-medium leading-tight tracking-tight mb-6">
+                    Your <span className="text-green-600">Cart</span>
+                  </h1>
+                  <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl">
+                    Review your items and proceed to checkout
+                  </p>
+                </div>
+                <div className="flex items-center gap-4 mb-2">
+                  <Badge variant="secondary" className="bg-gray-100 text-gray-700 px-4 py-2 text-sm rounded-full">
+                    {getTotalItems()} {getTotalItems() === 1 ? "item" : "items"}
+                  </Badge>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-red-500 border-red-100 hover:bg-red-50 hover:text-red-600 rounded-full px-4 h-10"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Clear Cart
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md bg-white px-6 py-4 rounded-3xl">
+                      <DialogHeader className="mb-4">
+                        <DialogTitle className="text-2xl font-medium tracking-tight">Clear your cart?</DialogTitle>
+                      </DialogHeader>
+                      <p className="text-gray-500 mb-6 text-lg">
+                        This will remove all items from your cart permanently. This action cannot be undone.
+                      </p>
+                      <DialogFooter className="gap-3 sm:gap-0">
+                        <DialogClose asChild>
+                          <Button variant="outline" className="rounded-full px-6">Cancel</Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button
+                            variant="destructive"
+                            className="rounded-full px-6"
+                            onClick={() => {
+                              clearCart();
+                              toast.success("Cart cleared");
+                            }}
+                          >
+                            Clear Cart
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+            </div>
+          </section>
 
-              {/* Address Section */}
-              <Card className="border-gray-100 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between text-lg font-medium">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5" />
-                      Delivery Address
+          <div className="container mx-auto px-6 max-w-7xl py-12">
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Items and Address */}
+              <div className="lg:col-span-2 space-y-12">
+                {/* Customer Info */}
+                {user && (
+                  <div className="space-y-6">
+                    <h2 className="text-3xl font-medium text-black tracking-tight border-b border-gray-100 pb-4">Customer Information</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                        <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">Full Name</p>
+                        <p className="text-xl font-medium text-black">{user.fullName || "Name not provided"}</p>
+                      </div>
+                      <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                        <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">Email Address</p>
+                        <p className="text-xl font-medium text-black">{user.primaryEmailAddress?.emailAddress}</p>
+                      </div>
                     </div>
+                  </div>
+                )}
+
+                {/* Address Section */}
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                    <h2 className="text-3xl font-medium text-black tracking-tight">Delivery Address</h2>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
                       onClick={() => setShowAddressForm(!showAddressForm)}
-                      className="text-sm"
+                      className="text-green-600 hover:text-green-700 hover:bg-green-50 font-medium"
                     >
-                      {showAddressForm ? "Hide" : "Add/Edit"} Address
+                      {showAddressForm ? "Hide Form" : "Edit Address"}
                     </Button>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {!showAddressForm && shippingAddress.fullName ? (
-                    <div className="space-y-2">
-                      <div className="font-medium text-black">
-                        {shippingAddress.fullName}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {shippingAddress.street}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {shippingAddress.city}, {shippingAddress.state}{" "}
-                        {shippingAddress.zip}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {shippingAddress.country}
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Phone className="h-4 w-4" />
-                        {shippingAddress.phone}
-                      </div>
-                    </div>
-                  ) : showAddressForm ? (
-                    <div className="space-y-6">
-                      {/* Shipping Address */}
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-gray-900">
-                          <Home className="h-4 w-4" />
-                          <h3 className="font-medium">Shipping Address</h3>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  </div>
+                  
+                  <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
+                    {!showAddressForm && shippingAddress.fullName ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-4">
                           <div>
-                            <Label htmlFor="shipping-name" className="text-gray-600">Full Name *</Label>
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-1">Recipient</p>
+                            <p className="text-xl font-medium text-black">{shippingAddress.fullName}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-1">Contact</p>
+                            <p className="text-xl font-medium text-black flex items-center gap-2">
+                              <Phone className="h-4 w-4 text-green-600" />
+                              {shippingAddress.phone}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-1">Address</p>
+                            <p className="text-lg text-gray-600 leading-relaxed">
+                              {shippingAddress.street}<br />
+                              {shippingAddress.city}, {shippingAddress.state} {shippingAddress.zip}<br />
+                              {shippingAddress.country}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : showAddressForm ? (
+                      <div className="space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <Label htmlFor="shipping-name" className="text-sm font-medium text-gray-700 ml-1">Full Name *</Label>
                             <Input
                               id="shipping-name"
                               value={shippingAddress.fullName}
@@ -472,13 +512,11 @@ export default function CartPage() {
                                 handleAddressChange("fullName", e.target.value)
                               }
                               placeholder="Enter full name"
-                              className="bg-white border-gray-200 focus:border-green-500"
+                              className="h-14 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
                             />
                           </div>
-                          <div>
-                            <Label htmlFor="shipping-phone" className="text-gray-600">
-                              Phone Number *
-                            </Label>
+                          <div className="space-y-2">
+                            <Label htmlFor="shipping-phone" className="text-sm font-medium text-gray-700 ml-1">Phone Number *</Label>
                             <Input
                               id="shipping-phone"
                               value={shippingAddress.phone}
@@ -486,14 +524,12 @@ export default function CartPage() {
                                 handleAddressChange("phone", e.target.value)
                               }
                               placeholder="Enter phone number"
-                              className="bg-white border-gray-200 focus:border-green-500"
+                              className="h-14 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
                             />
                           </div>
                         </div>
-                        <div>
-                          <Label htmlFor="shipping-street" className="text-gray-600">
-                            Street Address *
-                          </Label>
+                        <div className="space-y-2">
+                          <Label htmlFor="shipping-street" className="text-sm font-medium text-gray-700 ml-1">Street Address *</Label>
                           <Textarea
                             id="shipping-street"
                             value={shippingAddress.street}
@@ -501,13 +537,13 @@ export default function CartPage() {
                               handleAddressChange("street", e.target.value)
                             }
                             placeholder="Enter street address"
-                            rows={2}
-                            className="bg-white border-gray-200 focus:border-green-500"
+                            rows={3}
+                            className="rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all resize-none"
                           />
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div>
-                            <Label htmlFor="shipping-city" className="text-gray-600">City *</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          <div className="space-y-2">
+                            <Label htmlFor="shipping-city" className="text-sm font-medium text-gray-700 ml-1">City *</Label>
                             <Input
                               id="shipping-city"
                               value={shippingAddress.city}
@@ -515,21 +551,21 @@ export default function CartPage() {
                                 handleAddressChange("city", e.target.value)
                               }
                               placeholder="Enter city"
-                              className="bg-white border-gray-200 focus:border-green-500"
+                              className="h-14 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
                             />
                           </div>
-                          <div>
-                            <Label htmlFor="shipping-state" className="text-gray-600">State *</Label>
+                          <div className="space-y-2">
+                            <Label htmlFor="shipping-state" className="text-sm font-medium text-gray-700 ml-1">State *</Label>
                             <Select
                               value={shippingAddress.state}
                               onValueChange={(value) =>
                                 handleAddressChange("state", value)
                               }
                             >
-                              <SelectTrigger className="bg-white border-gray-200">
+                              <SelectTrigger className="h-14 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all">
                                 <SelectValue placeholder="Select state" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="rounded-2xl">
                                 {INDIAN_STATES.map((state) => (
                                   <SelectItem key={state} value={state}>
                                     {state}
@@ -538,8 +574,8 @@ export default function CartPage() {
                               </SelectContent>
                             </Select>
                           </div>
-                          <div>
-                            <Label htmlFor="shipping-zip" className="text-gray-600">PIN Code *</Label>
+                          <div className="space-y-2">
+                            <Label htmlFor="shipping-zip" className="text-sm font-medium text-gray-700 ml-1">PIN Code *</Label>
                             <Input
                               id="shipping-zip"
                               value={shippingAddress.zip}
@@ -547,231 +583,239 @@ export default function CartPage() {
                                 handleAddressChange("zip", e.target.value)
                               }
                               placeholder="Enter PIN code"
-                              className="bg-white border-gray-200 focus:border-green-500"
+                              className="h-14 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
                             />
                           </div>
                         </div>
+                        <Button 
+                          onClick={() => setShowAddressForm(false)}
+                          className="w-full h-14 bg-black text-white rounded-2xl hover:bg-gray-800 transition-all"
+                        >
+                          Save Address
+                        </Button>
                       </div>
-                    </div>
-                  ) : (
-                    <Alert className="bg-orange-50 border-orange-100 text-orange-800">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        Please add your delivery address to continue with the
-                        order.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Cart Items */}
-              <div className="space-y-4">
-                <h2 className="text-xl font-medium text-black">Order Items</h2>
-                {cart.map((item) => (
-                  <Card key={item._id} className="border-gray-100 shadow-sm overflow-hidden">
-                    <CardContent className="flex gap-4 p-6">
-                      <div className="relative w-24 h-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-                        <Image
-                          src={item.images?.[0] || "/placeholder.svg"}
-                          alt={item.title}
-                          fill
-                          className="object-contain p-2"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start">
-                          <h3 className="font-medium text-black text-lg">{item.title}</h3>
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-500">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-md bg-white py-4 px-6">
-                              <DialogHeader className="mb-4">
-                                <DialogTitle className="text-xl font-medium">Remove this item?</DialogTitle>
-                              </DialogHeader>
-                              <p className="text-gray-500 mb-6">
-                                Are you sure you want to remove <span className="font-medium text-black">{item.title}</span> from your cart?
-                              </p>
-                              <DialogFooter className="gap-2 sm:gap-0">
-                                <DialogClose asChild>
-                                  <Button variant="outline" className="rounded-lg">Cancel</Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                  <Button
-                                    variant="destructive"
-                                    className="rounded-lg"
-                                    onClick={() =>
-                                      handleRemoveItem(item._id, item.title)
-                                    }
-                                  >
-                                    Remove
-                                  </Button>
-                                </DialogClose>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                        <p className="text-sm text-gray-500 line-clamp-1">
-                          {item.description}
-                        </p>
-                        <div className="flex items-center justify-between mt-4">
-                          <div className="flex items-center border border-gray-200 rounded-lg">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  item._id,
-                                  item.quantity - 1
-                                )
-                              }
-                              disabled={item.quantity <= 1}
-                              className="h-8 w-8 p-0 hover:bg-gray-50"
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <span className="w-8 text-center text-sm font-medium">
-                              {item.quantity}
-                            </span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  item._id,
-                                  item.quantity + 1
-                                )
-                              }
-                              disabled={item.quantity >= item.stock}
-                              className="h-8 w-8 p-0 hover:bg-gray-50"
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-bold text-black text-lg">
-                              ₹{(item.price * item.quantity).toLocaleString()}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              ₹{item.price.toLocaleString()} each
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Summary */}
-            <div className="space-y-6">
-              <Card className="border-gray-100 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg font-medium">
-                    <Tag className="h-5 w-5" />
-                    Promo Code
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Enter code"
-                      value={promoCode}
-                      onChange={(e) =>
-                        setPromoCode(e.target.value.toUpperCase())
-                      }
-                      className="bg-white border-gray-200 focus:border-green-500"
-                    />
-                    <Button onClick={handleApplyPromo} disabled={!promoCode} className="bg-black text-white hover:bg-gray-800">
-                      Apply
-                    </Button>
-                  </div>
-                  {discount > 0 && (
-                    <p className="text-green-600 text-sm font-medium">✓ {discount}% off applied</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="border-gray-100 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-lg font-medium">Order Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Subtotal ({getTotalItems()} items)</span>
-                    <span>₹{subtotal.toLocaleString()}</span>
-                  </div>
-                  {discount > 0 && (
-                    <div className="flex justify-between text-green-600 text-sm">
-                      <span>Discount</span>
-                      <span>-₹{discountAmount.toLocaleString()}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>GST (18%)</span>
-                    <span>₹{tax.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Shipping</span>
-                    <span>
-                      {shipping === 0 ? (
-                        <span className="text-green-600 font-medium">Free</span>
-                      ) : (
-                        `₹${shipping.toLocaleString()}`
-                      )}
-                    </span>
-                  </div>
-                  <Separator className="bg-gray-100" />
-                  <div className="flex justify-between font-bold text-lg text-black">
-                    <span>Total</span>
-                    <span>₹{total.toLocaleString()}</span>
-                  </div>
-
-                  {/* Address validation warning */}
-                  {!validateAddress(shippingAddress) && (
-                    <Alert className="bg-orange-50 border-orange-100 text-orange-800">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        Please complete your address information before
-                        proceeding to payment.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-
-                  <Button
-                    className="w-full h-12 text-base bg-black hover:bg-gray-800 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
-                    onClick={handleProceedToPayment}
-                    disabled={isPayLoading || !validateAddress(shippingAddress)}
-                  >
-                    {isPayLoading ? (
-                      "Processing…"
                     ) : (
-                      <>
-                        <CreditCard className="inline-block mr-2 h-4 w-4" />
-                        Pay ₹{total.toLocaleString()}
-                      </>
+                      <div className="text-center py-8">
+                        <div className="bg-orange-50 p-6 rounded-2xl border border-orange-100 inline-block">
+                          <AlertCircle className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+                          <p className="text-orange-800 font-medium">Please add your delivery address to continue</p>
+                          <Button 
+                            variant="link" 
+                            onClick={() => setShowAddressForm(true)}
+                            className="text-orange-600 font-bold mt-2"
+                          >
+                            Add Address Now
+                          </Button>
+                        </div>
+                      </div>
                     )}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <div className="flex gap-4 text-xs text-gray-400 justify-center">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
-                  Secure Payment
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4" />
-                  Fast Delivery
+
+                {/* Cart Items */}
+                <div className="space-y-8">
+                  <h2 className="text-3xl font-medium text-black tracking-tight border-b border-gray-100 pb-4">Order Items</h2>
+                  <div className="space-y-6">
+                    {cart.map((item) => (
+                      <div key={item._id} className="group bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div className="flex flex-col md:flex-row gap-8">
+                          <div className="relative w-full md:w-40 h-40 bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 group-hover:scale-105 transition-transform duration-500">
+                            <Image
+                              src={item.images?.[0] || "/placeholder.svg"}
+                              alt={item.title}
+                              fill
+                              className="object-contain p-4"
+                            />
+                          </div>
+                          <div className="flex-1 flex flex-col justify-between">
+                            <div>
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="text-2xl font-medium text-black tracking-tight">{item.title}</h3>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="ghost" size="sm" className="text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full h-10 w-10 p-0">
+                                      <Trash2 className="h-5 w-5" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-md bg-white py-6 px-8 rounded-3xl">
+                                    <DialogHeader className="mb-4">
+                                      <DialogTitle className="text-2xl font-medium tracking-tight">Remove item?</DialogTitle>
+                                    </DialogHeader>
+                                    <p className="text-gray-500 mb-8 text-lg">
+                                      Are you sure you want to remove <span className="font-medium text-black">{item.title}</span> from your cart?
+                                    </p>
+                                    <DialogFooter className="gap-3 sm:gap-0">
+                                      <DialogClose asChild>
+                                        <Button variant="outline" className="rounded-full px-6">Cancel</Button>
+                                      </DialogClose>
+                                      <DialogClose asChild>
+                                        <Button
+                                          variant="destructive"
+                                          className="rounded-full px-6"
+                                          onClick={() =>
+                                            handleRemoveItem(item._id, item.title)
+                                          }
+                                        >
+                                          Remove
+                                        </Button>
+                                      </DialogClose>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              </div>
+                              <p className="text-gray-500 text-lg line-clamp-2 leading-relaxed mb-6">
+                                {item.description}
+                              </p>
+                            </div>
+                            
+                            <div className="flex flex-wrap items-center justify-between gap-6">
+                              <div className="flex items-center bg-gray-50 rounded-2xl p-1 border border-gray-100">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleQuantityChange(
+                                      item._id,
+                                      item.quantity - 1
+                                    )
+                                  }
+                                  disabled={item.quantity <= 1}
+                                  className="h-10 w-10 p-0 hover:bg-white hover:shadow-sm rounded-xl transition-all"
+                                >
+                                  <Minus className="h-4 w-4" />
+                                </Button>
+                                <span className="w-12 text-center text-lg font-medium text-black">
+                                  {item.quantity}
+                                </span>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleQuantityChange(
+                                      item._id,
+                                      item.quantity + 1
+                                    )
+                                  }
+                                  disabled={item.quantity >= item.stock}
+                                  className="h-10 w-10 p-0 hover:bg-white hover:shadow-sm rounded-xl transition-all"
+                                >
+                                  <Plus className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-3xl font-medium text-black tracking-tight">
+                                  ₹{(item.price * item.quantity).toLocaleString()}
+                                </div>
+                                <div className="text-sm text-gray-400 font-medium uppercase tracking-wider">
+                                  ₹{item.price.toLocaleString()} / unit
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Summary */}
+              <div className="space-y-8">
+                <div className="sticky top-24 space-y-8">
+                  <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm space-y-6">
+                    <h3 className="text-2xl font-medium text-black tracking-tight flex items-center gap-2">
+                      <Tag className="h-6 w-6 text-green-600" />
+                      Promo Code
+                    </h3>
+                    <div className="flex gap-3">
+                      <Input
+                        placeholder="Enter code"
+                        value={promoCode}
+                        onChange={(e) =>
+                          setPromoCode(e.target.value.toUpperCase())
+                        }
+                        className="h-14 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
+                      />
+                      <Button 
+                        onClick={handleApplyPromo} 
+                        disabled={!promoCode} 
+                        className="h-14 px-6 bg-black text-white rounded-2xl hover:bg-gray-800 transition-all disabled:opacity-50"
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                    {discount > 0 && (
+                      <div className="bg-green-50 text-green-700 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                        <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+                        Promo applied: {discount}% off
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-black rounded-3xl p-8 shadow-2xl shadow-black/20 text-white space-y-8">
+                    <h3 className="text-2xl font-medium tracking-tight">Order Summary</h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between text-gray-400">
+                        <span className="text-lg">Subtotal</span>
+                        <span className="text-lg font-medium text-white">₹{subtotal.toLocaleString()}</span>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-green-400">
+                          <span className="text-lg">Discount</span>
+                          <span className="text-lg font-medium">-₹{discountAmount.toLocaleString()}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-gray-400">
+                        <span className="text-lg">GST (18%)</span>
+                        <span className="text-lg font-medium text-white">₹{tax.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-400">
+                        <span className="text-lg">Shipping</span>
+                        <span className="text-lg font-medium text-green-400">Free</span>
+                      </div>
+                      <div className="pt-4 border-t border-white/10">
+                        <div className="flex justify-between items-end">
+                          <span className="text-xl text-gray-400">Total</span>
+                          <span className="text-5xl font-medium tracking-tighter">₹{total.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button
+                      className="w-full h-16 text-xl bg-green-500 hover:bg-green-400 text-black font-medium rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-green-500/20 disabled:opacity-50 disabled:hover:scale-100"
+                      onClick={handleProceedToPayment}
+                      disabled={isPayLoading || !validateAddress(shippingAddress)}
+                    >
+                      {isPayLoading ? (
+                        <div className="flex items-center gap-3">
+                          <div className="h-5 w-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                          Processing…
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-3">
+                          <CreditCard className="h-6 w-6" />
+                          Checkout Now
+                        </div>
+                      )}
+                    </Button>
+                    
+                    <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
+                      <div className="flex items-center gap-3 text-sm text-gray-400">
+                        <Shield className="h-5 w-5 text-green-500" />
+                        <span>Secure 256-bit SSL encrypted payment</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-gray-400">
+                        <Truck className="h-5 w-5 text-green-500" />
+                        <span>Free express delivery on all orders</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </>
   );
