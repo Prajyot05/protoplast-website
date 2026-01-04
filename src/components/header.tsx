@@ -10,11 +10,9 @@ import {
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
+import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLocalProduct } from "@/stores/useLocalProduct";
 import Link from "next/link";
@@ -24,10 +22,19 @@ export default function Header() {
   const pathname = usePathname();
   const { user, isLoaded } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const isMobile = useIsMobile();
   const totalItems = useLocalProduct((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
   );
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -41,200 +48,193 @@ export default function Header() {
 
   const isAdminPath = pathname?.startsWith("/dashboard");
   const role = user?.publicMetadata?.role;
+  const isLandingPage = pathname === "/";
 
   const navItems = [
-    { label: "Solutions", id: "services" },
-    // { label: "Pricing", id: "pricing" },
+    { label: "Services", id: "services" },
     { label: "About", id: "about" },
-    // { label: "Testimonials", id: "testimonials" },
+    { label: "Contact", id: "contact" },
   ];
 
-  if (!isLoaded) return null;
-
   // --- Admin Header (no nav items) ---
-  if (isAdminPath && role === "admin") {
+  if (isLoaded && isAdminPath && role === "admin") {
     return (
-      <motion.header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-gray-950/90 backdrop-blur-md border-b border-gray-800/50">
-        <div className="container mx-auto px-4 py-3 md:py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-6">
-              <Image
-                src="/logo-text-white.svg"
-                alt="Logo"
-                width={isMobile ? 90 : 120}
-                height={40}
-                className="flex-shrink-0 cursor-pointer"
-                onClick={() => router.push("/")}
-              />
-            </div>
-            {/* Right Side - Admin Tools */}
+      <header className="fixed top-0 left-0 md:left-72 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="px-8 py-4">
+          <div className="flex items-center justify-end">
             <div className="flex items-center gap-4">
-              {/* Quick Stats */}
               <div className="hidden lg:flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-gray-800/50 px-3 py-1.5 rounded-lg border border-gray-700/50">
+                <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-gray-300">System Online</span>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">System Online</span>
                 </div>
               </div>
-              {/* Admin Profile */}
-              <div className="flex items-center gap-3 bg-gray-800/30 px-3 py-2 rounded-lg border border-gray-700/50">
-                <Avatar className="w-8 h-8">
+              <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
+                <Avatar className="w-8 h-8 border border-white shadow-sm">
                   <AvatarImage src={user?.imageUrl ?? ""} alt="Admin profile" />
-                  <AvatarFallback className="bg-green-500/20 text-green-400">
+                  <AvatarFallback className="bg-green-500/10 text-green-600 text-[10px] font-bold">
                     {user?.firstName?.[0] ?? "A"}
                   </AvatarFallback>
                 </Avatar>
                 {!isMobile && (
-                  <div className="text-white text-sm">
-                    <p className="font-medium leading-tight">
+                  <div className="text-black text-sm">
+                    <p className="font-bold leading-tight tracking-tight">
                       {user?.firstName} {user?.lastName}
                     </p>
-                    <p className="text-xs text-green-400">Administrator</p>
+                    <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest">Administrator</p>
                   </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
     );
   }
 
   // --- Landing Page Header ---
   return (
-    <motion.header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black/20 backdrop-blur-md">
-      <div className="container mx-auto px-6 py-3 md:py-4">
-        <nav className="flex items-center justify-between">
-          {/* Desktop Logo */}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        (isScrolled || !isLandingPage) ? "bg-white shadow-sm" : "bg-white/80 backdrop-blur-sm"
+      }`}
+    >
+      <div className="container mx-auto px-6">
+        <nav className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
           <div
-            className="hidden md:block cursor-pointer"
+            className="cursor-pointer flex-shrink-0"
             onClick={() => router.push("/")}
           >
             <Image
-              alt="Logo"
-              src="/logo-text-white.svg"
-              width={120}
-              height={50}
+              alt="Protoplast Logo"
+              src="/logo-full-black.svg"
+              width={isMobile ? 120 : 180}
+              height={56}
+              className="h-10 md:h-14 w-auto"
             />
           </div>
+
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden md:flex items-center gap-8">
+            <Link
+              href="/"
+              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+                pathname === "/" ? "text-green-600" : "text-gray-600 hover:text-black"
+              }`}
+            >
+              Home
+            </Link>
             {navItems.map((item) => (
-              <ScrollLink
-                key={item.id}
-                to={item.id}
-                spy={true}
-                smooth={true}
-                offset={-100}
-                duration={100}
-                onClick={() => setIsMenuOpen(false)}
-                className="text-white hover:text-green-400 transition-colors text-sm font-medium cursor-pointer"
-                activeClass="text-green-400"
-              >
-                {item.label}
-              </ScrollLink>
+              pathname === "/" ? (
+                <ScrollLink
+                  key={item.id}
+                  to={item.id}
+                  spy={true}
+                  smooth={true}
+                  offset={-100}
+                  duration={100}
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                  activeClass="text-green-600"
+                >
+                  {item.label}
+                </ScrollLink>
+              ) : (
+                <Link
+                  key={item.id}
+                  href={`/#${item.id}`}
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
+            <Link
+              href="/products"
+              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+                pathname?.startsWith("/products") ? "text-green-600" : "text-gray-600 hover:text-black"
+              }`}
+            >
+              Products
+            </Link>
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="hidden md:flex items-center gap-8">
             <SignedOut>
               <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-[#5a3de6] transition-colors">
+                <button className="text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors">
                   Sign Up
                 </button>
               </SignUpButton>
             </SignedOut>
+
             <SignedIn>
-              <div className="flex items-center gap-4 relative">
-                {/* Orders Link */}
-                <Link href="/orders">
-                  <div className="flex items-center gap-2 mr-3 text-white hover:text-green-400 transition-colors cursor-pointer group">
-                    <ShoppingBag className="w-5 h-5" />
-                    <span className="text-sm font-medium hidden lg:block">
-                      Orders
-                    </span>
-                  </div>
+              <div className="flex items-center gap-8">
+                <Link href="/orders" className="group flex items-center gap-2">
+                  <ShoppingBag className={`w-4 h-4 transition-colors ${
+                    pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`} />
+                  <span className={`text-sm font-medium uppercase tracking-tight transition-colors ${
+                    pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`}>
+                    Orders
+                  </span>
                 </Link>
 
-                {/* Cart Link */}
-                <Link href="/cart">
-                  <div className="relative cursor-pointer mr-5 group">
-                    <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
+                <Link href="/cart" className="relative group flex items-center gap-2">
+                  <ShoppingCart className={`w-4 h-4 transition-colors ${
+                    pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`} />
+                  <span className={`text-sm font-medium uppercase tracking-tight transition-colors ${
+                    pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  }`}>
+                    Cart
                     {totalItems > 0 && (
-                      <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
-                        {totalItems > 9 ? "9+" : totalItems}
-                      </Badge>
+                      <span className="ml-1 text-green-600 font-bold">
+                        ({totalItems})
+                      </span>
                     )}
-                  </div>
+                  </span>
                 </Link>
 
                 <UserButton
                   appearance={{
                     elements: {
                       avatarBox:
-                        "w-10 h-10 border-2 border-green-400/30 hover:border-green-400/60 transition-colors",
+                        "w-8 h-8 border border-gray-100 hover:border-green-500 transition-colors",
                     },
                   }}
                 />
               </div>
             </SignedIn>
           </div>
+
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white hover:text-green-400 transition-colors"
+            className="md:hidden text-xs font-bold tracking-widest uppercase p-2"
+            aria-label="Toggle menu"
           >
-            <AnimatePresence mode="wait">
-              {isMenuOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X size={24} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Menu size={24} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {isMenuOpen ? "Close" : "Menu"}
           </button>
         </nav>
+
         {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              className="md:hidden mt-6 py-6 border-t border-gray-800"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Mobile Logo */}
-              <div
-                className="cursor-pointer mb-6"
-                onClick={() => {
-                  router.push("/");
-                  setIsMenuOpen(false);
-                }}
+        {isMenuOpen && (
+          <div className="md:hidden py-10 border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex flex-col gap-6">
+              <Link
+                href="/"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-2xl font-medium uppercase tracking-tighter ${
+                  pathname === "/" ? "text-green-600" : "text-black hover:text-green-600"
+                }`}
               >
-                <Image
-                  alt="Logo"
-                  src="/logo-text-white.svg"
-                  width={100}
-                  height={40}
-                />
-              </div>
-              {/* Mobile Nav Items */}
-              <div className="flex flex-col space-y-4">
-                {navItems.map((item) => (
+                Home
+              </Link>
+              {navItems.map((item) => (
+                pathname === "/" ? (
                   <ScrollLink
                     key={item.id}
                     to={item.id}
@@ -243,60 +243,79 @@ export default function Header() {
                     offset={-70}
                     duration={500}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-white hover:text-green-400 transition-colors text-left text-sm font-medium cursor-pointer"
-                    activeClass="text-green-400"
+                    className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
+                    activeClass="text-green-600"
                   >
                     {item.label}
                   </ScrollLink>
-                ))}
-              </div>
-              {/* Mobile Cart + Orders + User */}
-              <SignedIn>
-                <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-800">
-                  <div className="flex items-center gap-6">
-                    {/* Mobile Orders */}
-                    <Link href="/orders" onClick={() => setIsMenuOpen(false)}>
-                      <div className="flex items-center gap-2 text-white hover:text-green-400 transition-colors cursor-pointer">
-                        <ShoppingBag className="w-5 h-5" />
-                        <span className="text-sm font-medium">Orders</span>
-                      </div>
-                    </Link>
+                ) : (
+                  <Link
+                    key={item.id}
+                    href={`/#${item.id}`}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
+                  >
+                    {item.label}
+                  </Link>
+                )
+              ))}
+              <Link
+                href="/products"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-2xl font-medium uppercase tracking-tighter ${
+                  pathname?.startsWith("/products") ? "text-green-600" : "text-black hover:text-green-600"
+                }`}
+              >
+                Products
+              </Link>
+            </div>
 
-                    {/* Mobile Cart */}
-                    <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
-                      <div className="relative cursor-pointer group">
-                        <ShoppingCart className="text-white hover:text-green-400 transition-colors w-6 h-6" />
-                        {totalItems > 0 && (
-                          <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
-                            {totalItems > 9 ? "9+" : totalItems}
-                          </Badge>
-                        )}
-                      </div>
-                    </Link>
+            <SignedIn>
+              <div className="flex flex-col gap-6 mt-10 pt-10 border-t border-gray-100">
+                <Link href="/orders" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${
+                  pathname === "/orders" ? "text-green-600" : "text-black hover:text-green-600"
+                }`}>
+                  <ShoppingBag className="w-6 h-6" />
+                  Orders
+                </Link>
+
+                <Link href="/cart" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${
+                  pathname === "/cart" ? "text-green-600" : "text-black hover:text-green-600"
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <ShoppingCart className="w-6 h-6" />
+                    Cart
                   </div>
+                  {totalItems > 0 && (
+                    <span className="text-green-600">({totalItems})</span>
+                  )}
+                </Link>
 
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-sm text-gray-500 uppercase tracking-widest">Account</span>
                   <UserButton
                     appearance={{
                       elements: {
-                        avatarBox: "w-10 h-10 border-2 border-green-400/30",
+                        avatarBox: "w-10 h-10 border border-gray-100",
                       },
                     }}
                   />
                 </div>
-              </SignedIn>
-              <SignedOut>
-                <div className="mt-6 pt-6 border-t border-gray-800">
-                  <SignUpButton>
-                    <button className="w-full bg-[#6c47ff] text-white rounded-full font-medium text-sm h-12 px-5 cursor-pointer hover:bg-[#5a3de6] transition-colors">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
-                </div>
-              </SignedOut>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </div>
+            </SignedIn>
+
+            <SignedOut>
+              <div className="mt-10 pt-10 border-t border-gray-100">
+                <SignUpButton>
+                  <button className="w-full bg-black text-white text-xl font-medium py-5 uppercase tracking-tighter">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </div>
+            </SignedOut>
+          </div>
+        )}
       </div>
-    </motion.header>
+    </header>
   );
 }

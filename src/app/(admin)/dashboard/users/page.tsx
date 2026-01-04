@@ -2,11 +2,12 @@
 
 import { useState, useMemo, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { UsersIcon, Clock, Hash, Mail, User, Search, Filter } from "lucide-react"
+import { Search, Home, ChevronRight } from "lucide-react"
 import { getAllUsers } from "@/actions/users"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 export default function UsersPage() {
   const [users, setUsers] = useState<any[]>([])
@@ -20,36 +21,28 @@ export default function UsersPage() {
     const fetchUsers = async () => {
       try {
         const result = await getAllUsers()
-        console.log("Result is: ", result)
-
         if (!result.success) {
           setError("Failed to load users")
         } else {
           const userData = (result as { success: boolean; data?: any }).data || []
           setUsers(userData)
-          console.log("Users are: ", userData)
         }
-      } catch  {
+      } catch {
         setError("Failed to load users")
       } finally {
         setLoading(false)
       }
     }
-
     fetchUsers()
   }, [])
 
   const filteredAndSortedUsers = useMemo(() => {
     const filtered = users.filter((user) => {
-      // Search matches
       const matchesSearch =
         (user.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
         (user.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
         user._id.toLowerCase().includes(searchTerm.toLowerCase())
-
-      // Role matches
       const roleMatch = roleFilter === "all" || user.role?.toLowerCase() === roleFilter
-
       return matchesSearch && roleMatch
     })
 
@@ -67,15 +60,15 @@ export default function UsersPage() {
           return 0
       }
     })
-
     return filtered
   }, [users, searchTerm, roleFilter, sortBy])
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-gray-900/30 border border-gray-800/30 rounded-lg p-6 animate-fade-in">
-          <p className="text-gray-300">Loading users...</p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-8">
+          <div className="w-16 h-16 border-[3px] border-green-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-black text-xl font-medium tracking-tight animate-pulse">Accessing user directory...</p>
         </div>
       </div>
     )
@@ -83,170 +76,184 @@ export default function UsersPage() {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6 animate-fade-in">
-          <h2 className="text-red-400 font-semibold mb-2 text-xl">Error</h2>
-          <p className="text-red-300">{error}</p>
+      <div className="min-h-screen bg-white p-12">
+        <div className="max-w-2xl mx-auto bg-red-50 border border-red-100 rounded-[2rem] p-12 text-center">
+          <h2 className="text-red-600 font-medium text-4xl tracking-tighter mb-4">Access Error</h2>
+          <p className="text-red-500/80 text-lg mb-10 font-light">{error}</p>
+          <button onClick={() => window.location.reload()} className="px-10 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-900 transition-all">
+            Try Again
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
-            <UsersIcon className="w-4 h-4 text-blue-400" />
-          </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Users Management
-          </h1>
-        </div>
-        <p className="text-gray-400 text-lg">Manage and view all registered users</p>
-        <div className="flex items-center gap-2 mt-3">
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-          <span className="text-sm text-gray-300">
-            Total: <span className="font-semibold text-blue-400">{filteredAndSortedUsers.length}</span> users
-          </span>
+    <div className="min-h-screen bg-white text-black">
+      {/* Breadcrumb */}
+      <div className="pt-6 pb-6 border-b border-gray-100">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <nav className="flex items-center space-x-3 text-sm">
+            <Link href="/" className="text-gray-400 hover:text-black transition-colors flex items-center gap-1.5">
+              <Home className="h-4 w-4" />
+              <span className="font-medium">Home</span>
+            </Link>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-gray-400 font-medium">Admin</span>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-black font-bold uppercase tracking-widest text-[10px]">Users</span>
+          </nav>
         </div>
       </div>
 
-      {/* Filters */}
-      <Card className="mb-6 bg-gray-900/50 border-gray-800/50 backdrop-blur-sm animate-fade-in">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium text-gray-300">Filters & Search</span>
+      {/* Header Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+            <div className="max-w-4xl">
+              <h1 className="text-black text-6xl md:text-8xl font-medium leading-[0.9] tracking-tighter mb-8">
+                User <br />
+                <span className="text-green-600 italic">Directory.</span>
+              </h1>
+              <p className="text-gray-500 text-xl md:text-2xl leading-relaxed max-w-2xl font-light">
+                Manage your community, monitor user roles, and track registration growth across the platform with ease.
+              </p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative group">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-400 transition-colors" />
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-6 pb-32">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20 border-y border-gray-100 py-12">
+          <div className="group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Total Users</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{users.length}</h3>
+          </div>
+          <div className="md:border-l border-gray-100 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Administrators</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{users.filter(u => u.role === "admin").length}</h3>
+          </div>
+          <div className="border-l border-gray-100 pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">New This Month</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">
+              {users.filter(u => new Date(u.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}
+            </h3>
+          </div>
+          <div className="border-l border-gray-100 pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Active Now</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{users.length}</h3>
+          </div>
+        </div>
+
+        {/* Filters & Search */}
+        <div className="mb-16 space-y-8">
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="relative flex-grow group">
+              <Search className="w-5 h-5 absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-300 group-focus-within:text-green-600 transition-colors" />
               <Input
                 placeholder="Search by name, email, or ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500/20 transition-all"
+                className="h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-xl placeholder:text-gray-300"
               />
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[200px] text-base font-medium">
+                  <SelectValue placeholder="All Roles" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="all" className="rounded-xl py-3">All Roles</SelectItem>
+                  <SelectItem value="admin" className="rounded-xl py-3">Admin</SelectItem>
+                  <SelectItem value="user" className="rounded-xl py-3">User</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-blue-500 focus:ring-blue-500/20 transition-all">
-                <SelectValue placeholder="All Roles" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="user">User</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[200px] text-base font-medium">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="date-desc" className="rounded-xl py-3">Newest First</SelectItem>
+                  <SelectItem value="date-asc" className="rounded-xl py-3">Oldest First</SelectItem>
+                  <SelectItem value="name-asc" className="rounded-xl py-3">Name A-Z</SelectItem>
+                  <SelectItem value="name-desc" className="rounded-xl py-3">Name Z-A</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
 
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-blue-500 focus:ring-blue-500/20 transition-all">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="date-desc">Newest First</SelectItem>
-                <SelectItem value="date-asc">Oldest First</SelectItem>
-                <SelectItem value="name-asc">Name A-Z</SelectItem>
-                <SelectItem value="name-desc">Name Z-A</SelectItem>
-              </SelectContent>
-            </Select>
+        {/* Users Table */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-2xl shadow-black/5">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50/50 border-b border-gray-100">
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">User</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Contact</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Role</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Joined</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredAndSortedUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-8 py-32 text-center">
+                      <div className="flex flex-col items-center gap-6">
+                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
+                          <Search className="w-10 h-10 text-gray-200" />
+                        </div>
+                        <p className="text-gray-400 text-xl font-light">No users found matching your criteria.</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredAndSortedUsers.map((user, index) => (
+                    <tr key={user._id || index} className="hover:bg-gray-50/50 transition-colors group">
+                      <td className="px-8 py-8">
+                        <div className="flex items-center gap-5">
+                          <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-black font-bold text-lg uppercase border border-gray-100 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600 transition-all duration-500">
+                            {user.name?.charAt(0) || "U"}
+                          </div>
+                          <div>
+                            <div className="text-lg font-medium text-black">{user.name || "Anonymous User"}</div>
+                            <div className="text-[10px] text-gray-400 uppercase tracking-[0.2em] mt-1 font-mono">ID: {user._id?.slice(-8)}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <div className="text-base text-gray-600 font-light">{user.email || "—"}</div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <Badge className={cn(
+                          "rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest border shadow-none",
+                          user.role === "admin" 
+                            ? "bg-green-50 text-green-600 border-green-100" 
+                            : "bg-blue-50 text-blue-600 border-blue-100"
+                        )}>
+                          {user.role || "user"}
+                        </Badge>
+                      </td>
+                      <td className="px-8 py-8">
+                        <div className="text-base font-medium text-black">{user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : "—"}</div>
+                        <div className="text-[10px] font-bold text-gray-400 mt-1.5 uppercase tracking-widest">{user.createdAt ? new Date(user.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—"}</div>
+                      </td>
+                      <td className="px-8 py-8 text-right">
+                        <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest border shadow-none">
+                          Active
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Users Table Header */}
-      <div className="bg-gray-900/30 border border-gray-800/30 rounded-t-lg px-6 py-4 mb-0">
-        <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-400">
-          <div className="col-span-3 flex items-center gap-2">
-            <User className="w-4 h-4" />
-            Name
-          </div>
-          <div className="col-span-3 flex items-center gap-2">
-            <Mail className="w-4 h-4" />
-            Email
-          </div>
-          <div className="col-span-2 flex items-center gap-2">
-            <Hash className="w-4 h-4" />
-            Role
-          </div>
-          <div className="col-span-2 flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            Created
-          </div>
-          <div className="col-span-2">Status</div>
         </div>
       </div>
-
-      {/* Users */}
-      {filteredAndSortedUsers.length === 0 ? (
-        <Card className="bg-gray-900/30 border-gray-800/30 backdrop-blur-sm rounded-t-none">
-          <CardContent className="p-12 text-center">
-            <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <UsersIcon className="w-8 h-8 text-gray-500" />
-            </div>
-            <p className="text-gray-400 text-lg">No users found matching your criteria.</p>
-            <p className="text-gray-500 text-sm mt-2">Try adjusting your filters or search terms.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="bg-gray-900/20 border-x border-b border-gray-800/30 rounded-b-lg">
-          {filteredAndSortedUsers.map((user: any, index: number) => (
-            <div
-              key={user._id || index}
-              className="border-b border-gray-800/20 last:border-b-0 hover:bg-gray-900/40 transition-all duration-200 animate-fade-in"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="px-6 py-4">
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  {/* Name */}
-                  <div className="col-span-3">
-                    <div className="text-sm text-white font-medium">{user.name || "—"}</div>
-                    <div className="text-xs text-gray-400">ID: {user._id?.slice(-8) || "—"}</div>
-                  </div>
-
-                  {/* Email */}
-                  <div className="col-span-3">
-                    <div className="text-sm text-white truncate">{user.email || "—"}</div>
-                  </div>
-
-                  {/* Role */}
-                  <div className="col-span-2">
-                    <Badge
-                      className={`border font-medium px-2 py-1 text-xs w-fit ${
-                        user.role === "admin"
-                          ? "bg-green-500/20 text-green-400 border-green-500/30"
-                          : "bg-blue-500/20 text-blue-400 border-blue-500/30"
-                      }`}
-                    >
-                      {user.role || "user"}
-                    </Badge>
-                  </div>
-
-                  {/* Created Date */}
-                  <div className="col-span-2">
-                    <div className="text-sm text-white font-medium">
-                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      {user.createdAt ? new Date(user.createdAt).toLocaleTimeString() : "—"}
-                    </div>
-                  </div>
-
-                  {/* Status */}
-                  <div className="col-span-2">
-                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-medium px-2 py-1 text-xs w-fit">
-                      Active
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

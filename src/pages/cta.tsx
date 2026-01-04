@@ -1,34 +1,138 @@
-import { WavyBackground } from "@/components/ui/wavy-background";
-import WhatsappButton from "@/components/whatsapp-button";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const CTA = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Construct WhatsApp message
+    const message = `Hello! I'm reaching out from your website.%0A%0AEmail: ${formData.email}%0APhone: ${formData.phone}%0ACompany: ${formData.company}%0A%0AMessage: ${formData.message}`;
+    window.open(`https://wa.me/919404570482?text=${message}`, "_blank");
+  };
+
   return (
-    <WavyBackground className="max-w-4xl mx-auto m-5 md:py-20">
-      <div className="text-center -mt-5 bg-gray-900/70 backdrop-blur-md rounded-lg p-4 md:p-12 border border-gray-800 max-w-4xl mx-auto">
-        <h3 className="text-3xl md:text-5xl font-bold text-white mb-4">
-          Ready to start your project?
-        </h3>
-        <p className="text-lg md:text-2xl text-gray-400 mb-3 md:mb-8">
-          Get in touch for a personalized quote today!
-        </p>
-        <Link
-          href="https://wa.me/919404570482"
-          className="inline-flex items-center"
-        >
-          {/* <svg
-              className="w-5 h-5 mr-3"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M17.6 6.32A8.86 8.86 0 0 0 12.05 4 8.95 8.95 0 0 0 3.1 12.95a8.93 8.93 0 0 0 1.32 4.69L3 22l4.47-1.17a8.95 8.95 0 0 0 13.53-7.88 8.85 8.85 0 0 0-3.4-6.63zm-5.55 13.68a7.45 7.45 0 0 1-3.79-1.04l-.27-.16-2.82.74.75-2.75-.18-.28a7.43 7.43 0 0 1 9.78-10.19 7.36 7.36 0 0 1 2.83 5.52 7.45 7.45 0 0 1-7.46 8.16z" />
-              <path d="M9.06 7.76c-.16-.09-.59-.29-.68-.32-.09-.03-.16-.05-.22.05-.07.09-.26.32-.32.39-.06.07-.11.08-.2 0-.1-.08-.43-.17-.82-.54a3 3 0 0 1-.56-.7c-.06-.1 0-.15.04-.2l.14-.16c.05-.06.07-.1.1-.17.03-.07.01-.13-.01-.18-.03-.05-.22-.52-.3-.72-.07-.2-.15-.17-.21-.17h-.18c-.07 0-.17.03-.26.14-.09.11-.34.35-.34.85s.35.98.4 1.05c.04.07.62.95 1.5 1.33.21.09.38.14.5.18.21.07.41.06.56.03.17-.03.52-.21.6-.42.06-.2.06-.38.04-.42-.02-.03-.09-.08-.18-.12z" />
-            </svg>
-            Contact us on WhatsApp */}
-          <WhatsappButton className="md:scale-[120%]" />
-        </Link>
+    <section id="contact" className="py-24 bg-neutral-100">
+      <div className="container mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16">
+          {/* Left Content */}
+          <div>
+            <div className="section-label mb-4">CONTACT US</div>
+            <h2 className="text-black mb-6">
+              Start Your Project Today
+            </h2>
+            <p className="text-gray-600 leading-relaxed max-w-md">
+              Ready to bring your ideas to life? Contact our engineering team for a consultation or quote. Whether you need a single prototype or full-scale production, we are here to help.
+            </p>
+
+            {/* Featured In */}
+            <div className="mt-12 pt-12 border-t border-gray-300">
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-6">
+                Trusted by engineers and startups
+              </p>
+              <div className="flex items-center gap-8 opacity-60">
+                <Image
+                  src="/logo-full-black.svg"
+                  alt="Protoplast"
+                  width={100}
+                  height={30}
+                  className="h-8 w-auto"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right - Contact Form */}
+          <div className="bg-white p-8 border border-gray-200">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 text-black placeholder-gray-500 
+                             focus:border-green-500 focus:outline-none transition-colors bg-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 text-black placeholder-gray-500 
+                             focus:border-green-500 focus:outline-none transition-colors bg-transparent"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  name="company"
+                  placeholder="Company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 text-black placeholder-gray-500 
+                           focus:border-green-500 focus:outline-none transition-colors bg-transparent"
+                />
+              </div>
+
+              <div>
+                <textarea
+                  name="message"
+                  placeholder="Enter your message..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={5}
+                  className="w-full px-4 py-3 border border-gray-300 text-black placeholder-gray-500 
+                           focus:border-green-500 focus:outline-none transition-colors bg-transparent resize-none"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full btn-primary py-4"
+              >
+                Send Message
+              </button>
+            </form>
+
+            {/* Alternative Contact */}
+            <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+              <p className="text-sm text-gray-500">
+                Or reach us directly on{" "}
+                <Link
+                  href="https://wa.me/919404570482"
+                  className="text-green-600 hover:text-green-700 font-medium"
+                  target="_blank"
+                >
+                  WhatsApp
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </WavyBackground>
+    </section>
   );
 };
 

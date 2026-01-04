@@ -26,28 +26,30 @@ export default function BaseModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         className={cn(
-          "rounded-2xl max-w-2xl w-full bg-gray-900 text-white shadow-lg backdrop-blur-md p-8 border border-green-400/20",
+          "rounded-3xl max-w-2xl w-full bg-white text-black shadow-2xl p-0 border border-gray-100 overflow-hidden",
           className
         )}
       >
-        {/* Close Button */}
-        <Button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-green-400 transition-all duration-300"
-        >
-          <X className="w-5 h-5" />
-        </Button>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="space-y-6"
-        >
-          <DialogTitle className="text-2xl font-bold text-green-400 border-b border-green-400/30 pb-4">
+        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
+          <DialogTitle className="text-2xl font-medium tracking-tight text-black">
             {title}
           </DialogTitle>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="rounded-full hover:bg-gray-100"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="p-8"
+        >
           {children}
         </motion.div>
       </DialogContent>

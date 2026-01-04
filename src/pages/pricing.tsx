@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ServiceKey } from "@/types/service";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 
 export default function Pricing() {
@@ -115,6 +115,10 @@ export default function Pricing() {
       {/* Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="max-w-2xl">
+          <DialogTitle className="sr-only">Pricing Details</DialogTitle>
+          <DialogDescription className="sr-only">
+            Detailed pricing information for our {activeServiceId} service.
+          </DialogDescription>
           <div className="text-sm text-muted-foreground">
             {activeServiceId && (
               <ServiceModal

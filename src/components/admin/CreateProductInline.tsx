@@ -14,14 +14,14 @@ export default function CreateProductInline() {
     <div className="flex justify-end">
       {!showForm ? (
         <Button
-          className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30 hover:border-purple-500/50 transition-all duration-200"
+          className="bg-black hover:bg-gray-800 text-white rounded-full px-8 h-14 text-lg font-medium transition-all duration-300 shadow-xl shadow-black/10 flex items-center gap-3"
           onClick={() => {
             setShowForm(true);
             setSubmitted(false); // reset on open
           }}
         >
-          <Plus className="w-4 h-4 mr-2" />
-          Create Product
+          <Plus className="w-5 h-5" />
+          Add New Product
         </Button>
       ) : (
         <div className="w-full max-w-2xl">
@@ -33,7 +33,6 @@ export default function CreateProductInline() {
                 toast.success("Product created successfully!");
               }
             }}
-            // new optional prop
             onSubmitted={() => setSubmitted(true)}
           />
         </div>
