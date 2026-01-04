@@ -66,10 +66,10 @@ export default function Header() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               <Image
-                src="/logo-text-black.svg"
+                src="/logo-full-black.svg"
                 alt="Logo"
-                width={isMobile ? 90 : 120}
-                height={40}
+                width={isMobile ? 110 : 160}
+                height={52}
                 className="flex-shrink-0 cursor-pointer invert"
                 onClick={() => router.push("/")}
               />
@@ -120,10 +120,10 @@ export default function Header() {
           >
             <Image
               alt="Protoplast Logo"
-              src="/logo-text-black.svg"
-              width={isMobile ? 100 : 130}
-              height={40}
-              className="h-8 md:h-10 w-auto"
+              src="/logo-full-black.svg"
+              width={isMobile ? 120 : 180}
+              height={56}
+              className="h-10 md:h-14 w-auto"
             />
           </div>
 
