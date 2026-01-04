@@ -229,7 +229,7 @@ export default function ProductsClientView({ products }: ProductsClientViewProps
           </div>
           <h3 className="text-xl font-medium text-black mb-2">No products found</h3>
           <p className="text-gray-500">
-            We couldn't find any products matching "{searchQuery}".
+            We couldn&apos;t find any products matching &ldquo;{searchQuery}&rdquo;.
           </p>
           <Button 
             variant="link" 

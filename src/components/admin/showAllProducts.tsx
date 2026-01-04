@@ -7,12 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import {
   Pencil,
   Trash2,
-  Eye,
-  Star,
   Package,
   Zap,
   Thermometer,
-  Layers,
   MoreHorizontal,
 } from "lucide-react";
 import { getProductById, deleteProduct } from "@/actions/products";

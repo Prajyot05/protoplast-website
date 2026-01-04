@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ArrowRight, PartyPopper, Home, ChevronRight, ShoppingBag } from "lucide-react";
+import { CheckCircle, ArrowRight, PartyPopper, Home, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLocalProduct } from "@/stores/useLocalProduct";
@@ -88,7 +87,7 @@ export default function ThankYouPage() {
             </div>
             <h3 className="text-3xl font-medium text-black mb-3 tracking-tight">Payment Successful</h3>
             <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
-              We've received your order and are getting it ready for shipment. You can track your order status in your dashboard.
+              We&apos;ve received your order and are getting it ready for shipment. You can track your order status in your dashboard.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild className="bg-black text-white hover:bg-gray-800 rounded-full px-10 py-6 text-lg shadow-lg shadow-black/10 transition-all hover:scale-105 active:scale-95">

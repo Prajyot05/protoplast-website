@@ -10,7 +10,7 @@ import {
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ShoppingBag, ShoppingCart, ArrowLeft } from "lucide-react";
+import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";

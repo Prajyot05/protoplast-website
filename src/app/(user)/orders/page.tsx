@@ -139,7 +139,7 @@ export default async function OrdersPage() {
               </div>
               <h3 className="text-2xl font-bold text-black mb-3">No orders yet</h3>
               <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
-                Looks like you haven't placed any orders yet. Start shopping to see your orders here.
+                Looks like you haven&apos;t placed any orders yet. Start shopping to see your orders here.
               </p>
               <Button asChild className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10 py-6 text-lg shadow-lg shadow-green-600/20 transition-all hover:shadow-green-600/40 hover:-translate-y-1">
                 <Link href="/products">

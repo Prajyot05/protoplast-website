@@ -1,10 +1,9 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Package, Truck, CheckCircle, Clock, XCircle, Calendar, CreditCard, ExternalLink, ChevronRight } from "lucide-react"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Package, Truck, CheckCircle, Clock, XCircle, CreditCard, ChevronRight } from "lucide-react"
 import type { OrderType } from "@/types/order"
-import { Button } from "@/components/ui/button"
 import { OrderDetailsModal } from "@/components/OrderDetailsModal"
 import { useState } from "react"
 import Image from "next/image"

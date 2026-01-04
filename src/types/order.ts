@@ -1,3 +1,5 @@
+import { ReactNode } from "react"
+
 export interface OrderProduct {
   product: {
     description: ReactNode

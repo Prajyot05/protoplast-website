@@ -1,8 +1,5 @@
 "use client";
 
-import { Printer, Settings, Cpu, PenTool } from "lucide-react";
-import Link from "next/link";
-
 export default function About() {
   const coreValues = [
     "Innovation",
@@ -15,12 +12,6 @@ export default function About() {
     "Reliability",
   ];
 
-  const services = [
-    { icon: Printer, label: "3D Printing" },
-    { icon: Settings, label: "CNC Cutting" },
-    { icon: Cpu, label: "PCB Design" },
-    { icon: PenTool, label: "CAD Modeling" },
-  ];
 
   return (
     <section id="about" className="py-24 bg-white">

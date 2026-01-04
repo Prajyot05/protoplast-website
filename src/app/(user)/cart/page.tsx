@@ -340,7 +340,7 @@ export default function CartPage() {
               </div>
               <h3 className="text-3xl font-medium text-black mb-3 tracking-tight">Your cart is empty</h3>
               <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
-                Looks like you haven't added anything to your cart yet. Explore our products to find something you love.
+                Looks like you haven&apos;t added anything to your cart yet. Explore our products to find something you love.
               </p>
               <Button asChild className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10 py-6 text-lg shadow-lg shadow-green-600/20 transition-all hover:shadow-green-600/40 hover:-translate-y-1">
                 <Link href="/products">

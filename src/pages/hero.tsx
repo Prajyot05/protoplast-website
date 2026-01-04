@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ServiceKey } from "@/types/service";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 import { ArrowUpRight } from "lucide-react";

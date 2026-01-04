@@ -3,7 +3,6 @@
 import ProductForm from "./productForm";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Plus } from "lucide-react";
 
 export default function CreateProduct() {

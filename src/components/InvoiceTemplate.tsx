@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import type { OrderType } from "@/types/order";
 
 interface InvoiceTemplateProps {
@@ -22,7 +23,7 @@ export const InvoiceTemplate = React.forwardRef<HTMLDivElement, InvoiceTemplateP
         <div className="flex justify-between items-start mb-16">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4">
-              <img src="/logo-full-black.svg" alt="Protoplast Logo" className="h-12 w-auto" />
+              <Image src="/logo-full-black.svg" alt="Protoplast Logo" width={140} height={48} className="h-12 w-auto" />
               <div style={{ width: "2px", height: "40px", backgroundColor: "#e5e7eb" }} />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold tracking-tighter leading-none">Protoplast</span>

@@ -3,7 +3,6 @@ import {
   model,
   models,
   Document,
-  InferSchemaType,
 } from "mongoose";
 
 export interface IProduct extends Document {

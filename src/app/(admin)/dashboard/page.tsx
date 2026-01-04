@@ -2,8 +2,7 @@
 import { useState, useMemo, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent } from "@/components/ui/card"
-import { Package, Search, Filter, Home, ChevronRight, Plus } from "lucide-react"
+import { Search, Filter, Home, ChevronRight } from "lucide-react"
 import { getAllProducts } from "@/actions/products"
 import ShowAllProducts from "@/components/admin/showAllProducts"
 import CreateProductInline from "@/components/admin/CreateProductInline"
@@ -142,7 +141,7 @@ export default function AdminDashboard() {
                 <span className="text-green-600 italic">Inventory.</span>
               </h1>
               <p className="text-gray-500 text-xl md:text-2xl leading-relaxed max-w-2xl font-light">
-                Manage your store's catalog, track stock levels, and update product details with precision.
+                Manage your store&apos;s catalog, track stock levels, and update product details with precision.
               </p>
             </div>
             <div className="mb-2">
