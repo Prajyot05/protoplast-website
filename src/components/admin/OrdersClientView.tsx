@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Filter, Eye, Package, User, MapPin, Calendar, CreditCard } from "lucide-react"
+import { Search, Filter, Eye, Package, User, MapPin, Calendar, CreditCard, Home, ChevronRight } from "lucide-react"
 import OrderDetailModal from "./OrdersDetailModal"
 import type { OrderType } from "@/types/order"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 interface Props {
   orders: OrderType[]
@@ -60,17 +62,17 @@ export default function OrdersClientView({ orders }: Props) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "delivered":
-        return "bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30 transition-colors"
+        return "bg-green-50 text-green-600 border-green-100"
       case "shipped":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30 hover:bg-blue-500/30 transition-colors"
+        return "bg-blue-50 text-blue-600 border-blue-100"
       case "paid":
-        return "bg-purple-500/20 text-purple-400 border-purple-500/30 hover:bg-purple-500/30 transition-colors"
+        return "bg-purple-50 text-purple-600 border-purple-100"
       case "pending":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:bg-yellow-500/30 transition-colors"
+        return "bg-yellow-50 text-yellow-600 border-yellow-100"
       case "cancelled":
-        return "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30 transition-colors"
+        return "bg-red-50 text-red-600 border-red-100"
       default:
-        return "bg-gray-500/20 text-gray-400 border-gray-500/30 hover:bg-gray-500/30 transition-colors"
+        return "bg-gray-50 text-gray-600 border-gray-100"
     }
   }
 
@@ -86,179 +88,172 @@ export default function OrdersClientView({ orders }: Props) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
-            <Package className="w-4 h-4 text-orange-400" />
-          </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Orders Management
-          </h1>
-        </div>
-        <p className="text-gray-400 text-lg">Manage and track all customer orders</p>
-        <div className="flex items-center gap-2 mt-3">
-          <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-          <span className="text-sm text-gray-300">
-            Total: <span className="font-semibold text-orange-400">{filteredAndSortedOrders.length}</span> orders
-          </span>
+    <div className="min-h-screen bg-white text-black">
+      {/* Breadcrumb */}
+      <div className="pt-6 pb-6 border-b border-gray-100">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <nav className="flex items-center space-x-3 text-sm">
+            <Link href="/" className="text-gray-400 hover:text-black transition-colors flex items-center gap-1.5">
+              <Home className="h-4 w-4" />
+              <span className="font-medium">Home</span>
+            </Link>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-gray-400 font-medium">Admin</span>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-black font-bold uppercase tracking-widest text-[10px]">Orders</span>
+          </nav>
         </div>
       </div>
 
-      {/* Filters */}
-      <Card className="mb-6 bg-gray-900/50 border-gray-800/50 backdrop-blur-sm animate-fade-in">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-4 h-4 text-orange-400" />
-            <span className="text-sm font-medium text-gray-300">Filters & Search</span>
+      {/* Header Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+            <div className="max-w-4xl">
+              <h1 className="text-black text-6xl md:text-8xl font-medium leading-[0.9] tracking-tighter mb-8">
+                Order <br />
+                <span className="text-green-600 italic">Management.</span>
+              </h1>
+              <p className="text-gray-500 text-xl md:text-2xl leading-relaxed max-w-2xl font-light">
+                Track customer purchases, update order statuses, and manage fulfillment with precision.
+              </p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative group">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-orange-400 transition-colors" />
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-6 pb-32">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20 border-y border-gray-100 py-12">
+          <div className="group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Total Orders</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{orders.length}</h3>
+          </div>
+          <div className="md:border-l border-gray-100 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-yellow-600 transition-colors">Pending</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{orders.filter(o => o.status === "pending").length}</h3>
+          </div>
+          <div className="border-l border-gray-100 pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-blue-600 transition-colors">Shipped</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{orders.filter(o => o.status === "shipped").length}</h3>
+          </div>
+          <div className="border-l border-gray-100 pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Delivered</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{orders.filter(o => o.status === "delivered").length}</h3>
+          </div>
+        </div>
+
+        {/* Filters & Search */}
+        <div className="mb-16 space-y-8">
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="relative flex-grow group">
+              <Search className="w-5 h-5 absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-300 group-focus-within:text-green-600 transition-colors" />
               <Input
-                placeholder="Search by order ID, customer, phone..."
+                placeholder="Search orders..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-orange-500 focus:ring-orange-500/20 transition-all"
+                className="h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-xl placeholder:text-gray-300"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-orange-500 focus:ring-orange-500/20 transition-all">
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="shipped">Shipped</SelectItem>
-                <SelectItem value="delivered">Delivered</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-orange-500 focus:ring-orange-500/20 transition-all">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="date-desc">Newest First</SelectItem>
-                <SelectItem value="date-asc">Oldest First</SelectItem>
-                <SelectItem value="amount-desc">Highest Amount</SelectItem>
-                <SelectItem value="amount-asc">Lowest Amount</SelectItem>
-                <SelectItem value="status">Status</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="all" className="rounded-xl py-3">All Status</SelectItem>
+                  <SelectItem value="pending" className="rounded-xl py-3">Pending</SelectItem>
+                  <SelectItem value="paid" className="rounded-xl py-3">Paid</SelectItem>
+                  <SelectItem value="shipped" className="rounded-xl py-3">Shipped</SelectItem>
+                  <SelectItem value="delivered" className="rounded-xl py-3">Delivered</SelectItem>
+                  <SelectItem value="cancelled" className="rounded-xl py-3">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="date-desc" className="rounded-xl py-3">Newest First</SelectItem>
+                  <SelectItem value="date-asc" className="rounded-xl py-3">Oldest First</SelectItem>
+                  <SelectItem value="amount-desc" className="rounded-xl py-3">Highest Amount</SelectItem>
+                  <SelectItem value="amount-asc" className="rounded-xl py-3">Lowest Amount</SelectItem>
+                  <SelectItem value="status" className="rounded-xl py-3">Status</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Orders Table Header */}
-      <div className="bg-gray-900/30 border border-gray-800/30 rounded-t-lg px-6 py-4 mb-0">
-        <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-400">
-          <div className="col-span-2 flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            Date & Order ID
+        {/* Orders Table */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-2xl shadow-black/5">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50/50 border-b border-gray-100">
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Date & ID</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Customer</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Products</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Amount</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Status</th>
+                  <th className="px-8 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredAndSortedOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-8 py-32 text-center">
+                      <div className="flex flex-col items-center gap-6">
+                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
+                          <Search className="w-10 h-10 text-gray-200" />
+                        </div>
+                        <p className="text-gray-400 text-xl font-light">No orders found matching your criteria.</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredAndSortedOrders.map((order) => (
+                    <tr key={order._id} className="hover:bg-gray-50/50 transition-colors group">
+                      <td className="px-8 py-8">
+                        <div className="text-base font-medium text-black">{new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                        <div className="text-[10px] font-mono text-gray-400 mt-1.5 uppercase tracking-widest">#{order._id.slice(-8)}</div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <div className="text-base font-medium text-black">{order.address.fullName}</div>
+                        <div className="text-sm text-gray-500 mt-1 font-light">{order.address.phone}</div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <div className="text-sm text-gray-600 max-w-[240px] truncate font-medium">{getOrderSummary(order)}</div>
+                        <div className="text-[10px] font-bold text-gray-400 mt-1.5 uppercase tracking-widest">
+                          {order.products.reduce((sum, p) => sum + p.quantity, 0)} items
+                        </div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <div className="text-2xl font-medium text-black tracking-tighter">₹{order.totalAmount.toLocaleString()}</div>
+                      </td>
+                      <td className="px-8 py-8">
+                        <Badge className={cn("rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest border shadow-none", getStatusColor(order.status))}>
+                          {order.status}
+                        </Badge>
+                      </td>
+                      <td className="px-8 py-8 text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openOrderModal(order)}
+                          className="h-12 w-12 p-0 rounded-full hover:bg-green-50 hover:text-green-600 transition-all"
+                        >
+                          <Eye className="w-6 h-6" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-          <div className="col-span-2 flex items-center gap-2">
-            <User className="w-4 h-4" />
-            Customer
-          </div>
-          <div className="col-span-3 flex items-center gap-2">
-            <Package className="w-4 h-4" />
-            Products
-          </div>
-          <div className="col-span-2 flex items-center gap-2">
-            <CreditCard className="w-4 h-4" />
-            Amount & Status
-          </div>
-          <div className="col-span-2 flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            Shipping
-          </div>
-          <div className="col-span-1 text-center">Actions</div>
         </div>
       </div>
-
-      {/* Orders */}
-      {filteredAndSortedOrders.length === 0 ? (
-        <Card className="bg-gray-900/30 border-gray-800/30 backdrop-blur-sm rounded-t-none">
-          <CardContent className="p-12 text-center">
-            <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-gray-500" />
-            </div>
-            <p className="text-gray-400 text-lg">No orders found matching your criteria.</p>
-            <p className="text-gray-500 text-sm mt-2">Try adjusting your filters or search terms.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="bg-gray-900/20 border-x border-b border-gray-800/30 rounded-b-lg">
-          {filteredAndSortedOrders.map((order, index) => (
-            <div
-              key={order._id}
-              className="border-b border-gray-800/20 last:border-b-0 hover:bg-gray-900/40 transition-all duration-200 animate-fade-in"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="px-6 py-4">
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  {/* Date & Order ID */}
-                  <div className="col-span-2">
-                    <div className="text-sm text-white font-medium">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </div>
-                    <div className="font-mono text-xs text-gray-400 bg-gray-800/50 px-2 py-1 rounded truncate mt-1">
-                      {order._id.slice(-8)}
-                    </div>
-                  </div>
-
-                  {/* Customer */}
-                  <div className="col-span-2">
-                    <div className="text-sm text-white font-medium truncate">{order.address.fullName}</div>
-                    <div className="text-xs text-gray-400 truncate">{order.address.phone}</div>
-                  </div>
-
-                  {/* Products */}
-                  <div className="col-span-3">
-                    <div className="text-sm text-white truncate">{getOrderSummary(order)}</div>
-                    <div className="text-xs text-gray-400">
-                      {order.products.reduce((sum, p) => sum + p.quantity, 0)} items
-                    </div>
-                  </div>
-
-                  {/* Amount & Status */}
-                  <div className="col-span-2">
-                    <div className="text-lg font-bold text-white">₹{order.totalAmount.toLocaleString()}</div>
-                    <Badge
-                      className={`${getStatusColor(order.status)} border font-medium px-2 py-1 text-xs w-fit mt-1`}
-                    >
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                    </Badge>
-                  </div>
-
-                  {/* Shipping */}
-                  <div className="col-span-2">
-                    <div className="text-sm text-white truncate">
-                      {order.address.city}, {order.address.state}
-                    </div>
-                    <div className="text-xs text-gray-400 truncate">{order.address.zip}</div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="col-span-1 text-center">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => openOrderModal(order)}
-                      className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border-orange-500/30 hover:border-orange-500/50 transition-all duration-200"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Detail Modal */}
       <OrderDetailModal open={isModalOpen} onClose={() => setIsModalOpen(false)} order={selectedOrder} />

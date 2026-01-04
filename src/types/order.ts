@@ -1,5 +1,6 @@
 export interface OrderProduct {
   product: {
+    description: ReactNode
     _id: string
     title: string
     price: number

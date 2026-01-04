@@ -4,18 +4,16 @@ import type { ProductType } from "@/models/Product";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Pencil,
   Trash2,
   Eye,
-  Heart,
   Star,
-  RotateCcw,
   Package,
   Zap,
   Thermometer,
   Layers,
+  MoreHorizontal,
 } from "lucide-react";
 import { getProductById, deleteProduct } from "@/actions/products";
 import { useState, useEffect } from "react";
@@ -32,6 +30,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useProductStore } from "@/stores/useProductStore";
+import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ShowAllProductsProps {
   products: ProductType[];
@@ -47,7 +52,6 @@ export default function ShowAllProducts({
   const [productToDelete, setProductToDelete] = useState<ProductType | null>(
     null
   );
-  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
 
   const {
     productList: allProducts,
@@ -86,18 +90,6 @@ export default function ShowAllProducts({
     }
   };
 
-  const toggleFlip = (productId: string) => {
-    setFlippedCards((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(productId)) {
-        newSet.delete(productId);
-      } else {
-        newSet.add(productId);
-      }
-      return newSet;
-    });
-  };
-
   return (
     <>
       <ProductForm
@@ -114,428 +106,172 @@ export default function ShowAllProducts({
         open={!!productToDelete}
         onOpenChange={(open) => !open && setProductToDelete(null)}
       >
-        <AlertDialogContent className="bg-gray-900/95 border-gray-800/50 backdrop-blur-md">
+        <AlertDialogContent className="bg-white border-gray-100 rounded-3xl shadow-2xl max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">
-              Are you sure?
+            <AlertDialogTitle className="text-2xl font-medium tracking-tight text-black">
+              Confirm Deletion
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-300">
-              This action cannot be undone. This will permanently delete the
-              product:{" "}
-              <strong className="text-white">{productToDelete?.title}</strong>
+            <AlertDialogDescription className="text-gray-500 text-base">
+              This will permanently remove <span className="text-black font-medium">{productToDelete?.title}</span> from your inventory. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700">
+          <AlertDialogFooter className="mt-6 gap-3">
+            <AlertDialogCancel className="rounded-full h-12 px-6 border-gray-100 hover:bg-gray-50 text-black font-medium">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30"
+              className="rounded-full h-12 px-6 bg-red-600 text-white hover:bg-red-700 font-medium border-0"
             >
-              Delete
+              Delete Product
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {allProducts.length === 0 ? (
-          <div className="col-span-full flex flex-col items-center justify-center py-12">
-            <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Package className="w-8 h-8 text-gray-500" />
+          <div className="col-span-full flex flex-col items-center justify-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm mb-6">
+              <Package className="w-10 h-10 text-gray-300" />
             </div>
-            <p className="text-gray-400 text-lg">No products available yet.</p>
-            <p className="text-gray-500 text-sm mt-2">
-              Products will appear here once added.
-            </p>
+            <p className="text-black text-xl font-medium">No products found</p>
+            <p className="text-gray-500 mt-2">Your inventory is currently empty.</p>
           </div>
         ) : (
-          allProducts.map((product) => {
-            const isFlipped = flippedCards.has(product._id as string);
-
-            return (
-              <div
-                key={product._id as string}
-                className="relative h-[500px] perspective-1000"
+          allProducts.map((product) => (
+            <div
+              key={product._id as string}
+              className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:shadow-black/5 transition-all duration-500 flex flex-col"
+            >
+              {/* Image Section */}
+              <div 
+                className="relative aspect-[4/3] overflow-hidden bg-gray-50 cursor-pointer"
+                onClick={() => handleEdit(product._id as string)}
               >
-                <div
-                  className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                    isFlipped ? "rotate-y-180" : ""
-                  }`}
-                >
-                  {/* Front Side */}
-                  <Card className="absolute inset-0 backface-hidden group overflow-hidden bg-gray-900/50 border-gray-800/50 backdrop-blur-sm shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-1">
-                    <CardContent className="p-0 h-full flex flex-col">
-                      {/* Image Section */}
-                      <div className="relative aspect-[4/3] overflow-hidden bg-gray-800/30">
-                        <Image
-                          src={
-                            product.images?.[0]?.startsWith("http")
-                              ? product.images[0]
-                              : "/placeholder.svg?height=300&width=400&query=3D printer product"
-                          }
-                          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                          alt={product.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
+                <Image
+                  src={
+                    product.images?.[0]?.startsWith("http")
+                      ? product.images[0]
+                      : "/placeholder.svg?height=300&width=400&query=3D printer product"
+                  }
+                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+                  alt={product.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
 
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent" />
+                {/* Status Badges */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                  {product.featured && (
+                    <Badge className="bg-black text-white border-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                      Featured
+                    </Badge>
+                  )}
+                  {product.stock === 0 ? (
+                    <Badge className="bg-red-50 text-red-600 border border-red-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                      Out of Stock
+                    </Badge>
+                  ) : product.stock < 5 ? (
+                    <Badge className="bg-orange-50 text-orange-600 border border-orange-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                      Low Stock: {product.stock}
+                    </Badge>
+                  ) : null}
+                </div>
 
-                        {/* Status Badges */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-2">
-                          {product.featured && (
-                            <Badge className="bg-gradient-to-r from-yellow-500/90 to-orange-500/90 text-white border-0 shadow-lg backdrop-blur-sm">
-                              ⭐ Featured
-                            </Badge>
-                          )}
-                          {product.stock === 0 && (
-                            <Badge className="bg-red-500/90 text-white border-0 shadow-lg backdrop-blur-sm">
-                              Out of Stock
-                            </Badge>
-                          )}
-                          {product.stock > 0 && product.stock < 5 && (
-                            <Badge className="bg-orange-500/90 text-white border-0 shadow-lg backdrop-blur-sm">
-                              Only {product.stock} left
-                            </Badge>
-                          )}
-                        </div>
-
-                        {/* Quick Actions */}
-                        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            className="h-8 w-8 rounded-full bg-gray-900/80 backdrop-blur-sm hover:bg-gray-800 shadow-lg border border-gray-700/50 text-gray-300 hover:text-white"
-                          >
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            className="h-8 w-8 rounded-full bg-gray-900/80 backdrop-blur-sm hover:bg-gray-800 shadow-lg border border-gray-700/50 text-gray-300 hover:text-white"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            onClick={() => toggleFlip(product._id as string)}
-                            className="h-8 w-8 rounded-full bg-purple-500/20 backdrop-blur-sm hover:bg-purple-500/30 shadow-lg border border-purple-500/30 text-purple-400 hover:text-purple-300"
-                          >
-                            <RotateCcw className="h-4 w-4" />
-                          </Button>
-                        </div>
-
-                        {/* Price Tag */}
-                        <div className="absolute bottom-3 right-3">
-                          <div className="bg-gray-900/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg border border-gray-700/50">
-                            <span className="text-lg font-bold text-green-400">
-                              ₹{product.price.toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="p-4 flex-1 flex flex-col space-y-3">
-                        {/* Title and Rating */}
-                        <div className="space-y-2">
-                          <h3 className="font-semibold text-lg leading-tight line-clamp-2 text-white group-hover:text-purple-400 transition-colors">
-                            {product.title}
-                          </h3>
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`h-3 w-3 ${
-                                    i < 4
-                                      ? "fill-yellow-400 text-yellow-400"
-                                      : "fill-gray-600 text-gray-600"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-xs text-gray-400">(4.2)</span>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        {product.description && (
-                          <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed flex-1">
-                            {product.description}
-                          </p>
-                        )}
-
-                        {/* Quick Specs */}
-                        <div className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/30">
-                          <div className="grid grid-cols-2 gap-2 text-xs">
-                            {product.specs?.printerSpeed && (
-                              <>
-                                <span className="text-gray-400 flex items-center gap-1">
-                                  <Zap className="w-3 h-3" />
-                                  Speed:
-                                </span>
-                                <span className="font-medium text-gray-300 text-right">
-                                  {product.specs.printerSpeed}mm/s
-                                </span>
-                              </>
-                            )}
-                            {product.specs?.maxHeatbedTemp && (
-                              <>
-                                <span className="text-gray-400 flex items-center gap-1">
-                                  <Thermometer className="w-3 h-3" />
-                                  Bed Temp:
-                                </span>
-                                <span className="font-medium text-gray-300 text-right">
-                                  {product.specs.maxHeatbedTemp}°C
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Stock Status */}
-                        <div className="flex items-center justify-between">
-                          <span
-                            className={`text-sm font-medium ${
-                              product.stock > 0
-                                ? "text-green-400"
-                                : "text-red-400"
-                            }`}
-                          >
-                            {product.stock > 0
-                              ? `${product.stock} in stock`
-                              : "Out of stock"}
-                          </span>
-                        </div>
-
-                        {/* Admin Actions */}
-                        {isAdmin && (
-                          <div className="flex gap-2 pt-2 border-t border-gray-700/30">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1 text-green-400 border-green-500/30 hover:bg-green-500/10 bg-transparent hover:text-green-300 transition-colors"
-                              onClick={() => handleEdit(product._id as string)}
-                            >
-                              <Pencil className="h-3 w-3 mr-1" />
-                              Edit
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1 text-red-400 border-red-500/30 hover:bg-red-500/10 bg-transparent hover:text-red-300 transition-colors"
-                              onClick={() => setProductToDelete(product)}
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              Delete
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Back Side - Detailed Specs */}
-                  <Card className="absolute inset-0 backface-hidden rotate-y-180 bg-gray-900/50 border-gray-800/50 backdrop-blur-sm shadow-2xl">
-                    <CardContent className="p-4 h-full flex flex-col">
-                      {/* Header */}
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-white">
-                          Technical Specifications
-                        </h3>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => toggleFlip(product._id as string)}
-                          className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-800/50"
-                        >
-                          <RotateCcw className="h-4 w-4" />
+                {/* Admin Quick Actions */}
+                {isAdmin && (
+                  <div className="absolute top-4 right-4">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="secondary" size="icon" className="h-10 w-10 rounded-full bg-white/90 backdrop-blur-md border-0 shadow-lg hover:bg-white transition-all">
+                          <MoreHorizontal className="h-5 w-5 text-black" />
                         </Button>
-                      </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="rounded-2xl border-gray-100 p-2 min-w-[160px]">
+                        <DropdownMenuItem 
+                          onClick={() => handleEdit(product._id as string)}
+                          className="rounded-xl px-4 py-3 focus:bg-green-50 focus:text-green-600 cursor-pointer gap-3 font-medium"
+                        >
+                          <Pencil className="h-4 w-4" />
+                          Edit Product
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => setProductToDelete(product)}
+                          className="rounded-xl px-4 py-3 focus:bg-red-50 focus:text-red-600 cursor-pointer gap-3 font-medium"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete Product
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
+              </div>
 
-                      {/* Detailed Specs */}
-                      <div className="space-y-4 flex-1 overflow-y-auto">
-                        {/* Performance Specs */}
-                        <div className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/30">
-                          <h4 className="text-sm font-medium text-purple-400 mb-3 flex items-center gap-2">
-                            <Zap className="w-4 h-4" />
-                            Performance
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            {product.specs?.printerSpeed && (
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">
-                                  Print Speed:
-                                </span>
-                                <span className="text-gray-300">
-                                  {product.specs.printerSpeed}mm/s
-                                </span>
-                              </div>
-                            )}
-                            {product.specs?.maxSpeed && (
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">
-                                  Max Speed:
-                                </span>
-                                <span className="text-gray-300">
-                                  {product.specs.maxSpeed}mm/s
-                                </span>
-                              </div>
-                            )}
-                            {product.specs?.acceleration && (
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">
-                                  Acceleration:
-                                </span>
-                                <span className="text-gray-300">
-                                  {product.specs.acceleration}mm/s²
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+              {/* Content Section */}
+              <div className="p-8 flex-1 flex flex-col">
+                <div className="flex justify-between items-start gap-4 mb-4">
+                  <h3 
+                    className="text-2xl font-medium tracking-tight text-black leading-tight group-hover:text-green-600 transition-colors cursor-pointer"
+                    onClick={() => handleEdit(product._id as string)}
+                  >
+                    {product.title}
+                  </h3>
+                  <div className="text-2xl font-medium text-black tracking-tighter">
+                    ₹{product.price.toLocaleString()}
+                  </div>
+                </div>
 
-                        {/* Temperature Specs */}
-                        <div className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/30">
-                          <h4 className="text-sm font-medium text-orange-400 mb-3 flex items-center gap-2">
-                            <Thermometer className="w-4 h-4" />
-                            Temperature
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            {product.specs?.maxHotendTemp && (
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">
-                                  Hotend Max:
-                                </span>
-                                <span className="text-gray-300">
-                                  {product.specs.maxHotendTemp}°C
-                                </span>
-                              </div>
-                            )}
-                            {product.specs?.maxHeatbedTemp && (
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Bed Max:</span>
-                                <span className="text-gray-300">
-                                  {product.specs.maxHeatbedTemp}°C
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                <p className="text-gray-500 text-sm line-clamp-2 mb-8 leading-relaxed">
+                  {product.description || "No description provided for this product."}
+                </p>
 
-                        {/* Build Volume */}
-                        {product.specs?.volumeX &&
-                          product.specs?.volumeY &&
-                          product.specs?.volumeZ && (
-                            <div className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/30">
-                              <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
-                                <Package className="w-4 h-4" />
-                                Build Volume
-                              </h4>
-                              <div className="text-center">
-                                <span className="text-lg font-mono text-gray-300">
-                                  {product.specs.volumeX} ×{" "}
-                                  {product.specs.volumeY} ×{" "}
-                                  {product.specs.volumeZ}mm
-                                </span>
-                              </div>
-                            </div>
-                          )}
+                {/* Specs Grid */}
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100/50">
+                    <div className="flex items-center gap-2 text-gray-400 mb-1">
+                      <Zap className="w-3 h-3" />
+                      <span className="text-[10px] font-bold uppercase tracking-widest">Speed</span>
+                    </div>
+                    <div className="text-sm font-medium text-black">
+                      {product.specs?.printerSpeed ? `${product.specs.printerSpeed}mm/s` : "—"}
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100/50">
+                    <div className="flex items-center gap-2 text-gray-400 mb-1">
+                      <Thermometer className="w-3 h-3" />
+                      <span className="text-[10px] font-bold uppercase tracking-widest">Temp</span>
+                    </div>
+                    <div className="text-sm font-medium text-black">
+                      {product.specs?.maxHotendTemp ? `${product.specs.maxHotendTemp}°C` : "—"}
+                    </div>
+                  </div>
+                </div>
 
-                        {/* Supported Filaments */}
-                        {product.specs?.supportedFilaments && (
-                          <div className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/30">
-                            <h4 className="text-sm font-medium text-green-400 mb-3 flex items-center gap-2">
-                              <Layers className="w-4 h-4" />
-                              Supported Filaments
-                            </h4>
-                            <div className="flex flex-wrap gap-1">
-                              {product.specs.supportedFilaments
-                                .split(",")
-                                .map((filament, idx) => (
-                                  <Badge
-                                    key={idx}
-                                    variant="outline"
-                                    className="text-xs px-2 py-0.5 bg-blue-500/10 text-blue-400 border-blue-500/30"
-                                  >
-                                    {filament.trim()}
-                                  </Badge>
-                                ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Price and Actions */}
-                      <div className="mt-4 pt-4 border-t border-gray-700/30">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-2xl font-bold text-green-400">
-                            ₹{product.price.toLocaleString()}
-                          </span>
-                          <span
-                            className={`text-sm font-medium ${
-                              product.stock > 0
-                                ? "text-green-400"
-                                : "text-red-400"
-                            }`}
-                          >
-                            {product.stock > 0
-                              ? `${product.stock} in stock`
-                              : "Out of stock"}
-                          </span>
-                        </div>
-
-                        {isAdmin && (
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1 text-green-400 border-green-500/30 hover:bg-green-500/10 bg-transparent"
-                              onClick={() => handleEdit(product._id as string)}
-                            >
-                              <Pencil className="h-3 w-3 mr-1" />
-                              Edit
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1 text-red-400 border-red-500/30 hover:bg-red-500/10 bg-transparent"
-                              onClick={() => setProductToDelete(product)}
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              Delete
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <div className="mt-auto flex items-center justify-between pt-6 border-t border-gray-50">
+                  <div className="flex items-center gap-1.5">
+                    <div className={cn(
+                      "w-2 h-2 rounded-full",
+                      product.stock > 0 ? "bg-green-500" : "bg-red-500"
+                    )} />
+                    <span className="text-xs font-bold uppercase tracking-widest text-gray-400">
+                      {product.stock > 0 ? `${product.stock} Units` : "Sold Out"}
+                    </span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => handleEdit(product._id as string)}
+                    className="text-xs font-bold uppercase tracking-widest text-green-600 hover:text-green-700 hover:bg-green-50 p-0 h-auto"
+                  >
+                    View Details
+                  </Button>
                 </div>
               </div>
-            );
-          })
+            </div>
+          ))
         )}
       </div>
-
-      <style jsx global>{`
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .transform-style-preserve-3d {
-          transform-style: preserve-3d;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-      `}</style>
     </>
   );
 }

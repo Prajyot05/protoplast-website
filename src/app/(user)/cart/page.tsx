@@ -6,9 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,15 +21,11 @@ import {
   Minus,
   Plus,
   Trash2,
-  ShoppingCart,
-  ArrowLeft,
   CreditCard,
   Truck,
   Shield,
   Tag,
-  Mail,
   UserIcon,
-  MapPin,
   Phone,
   Home,
   AlertCircle,
@@ -47,8 +41,8 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
+  DialogDescription
 } from "@/components/ui/dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useProductStore } from "@/stores/useProductStore";
 import { useLocalProduct } from "@/stores/useLocalProduct";
 import { toast } from "sonner";
@@ -410,6 +404,9 @@ export default function CartPage() {
                     <DialogContent className="sm:max-w-md bg-white px-6 py-4 rounded-3xl">
                       <DialogHeader className="mb-4">
                         <DialogTitle className="text-2xl font-medium tracking-tight">Clear your cart?</DialogTitle>
+                        <DialogDescription className="sr-only">
+                          Confirm if you want to remove all items from your cart.
+                        </DialogDescription>
                       </DialogHeader>
                       <p className="text-gray-500 mb-6 text-lg">
                         This will remove all items from your cart permanently. This action cannot be undone.
@@ -640,6 +637,9 @@ export default function CartPage() {
                                   <DialogContent className="sm:max-w-md bg-white py-6 px-8 rounded-3xl">
                                     <DialogHeader className="mb-4">
                                       <DialogTitle className="text-2xl font-medium tracking-tight">Remove item?</DialogTitle>
+                                      <DialogDescription className="sr-only">
+                                        Confirm if you want to remove this item from your cart.
+                                      </DialogDescription>
                                     </DialogHeader>
                                     <p className="text-gray-500 mb-8 text-lg">
                                       Are you sure you want to remove <span className="font-medium text-black">{item.title}</span> from your cart?

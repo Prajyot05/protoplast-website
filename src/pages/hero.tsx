@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ServiceKey } from "@/types/service";
 import { useState, useRef } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 import { ArrowUpRight } from "lucide-react";
 
@@ -90,6 +90,10 @@ export default function Hero() {
       {/* Service Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="max-w-4xl bg-white border-gray-200">
+          <DialogTitle className="sr-only">Service Details</DialogTitle>
+          <DialogDescription className="sr-only">
+            Detailed information about our manufacturing services.
+          </DialogDescription>
           {activeServiceId && (
             <ServiceModal
               serviceId={activeServiceId}

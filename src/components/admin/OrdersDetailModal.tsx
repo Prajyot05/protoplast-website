@@ -1,16 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { Package, User, MapPin, CreditCard, Calendar, Phone } from "lucide-react"
+import { Package, User, MapPin, CreditCard, Calendar, Phone, X } from "lucide-react"
 import { updateOrderStatus } from "@/actions/orders"
 import { toast } from "sonner"
 import type { OrderType } from "@/types/order"
+import { cn } from "@/lib/utils"
 
 interface Props {
   open: boolean
@@ -27,17 +27,17 @@ export default function OrderDetailModal({ open, onClose, order }: Props) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "delivered":
-        return "bg-green-500/20 text-green-400 border-green-500/30"
+        return "bg-green-50 text-green-600 border-green-100"
       case "shipped":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30"
+        return "bg-blue-50 text-blue-600 border-blue-100"
       case "paid":
-        return "bg-purple-500/20 text-purple-400 border-purple-500/30"
+        return "bg-purple-50 text-purple-600 border-purple-100"
       case "pending":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+        return "bg-yellow-50 text-yellow-600 border-yellow-100"
       case "cancelled":
-        return "bg-red-500/20 text-red-400 border-red-500/30"
+        return "bg-red-50 text-red-600 border-red-100"
       default:
-        return "bg-gray-500/20 text-gray-400 border-gray-500/30"
+        return "bg-gray-50 text-gray-600 border-gray-100"
     }
   }
 
@@ -62,62 +62,51 @@ export default function OrderDetailModal({ open, onClose, order }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 border-gray-800">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
-            <Package className="w-5 h-5 text-orange-400" />
-            Order Details
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-gray-100 p-0 rounded-3xl shadow-2xl">
+        <div className="sticky top-0 bg-white/80 backdrop-blur-md z-10 px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+          <DialogHeader className="text-left">
+            <DialogTitle className="text-2xl font-medium tracking-tight text-black">Order Details</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 mt-1 font-mono uppercase tracking-widest">
+              #{order._id.slice(-12)}
+            </DialogDescription>
+          </DialogHeader>
+          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-gray-100">
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Order Info */}
-          <Card className="bg-gray-800/50 border-gray-700/50">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-orange-400" />
-                Order Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-400">Order ID</p>
-                  <p className="font-mono text-sm text-white bg-gray-800/50 px-2 py-1 rounded">{order._id}</p>
+        <div className="p-8 space-y-12">
+          {/* Top Grid: Info & Customer */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Order Info */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3 text-green-600">
+                <CreditCard className="w-5 h-5" />
+                <h3 className="text-sm font-bold uppercase tracking-widest">Order Information</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Payment ID</p>
+                  <p className="text-sm font-mono text-black break-all">{order.paymentIntentId || "—"}</p>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-400">Payment ID</p>
-                  <p className="font-mono text-sm text-white bg-gray-800/50 px-2 py-1 rounded truncate">
-                    {order.paymentIntentId}
-                  </p>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Order Date</p>
+                  <p className="text-sm font-medium text-black">{new Date(order.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-400">Order Date</p>
-                  <p className="text-white flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Total Amount</p>
-                  <p className="text-xl font-bold text-white">₹{order.totalAmount.toLocaleString()}</p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-sm text-gray-400 mb-2">Status</p>
-                <div className="flex items-center gap-3">
-                  <Badge className={`${getStatusColor(currentStatus)} border font-medium px-3 py-1`}>
-                    {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
+              <div className="space-y-4">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current Status</p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Badge className={cn("rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider border shadow-none", getStatusColor(currentStatus))}>
+                    {currentStatus}
                   </Badge>
                   <Select value={currentStatus} onValueChange={handleStatusUpdate} disabled={isUpdating}>
-                    <SelectTrigger className="w-40 bg-gray-800/50 border-gray-700/50 text-white">
+                    <SelectTrigger className="h-10 rounded-xl bg-gray-50 border-transparent focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all w-40 text-xs font-medium">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-800 border-gray-700">
+                    <SelectContent className="rounded-xl border-gray-100">
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="paid">Paid</SelectItem>
                       <SelectItem value="shipped">Shipped</SelectItem>
@@ -127,94 +116,95 @@ export default function OrderDetailModal({ open, onClose, order }: Props) {
                   </Select>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Customer & Shipping */}
-          <Card className="bg-gray-800/50 border-gray-700/50">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <User className="w-4 h-4 text-orange-400" />
-                Customer & Shipping
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-400">Customer Name</p>
-                <p className="text-white font-medium">{order.address.fullName}</p>
+            {/* Customer Info */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3 text-green-600">
+                <User className="w-5 h-5" />
+                <h3 className="text-sm font-bold uppercase tracking-widest">Customer & Shipping</h3>
               </div>
 
-              <div>
-                <p className="text-sm text-gray-400">Phone</p>
-                <p className="text-white flex items-center gap-1">
-                  <Phone className="w-4 h-4" />
-                  {order.address.phone}
-                </p>
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Name</p>
+                  <p className="text-sm font-medium text-black">{order.address.fullName}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phone</p>
+                  <p className="text-sm font-medium text-black">{order.address.phone}</p>
+                </div>
               </div>
 
-              <div>
-                <p className="text-sm text-gray-400 mb-2">Shipping Address</p>
-                <div className="bg-gray-800/50 p-3 rounded-lg">
-                  <p className="text-white flex items-start gap-2">
-                    <MapPin className="w-4 h-4 mt-0.5 text-orange-400" />
-                    <span>
-                      {order.address.street}
-                      <br />
-                      {order.address.city}, {order.address.state} {order.address.zip}
-                      <br />
-                      {order.address.country}
-                    </span>
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Shipping Address</p>
+                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {order.address.street}<br />
+                    {order.address.city}, {order.address.state} {order.address.zip}<br />
+                    {order.address.country}
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          {/* Products List */}
+          <div className="space-y-8">
+            <div className="flex items-center gap-3 text-green-600">
+              <Package className="w-5 h-5" />
+              <h3 className="text-sm font-bold uppercase tracking-widest">Products ({totalItems} items)</h3>
+            </div>
+
+            <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50/50 border-b border-gray-100">
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Item</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Price</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Qty</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {order.products.map((item, index) => (
+                    <tr key={index} className="group">
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium text-black">{item.product.title}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-500">₹{item.priceAtPurchase.toLocaleString()}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-500">{item.quantity}</div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="text-sm font-medium text-black">₹{(item.quantity * item.priceAtPurchase).toLocaleString()}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-gray-50/30">
+                    <td colSpan={3} className="px-6 py-6 text-right">
+                      <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Grand Total</span>
+                    </td>
+                    <td className="px-6 py-6 text-right">
+                      <span className="text-2xl font-medium text-black tracking-tight">₹{order.totalAmount.toLocaleString()}</span>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         </div>
 
-        {/* Products */}
-        <Card className="bg-gray-800/50 border-gray-700/50">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Package className="w-4 h-4 text-orange-400" />
-              Products ({totalItems} items)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {order.products.map((item, index) => (
-                <div key={index} className="flex items-center gap-4 p-3 bg-gray-800/30 rounded-lg">
-                  <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                    <Package className="w-6 h-6 text-gray-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-medium">{item.product.title}</h4>
-                    <p className="text-sm text-gray-400">
-                      Quantity: {item.quantity} × ₹{item.priceAtPurchase.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-white font-medium">₹{(item.quantity * item.priceAtPurchase).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-
-              <Separator className="bg-gray-700/50" />
-
-              <div className="flex justify-between items-center pt-2">
-                <span className="text-lg font-medium text-white">Total Amount:</span>
-                <span className="text-xl font-bold text-white">₹{order.totalAmount.toLocaleString()}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-end gap-3 pt-4">
+        <div className="p-8 border-t border-gray-100 flex justify-end">
           <Button
-            variant="outline"
             onClick={onClose}
-            className="border-gray-700 text-gray-300 hover:bg-gray-800 bg-transparent"
+            className="h-12 px-8 rounded-full bg-black text-white hover:bg-gray-800 transition-all font-medium"
           >
-            Close
+            Close Details
           </Button>
         </div>
       </DialogContent>

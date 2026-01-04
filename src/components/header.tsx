@@ -10,7 +10,7 @@ import {
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ShoppingBag, ShoppingCart } from "lucide-react";
+import { ShoppingBag, ShoppingCart, ArrowLeft } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -59,39 +59,29 @@ export default function Header() {
   // --- Admin Header (no nav items) ---
   if (isLoaded && isAdminPath && role === "admin") {
     return (
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950 border-b border-gray-800">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Image
-                src="/logo-full-black.svg"
-                alt="Logo"
-                width={isMobile ? 110 : 160}
-                height={52}
-                className="flex-shrink-0 cursor-pointer invert"
-                onClick={() => router.push("/")}
-              />
-            </div>
+      <header className="fixed top-0 left-0 md:left-72 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="px-8 py-4">
+          <div className="flex items-center justify-end">
             <div className="flex items-center gap-4">
               <div className="hidden lg:flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-gray-800/50 px-3 py-1.5 rounded border border-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-xs text-gray-300">System Online</span>
+                <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">System Online</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-gray-800/30 px-3 py-2 rounded border border-gray-700">
-                <Avatar className="w-8 h-8">
+              <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
+                <Avatar className="w-8 h-8 border border-white shadow-sm">
                   <AvatarImage src={user?.imageUrl ?? ""} alt="Admin profile" />
-                  <AvatarFallback className="bg-green-500/20 text-green-400">
+                  <AvatarFallback className="bg-green-500/10 text-green-600 text-[10px] font-bold">
                     {user?.firstName?.[0] ?? "A"}
                   </AvatarFallback>
                 </Avatar>
                 {!isMobile && (
-                  <div className="text-white text-sm">
-                    <p className="font-medium leading-tight">
+                  <div className="text-black text-sm">
+                    <p className="font-bold leading-tight tracking-tight">
                       {user?.firstName} {user?.lastName}
                     </p>
-                    <p className="text-xs text-green-400">Administrator</p>
+                    <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest">Administrator</p>
                   </div>
                 )}
               </div>

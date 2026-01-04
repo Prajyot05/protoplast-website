@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { ServiceKey } from "@/types/service";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 
 export default function Services() {
@@ -99,6 +99,10 @@ export default function Services() {
       {/* Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="max-w-2xl bg-white border-gray-200">
+          <DialogTitle className="sr-only">Service Details</DialogTitle>
+          <DialogDescription className="sr-only">
+            Detailed information about our {activeServiceId} service.
+          </DialogDescription>
           {activeServiceId && (
             <ServiceModal
               serviceId={activeServiceId}

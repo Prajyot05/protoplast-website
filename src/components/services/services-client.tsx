@@ -4,7 +4,7 @@ import { JSX, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Zap } from "lucide-react";
 import { ServiceKey } from "@/types/service";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import ServiceModal from "./service-modal";
 
 interface Service {
@@ -81,6 +81,10 @@ export default function ServicesClient({ services }: ServicesClientProps) {
       {/* Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="max-w-2xl">
+          <DialogTitle className="sr-only">Service Details</DialogTitle>
+          <DialogDescription className="sr-only">
+            Detailed information about our services.
+          </DialogDescription>
           <div className="text-sm text-muted-foreground">
             {activeServiceId && (
               <ServiceModal

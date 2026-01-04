@@ -14,11 +14,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
+    <div className="min-h-screen bg-white text-black flex flex-col">
       <Header />
-      <div className="flex pt-20">
+      <div className="flex flex-grow">
         <AdminSidebar />
-        <main className="ml-64 w-full p-6">{children}</main>
+        <main className="flex-grow md:ml-72 w-full min-h-screen">
+          {children}
+        </main>
       </div>
     </div>
   )

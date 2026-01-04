@@ -13,6 +13,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export interface ProductFormProps {
   product?: ProductType;
@@ -123,7 +125,6 @@ export default function ProductForm({ product, open, setOpen, onSubmitted }: Pro
         : await createProductOnServer(payload);
 
       if (result.success) {
-        // Update the store with the new/updated product
         if (product) {
           updateInStore(result.data);
           toast.success("Product updated successfully!");
@@ -131,12 +132,9 @@ export default function ProductForm({ product, open, setOpen, onSubmitted }: Pro
           addToStore(result.data);
           if (onSubmitted) onSubmitted(); 
         }
-        
-        // Close the form and reset
         setOpen(false);
         form.reset();
       } else {
-        // Handle server-side errors
         toast.error(result.error || "Failed to save product");
       }
     } catch (error) {
@@ -147,120 +145,131 @@ export default function ProductForm({ product, open, setOpen, onSubmitted }: Pro
     }
   };
 
+  const inputClasses = "h-12 rounded-xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all";
+  const labelClasses = "text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1";
+
   return (
     <BaseModal
       open={open}
       onClose={() => setOpen(false)}
       title={product ? "Edit Product" : "Create Product"}
     >
-      <div className="max-h-[80vh] overflow-y-auto px-1">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-1">
+      <div className="max-h-[70vh] overflow-y-auto pr-2 -mr-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
           {/* General Info */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="title">Title</label>
-              <input 
-                id="title" 
-                {...form.register("title")} 
-                className="input" 
-                placeholder="Ender 3 V2"
-                disabled={isSubmitting}
-              />
-              {form.formState.errors.title && (
-                <span className="text-red-500 text-sm">{form.formState.errors.title.message}</span>
-              )}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-green-600 mb-2">
+              <h3 className="text-sm font-bold uppercase tracking-widest">General Information</h3>
             </div>
+            
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="flex flex-col">
+                <label className={labelClasses} htmlFor="title">Product Title</label>
+                <Input 
+                  id="title" 
+                  {...form.register("title")} 
+                  className={inputClasses} 
+                  placeholder="e.g. Protoplast X1"
+                  disabled={isSubmitting}
+                />
+                {form.formState.errors.title && (
+                  <span className="text-red-500 text-[10px] mt-1 ml-1 font-medium">{form.formState.errors.title.message}</span>
+                )}
+              </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="price">Price (₹)</label>
-              <input 
-                type="number" 
-                id="price" 
-                {...form.register("price")} 
-                className="input" 
-                placeholder="0.00"
-                disabled={isSubmitting}
-              />
-              {form.formState.errors.price && (
-                <span className="text-red-500 text-sm">{form.formState.errors.price.message}</span>
-              )}
-            </div>
+              <div className="flex flex-col">
+                <label className={labelClasses} htmlFor="price">Price (₹)</label>
+                <Input 
+                  type="number" 
+                  id="price" 
+                  {...form.register("price")} 
+                  className={inputClasses} 
+                  placeholder="0.00"
+                  disabled={isSubmitting}
+                />
+                {form.formState.errors.price && (
+                  <span className="text-red-500 text-[10px] mt-1 ml-1 font-medium">{form.formState.errors.price.message}</span>
+                )}
+              </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="stock">Stock</label>
-              <input 
-                type="number" 
-                id="stock" 
-                {...form.register("stock")} 
-                className="input" 
-                placeholder="e.g. 50"
-                disabled={isSubmitting}
-              />
-              {form.formState.errors.stock && (
-                <span className="text-red-500 text-sm">{form.formState.errors.stock.message}</span>
-              )}
-            </div>
+              <div className="flex flex-col">
+                <label className={labelClasses} htmlFor="stock">Inventory Stock</label>
+                <Input 
+                  type="number" 
+                  id="stock" 
+                  {...form.register("stock")} 
+                  className={inputClasses} 
+                  placeholder="e.g. 50"
+                  disabled={isSubmitting}
+                />
+                {form.formState.errors.stock && (
+                  <span className="text-red-500 text-[10px] mt-1 ml-1 font-medium">{form.formState.errors.stock.message}</span>
+                )}
+              </div>
 
-            <div className="flex flex-col gap-1 sm:col-span-2">
-              <label htmlFor="image">Image URL</label>
-              <input 
-                id="image" 
-                {...form.register("image")} 
-                className="input" 
-                placeholder="https://..."
-                disabled={isSubmitting}
-              />
-              {form.formState.errors.image && (
-                <span className="text-red-500 text-sm">{form.formState.errors.image.message}</span>
-              )}
-            </div>
+              <div className="flex flex-col">
+                <label className={labelClasses} htmlFor="image">Image URL</label>
+                <Input 
+                  id="image" 
+                  {...form.register("image")} 
+                  className={inputClasses} 
+                  placeholder="https://..."
+                  disabled={isSubmitting}
+                />
+                {form.formState.errors.image && (
+                  <span className="text-red-500 text-[10px] mt-1 ml-1 font-medium">{form.formState.errors.image.message}</span>
+                )}
+              </div>
 
-            <div className="flex flex-col gap-1 sm:col-span-2">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                {...form.register("description")}
-                className="textarea"
-                placeholder="Write short description..."
-                rows={4}
-                disabled={isSubmitting}
-              />
+              <div className="flex flex-col sm:col-span-2">
+                <label className={labelClasses} htmlFor="description">Description</label>
+                <Textarea
+                  id="description"
+                  {...form.register("description")}
+                  className="min-h-[120px] rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all resize-none"
+                  placeholder="Describe the product features and benefits..."
+                  disabled={isSubmitting}
+                />
+              </div>
             </div>
           </div>
 
           {/* Technical Specs */}
-          <div className="space-y-3 border-t pt-4">
-            <h3 className="text-md font-semibold">Technical Specifications</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-green-600 mb-2">
+              <h3 className="text-sm font-bold uppercase tracking-widest">Technical Specifications</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {[
-                { name: "printerSpeed", label: "Printer Speed" },
+                { name: "printerSpeed", label: "Print Speed" },
                 { name: "maxSpeed", label: "Max Speed" },
                 { name: "acceleration", label: "Acceleration" },
-                { name: "maxAcceleration", label: "Max Acceleration" },
+                { name: "maxAcceleration", label: "Max Accel" },
                 { name: "volumeX", label: "Volume X" },
                 { name: "volumeY", label: "Volume Y" },
                 { name: "volumeZ", label: "Volume Z" },
-                { name: "maxHeatbedTemp", label: "Max Heatbed Temp" },
-                { name: "maxHotendTemp", label: "Max Hotend Temp" },
+                { name: "maxHeatbedTemp", label: "Heatbed Temp" },
+                { name: "maxHotendTemp", label: "Hotend Temp" },
               ].map(({ name, label }) => (
-                <div className="flex flex-col gap-1" key={name}>
-                  <label htmlFor={name}>{label}</label>
-                  <input 
+                <div className="flex flex-col" key={name}>
+                  <label className={labelClasses} htmlFor={name}>{label}</label>
+                  <Input 
                     id={name} 
                     type="number" 
                     {...form.register(name as keyof ProductFormValues)} 
-                    className="input"
+                    className={inputClasses}
                     disabled={isSubmitting}
                   />
                 </div>
               ))}
 
-              <div className="flex flex-col gap-1 sm:col-span-2 md:col-span-3">
-                <label htmlFor="supportedFilaments">Supported Filaments</label>
-                <input
+              <div className="flex flex-col sm:col-span-2 md:col-span-3">
+                <label className={labelClasses} htmlFor="supportedFilaments">Supported Filaments</label>
+                <Input
                   id="supportedFilaments"
                   {...form.register("supportedFilaments")}
-                  className="input"
+                  className={inputClasses}
                   placeholder="PLA, ABS, PETG, TPU..."
                   disabled={isSubmitting}
                 />
@@ -268,13 +277,15 @@ export default function ProductForm({ product, open, setOpen, onSubmitted }: Pro
             </div>
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={isSubmitting}
-            className="w-full bg-green-600 hover:bg-green-500 text-white font-medium disabled:opacity-50"
-          >
-            {isSubmitting ? "Saving..." : (product ? "Update Product" : "Create Product")}
-          </Button>
+          <div className="pt-6 border-t border-gray-100">
+            <Button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full h-14 rounded-full bg-black text-white hover:bg-gray-800 transition-all font-medium text-lg shadow-xl shadow-black/5"
+            >
+              {isSubmitting ? "Processing..." : (product ? "Update Product" : "Create Product")}
+            </Button>
+          </div>
         </form>
       </div>
     </BaseModal>

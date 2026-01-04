@@ -3,14 +3,16 @@ import { useState, useMemo, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { Package, Search, Filter } from "lucide-react"
+import { Package, Search, Filter, Home, ChevronRight, Plus } from "lucide-react"
 import { getAllProducts } from "@/actions/products"
 import ShowAllProducts from "@/components/admin/showAllProducts"
 import CreateProductInline from "@/components/admin/CreateProductInline"
-import type { IProduct } from "@/models/Product"
+import type { ProductType } from "@/models/Product"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function AdminDashboard() {
-  const [products, setProducts] = useState<IProduct[]>([])
+  const [products, setProducts] = useState<ProductType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
@@ -89,9 +91,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-gray-900/30 border border-gray-800/30 rounded-lg p-6 animate-fade-in">
-          <p className="text-gray-300">Loading products...</p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 border-4 border-green-500/20 border-t-green-500 rounded-full animate-spin" />
+          <p className="text-gray-500 font-medium">Loading inventory...</p>
         </div>
       </div>
     )
@@ -99,114 +102,151 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6 animate-fade-in">
-          <h3 className="text-red-400 font-semibold mb-2 text-lg">Error Loading Products</h3>
-          <p className="text-red-300">{error}</p>
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+        <div className="bg-red-50 border border-red-100 text-red-600 px-8 py-12 rounded-3xl shadow-sm max-w-md w-full text-center">
+          <h3 className="text-2xl font-bold mb-2 text-black tracking-tight">Error Loading Products</h3>
+          <p className="text-gray-500 mb-8">{error}</p>
+          <Button onClick={() => window.location.reload()} className="bg-black text-white hover:bg-gray-800 rounded-full px-8">
+            Try Again
+          </Button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Package className="w-4 h-4 text-purple-400" />
-              </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Admin Dashboard
-              </h1>
-            </div>
-            <p className="text-gray-400 text-lg">Manage your products and inventory</p>
-            <div className="flex items-center gap-2 mt-3">
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-300">
-                Total: <span className="font-semibold text-purple-400">{filteredAndSortedProducts.length}</span>{" "}
-                products
-              </span>
-            </div>
-          </div>
-          <CreateProductInline />
+    <div className="min-h-screen bg-white text-black">
+      {/* Breadcrumb */}
+      <div className="pt-6 pb-6 border-b border-gray-100">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <nav className="flex items-center space-x-3 text-sm">
+            <Link href="/" className="text-gray-400 hover:text-black transition-colors flex items-center gap-1.5">
+              <Home className="h-4 w-4" />
+              <span className="font-medium">Home</span>
+            </Link>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-gray-400 font-medium">Admin</span>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-black font-bold uppercase tracking-widest text-[10px]">Inventory</span>
+          </nav>
         </div>
       </div>
 
-      {/* Filters */}
-      <Card className="mb-6 bg-gray-900/50 border-gray-800/50 backdrop-blur-sm animate-fade-in">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-4 h-4 text-purple-400" />
-            <span className="text-sm font-medium text-gray-300">Filters & Search</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="relative group">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-purple-400 transition-colors" />
-              <Input
-                placeholder="Search by title, description, or ID..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
-              />
+      {/* Header Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+            <div className="max-w-4xl">
+              <h1 className="text-black text-6xl md:text-8xl font-medium leading-[0.9] tracking-tighter mb-8">
+                Product <br />
+                <span className="text-green-600 italic">Inventory.</span>
+              </h1>
+              <p className="text-gray-500 text-xl md:text-2xl leading-relaxed max-w-2xl font-light">
+                Manage your store's catalog, track stock levels, and update product details with precision.
+              </p>
             </div>
-
-            <Select value={stockFilter} onValueChange={setStockFilter}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-purple-500 focus:ring-purple-500/20 transition-all">
-                <SelectValue placeholder="All Stock" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="all">All Stock</SelectItem>
-                <SelectItem value="in-stock">In Stock</SelectItem>
-                <SelectItem value="low-stock">Low Stock (&lt;5)</SelectItem>
-                <SelectItem value="out-of-stock">Out of Stock</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={featuredFilter} onValueChange={setFeaturedFilter}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-purple-500 focus:ring-purple-500/20 transition-all">
-                <SelectValue placeholder="All Products" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="all">All Products</SelectItem>
-                <SelectItem value="featured">Featured Only</SelectItem>
-                <SelectItem value="not-featured">Not Featured</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="bg-gray-800/50 border-gray-700/50 text-white focus:border-purple-500 focus:ring-purple-500/20 transition-all">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="date-desc">Newest First</SelectItem>
-                <SelectItem value="date-asc">Oldest First</SelectItem>
-                <SelectItem value="price-desc">Highest Price</SelectItem>
-                <SelectItem value="price-asc">Lowest Price</SelectItem>
-                <SelectItem value="name-asc">Title A-Z</SelectItem>
-                <SelectItem value="name-desc">Title Z-A</SelectItem>
-                <SelectItem value="stock-desc">Highest Stock</SelectItem>
-                <SelectItem value="stock-asc">Lowest Stock</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="mb-2">
+              <CreateProductInline />
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* Products Section */}
-      <div className="animate-fade-in">
-        <div className="flex items-center gap-2 mb-6">
-          <Package className="w-5 h-5 text-purple-400" />
-          <h2 className="text-xl font-semibold text-white">All Products</h2>
-          <span className="text-sm text-gray-400">
-            ({filteredAndSortedProducts.length} of {products.length})
-          </span>
+      <div className="max-w-7xl mx-auto px-6 pb-32">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20 border-y border-gray-100 py-12">
+          <div className="group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Total Products</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.length}</h3>
+          </div>
+          <div className="md:border-l border-gray-100 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">In Stock</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.stock > 0).length}</h3>
+          </div>
+          <div className="border-l border-gray-100 pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-red-600 transition-colors">Out of Stock</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.stock === 0).length}</h3>
+          </div>
+          <div className="border-l border-gray-100 pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Featured</p>
+            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.featured).length}</h3>
+          </div>
         </div>
 
-        <ShowAllProducts products={filteredAndSortedProducts} isAdmin={true} />
+        {/* Filters & Search */}
+        <div className="mb-16 space-y-8">
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="relative flex-grow group">
+              <Search className="w-5 h-5 absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-300 group-focus-within:text-green-600 transition-colors" />
+              <Input
+                placeholder="Search inventory..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-xl placeholder:text-gray-300"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Select value={stockFilter} onValueChange={setStockFilter}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                  <SelectValue placeholder="Stock Status" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="all" className="rounded-xl py-3">All Stock</SelectItem>
+                  <SelectItem value="in-stock" className="rounded-xl py-3">In Stock</SelectItem>
+                  <SelectItem value="low-stock" className="rounded-xl py-3">Low Stock (&lt;5)</SelectItem>
+                  <SelectItem value="out-of-stock" className="rounded-xl py-3">Out of Stock</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={featuredFilter} onValueChange={setFeaturedFilter}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                  <SelectValue placeholder="Featured" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="all" className="rounded-xl py-3">All Products</SelectItem>
+                  <SelectItem value="featured" className="rounded-xl py-3">Featured Only</SelectItem>
+                  <SelectItem value="not-featured" className="rounded-xl py-3">Not Featured</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-gray-100 p-2">
+                  <SelectItem value="date-desc" className="rounded-xl py-3">Newest First</SelectItem>
+                  <SelectItem value="date-asc" className="rounded-xl py-3">Oldest First</SelectItem>
+                  <SelectItem value="price-desc" className="rounded-xl py-3">Highest Price</SelectItem>
+                  <SelectItem value="price-asc" className="rounded-xl py-3">Lowest Price</SelectItem>
+                  <SelectItem value="name-asc" className="rounded-xl py-3">Title A-Z</SelectItem>
+                  <SelectItem value="name-desc" className="rounded-xl py-3">Title Z-A</SelectItem>
+                  <SelectItem value="stock-desc" className="rounded-xl py-3">Highest Stock</SelectItem>
+                  <SelectItem value="stock-asc" className="rounded-xl py-3">Lowest Stock</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        <div className="space-y-12">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+            <div className="flex items-baseline gap-4">
+              <h2 className="text-4xl font-medium text-black tracking-tight">Catalog</h2>
+              <span className="text-xl text-green-600 font-medium tabular-nums">
+                ({filteredAndSortedProducts.length})
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-2 text-gray-400">
+              <Filter className="w-4 h-4" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Active Filters</span>
+            </div>
+          </div>
+
+          <ShowAllProducts products={filteredAndSortedProducts} isAdmin={true} />
+        </div>
       </div>
     </div>
   )
+  
 }

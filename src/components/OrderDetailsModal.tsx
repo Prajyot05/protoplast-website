@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
   DialogFooter,
   DialogClose,
@@ -13,9 +14,11 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { Package, MapPin, Phone, Calendar, CreditCard, Truck, CheckCircle, Clock, XCircle, ExternalLink } from "lucide-react"
+import { Package, MapPin, Phone, Calendar, CreditCard, Truck, CheckCircle, Clock, XCircle, ExternalLink, Loader2 } from "lucide-react"
 import Image from "next/image"
 import type { OrderType } from "@/types/order"
+import { useState, useRef } from "react"
+import { InvoiceTemplate } from "./InvoiceTemplate"
 
 interface OrderDetailsModalProps {
   order: OrderType
@@ -25,6 +28,69 @@ interface OrderDetailsModalProps {
 }
 
 export function OrderDetailsModal({ order, trigger, open, onOpenChange }: OrderDetailsModalProps) {
+  const [isDownloading, setIsDownloading] = useState(false)
+  const invoiceRef = useRef<HTMLDivElement>(null)
+
+  const handleDownloadInvoice = async () => {
+    if (!invoiceRef.current) return
+    setIsDownloading(true)
+    try {
+      const { default: jsPDF } = await import("jspdf")
+      const { default: html2canvas } = await import("html2canvas")
+      
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        onclone: (clonedDoc) => {
+          // Remove any oklch colors that might be in the stylesheets or computed styles
+          // html2canvas fails when it encounters oklch()
+          
+          // 1. Remove or modify style tags that might contain oklch
+          const styleTags = clonedDoc.getElementsByTagName("style");
+          for (let i = 0; i < styleTags.length; i++) {
+            if (styleTags[i].innerHTML.includes("oklch")) {
+              // We can't easily parse and fix CSS, but we can try a simple replace
+              styleTags[i].innerHTML = styleTags[i].innerHTML.replace(/oklch\([^)]+\)/g, "#000000");
+            }
+          }
+
+          // 2. Fix computed styles on elements
+          const elements = clonedDoc.getElementsByTagName("*");
+          for (let i = 0; i < elements.length; i++) {
+            const el = elements[i] as HTMLElement;
+            const style = window.getComputedStyle(el);
+            
+            // Check common color properties
+            const props = ["color", "backgroundColor", "borderColor", "borderTopColor", "borderBottomColor", "borderLeftColor", "borderRightColor"];
+            props.forEach(prop => {
+              const value = style.getPropertyValue(prop);
+              if (value && value.includes("oklch")) {
+                // Fallback to a safe color if oklch is detected
+                el.style.setProperty(prop, prop.includes("border") ? "#e5e7eb" : (prop === "color" ? "#000000" : "transparent"), "important");
+              }
+            });
+          }
+        }
+      })
+      
+      const imgData = canvas.toDataURL("image/png")
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width / 2, canvas.height / 2],
+      })
+      
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width / 2, canvas.height / 2)
+      pdf.save(`invoice-${order._id.slice(-8)}.pdf`)
+    } catch (error) {
+      console.error("Error generating PDF:", error)
+    } finally {
+      setIsDownloading(false)
+    }
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending": return "bg-yellow-100 text-yellow-700 border-yellow-200"
@@ -52,6 +118,22 @@ export function OrderDetailsModal({ order, trigger, open, onOpenChange }: OrderD
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      
+      {/* Hidden Invoice Template for PDF Generation */}
+      <div className="fixed -left-[9999px] top-0">
+        <InvoiceTemplate 
+          ref={invoiceRef} 
+          order={order} 
+          downloadDate={new Date().toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          })}
+        />
+      </div>
+
       <DialogContent className="sm:max-w-2xl bg-white max-h-[90vh] flex flex-col p-0 gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b border-gray-100">
           <div className="flex items-center justify-between mr-8">
@@ -61,6 +143,9 @@ export function OrderDetailsModal({ order, trigger, open, onOpenChange }: OrderD
                 {order.products.length > 1 && ` + ${order.products.length - 1} more`}
               </span>
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Detailed view of your order including items, shipping address, and payment summary.
+            </DialogDescription>
             <Badge className={`${getStatusColor(order.status)} border px-3 py-1`}>
               <StatusIcon className="w-3 h-3 mr-1.5" />
               {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
@@ -173,9 +258,17 @@ export function OrderDetailsModal({ order, trigger, open, onOpenChange }: OrderD
               Close
             </Button>
           </DialogClose>
-          <Button className="w-full sm:w-auto bg-black text-white hover:bg-gray-800 gap-2">
-            <ExternalLink className="w-4 h-4" />
-            Download Invoice
+          <Button 
+            className="w-full sm:w-auto bg-black text-white hover:bg-gray-800 gap-2"
+            onClick={handleDownloadInvoice}
+            disabled={isDownloading}
+          >
+            {isDownloading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <ExternalLink className="w-4 h-4" />
+            )}
+            {isDownloading ? "Generating..." : "Download Invoice"}
           </Button>
         </DialogFooter>
       </DialogContent>
