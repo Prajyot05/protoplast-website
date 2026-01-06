@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
+import { NavigationLoader } from "@/components/ui/navigation-loader";
+import { Suspense } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,6 +46,9 @@ export default async function RootLayout({
             richColors
             closeButton
           />
+          <Suspense fallback={null}>
+            <NavigationLoader />
+          </Suspense>
           {children}
         </body>
       </html>

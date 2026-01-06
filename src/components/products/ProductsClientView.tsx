@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ShoppingCart, ArrowRight, Search, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProductType } from "@/models/Product";
+import { triggerNavigation } from "@/components/ui/navigation-loader";
 
 interface ProductsClientViewProps {
   products: ProductType[];
@@ -121,6 +122,7 @@ export default function ProductsClientView({ products }: ProductsClientViewProps
               <Link 
                 href={`/products/${product._id}`} 
                 key={product._id}
+                onClick={() => triggerNavigation()}
                 className="group block"
               >
                 <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">

@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { X, ShoppingBag , Package, Users, ArrowUpDown, Globe } from "lucide-react"
+import { triggerNavigation } from "@/components/ui/navigation-loader"
 
 const links = [
   { label: "Inventory", href: "/dashboard", icon: Package },
@@ -44,16 +45,19 @@ export default function AdminSidebar() {
   }
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
-      <nav className="flex flex-col space-y-2 px-6 py-10 flex-grow">
-        <div className="px-4 mb-10">
+    <div className="flex flex-col h-full min-h-0">
+      <nav className="flex flex-col space-y-2 px-6 py-6 md:py-10 flex-grow overflow-y-auto scrollbar-none">
+        <div className="px-4 mb-6 md:mb-10 flex-shrink-0">
           <Image
             src="/logo-full-black.svg"
             alt="Logo"
             width={140}
             height={46}
-            className="flex-shrink-0 cursor-pointer mb-10"
-            onClick={() => router.push("/")}
+            className="flex-shrink-0 cursor-pointer mb-6 md:mb-10"
+            onClick={() => {
+              triggerNavigation();
+              router.push("/");
+            }}
           />
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">Management</p>
         </div>
@@ -67,7 +71,10 @@ export default function AdminSidebar() {
                 ? "bg-black text-white shadow-2xl shadow-black/20" 
                 : "text-gray-500 hover:bg-gray-50 hover:text-black"
             )}
-            onClick={() => isMobile && setIsOpen(false)}
+            onClick={() => {
+              if (isMobile) setIsOpen(false);
+              if (!isActiveLink(href)) triggerNavigation();
+            }}
           >
             <Icon size={20} className={cn(
               "transition-all duration-500",
@@ -81,13 +88,14 @@ export default function AdminSidebar() {
         ))}
       </nav>
       
-      <div className="px-6 pb-10">
+      <div className="px-6 pb-10 flex-shrink-0">
         <Link
           href="/"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-black transition-all duration-500 group"
+          onClick={() => triggerNavigation()}
+          className="flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-black transition-all duration-500 group border-t border-gray-50 pt-6"
         >
           <Globe size={20} className="text-gray-300 group-hover:text-black group-hover:scale-110 transition-all duration-500" />
-          <span className="tracking-tight">Back to Website</span>
+          <span className="tracking-tight font-bold text-green-600">Back to Website</span>
         </Link>
       </div>
     </div>
@@ -99,10 +107,10 @@ export default function AdminSidebar() {
         {isOpen && (
           <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setIsOpen(false)}>
             <aside 
-              className="w-80 h-full bg-white text-black border-r border-gray-100 shadow-2xl animate-in slide-in-from-left duration-500"
+              className="w-full max-w-[280px] h-full bg-white text-black border-r border-gray-100 shadow-2xl animate-in slide-in-from-left duration-500 flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-end p-4">
+              <div className="flex justify-end p-4 flex-shrink-0">
                 <button 
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-xl bg-gray-50 text-gray-400 hover:text-black transition-colors"
@@ -110,7 +118,9 @@ export default function AdminSidebar() {
                   <X size={20} />
                 </button>
               </div>
-              {sidebarContent}
+              <div className="flex-grow min-h-0">
+                {sidebarContent}
+              </div>
             </aside>
           </div>
         )}
