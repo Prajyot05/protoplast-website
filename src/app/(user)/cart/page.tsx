@@ -47,6 +47,7 @@ import { useProductStore } from "@/stores/useProductStore";
 import { useLocalProduct } from "@/stores/useLocalProduct";
 import { toast } from "sonner";
 import Script from "next/script";
+import { triggerNavigation } from "@/components/ui/navigation-loader";
 import type { ProductType } from "@/models/Product";
 import Header from "@/components/header";
 import Footer from "@/pages/footer";
@@ -293,7 +294,13 @@ export default function CartPage() {
             <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
               Please sign in to view your cart and proceed with your purchase.
             </p>
-            <Button onClick={() => router.push("/sign-in")} className="bg-black text-white hover:bg-gray-800 rounded-full px-10 py-6 text-lg shadow-lg shadow-black/10 transition-all hover:scale-105 active:scale-95">
+            <Button 
+              onClick={() => {
+                triggerNavigation();
+                router.push("/sign-in");
+              }} 
+              className="bg-black text-white hover:bg-gray-800 rounded-full px-10 py-6 text-lg shadow-lg shadow-black/10 transition-all hover:scale-105 active:scale-95"
+            >
               Sign In to Continue
             </Button>
           </div>
@@ -343,7 +350,7 @@ export default function CartPage() {
                 Looks like you haven&apos;t added anything to your cart yet. Explore our products to find something you love.
               </p>
               <Button asChild className="bg-green-600 hover:bg-green-700 text-white rounded-full px-10 py-6 text-lg shadow-lg shadow-green-600/20 transition-all hover:shadow-green-600/40 hover:-translate-y-1">
-                <Link href="/products">
+                <Link href="/products" onClick={() => triggerNavigation()}>
                   Start Shopping <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>

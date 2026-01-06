@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLocalProduct } from "@/stores/useLocalProduct";
 import Link from "next/link";
+import { triggerNavigation } from "@/components/ui/navigation-loader";
 
 export default function Header() {
   const router = useRouter();
@@ -114,7 +115,12 @@ export default function Header() {
           {/* Logo */}
           <div
             className="cursor-pointer flex-shrink-0"
-            onClick={() => router.push("/")}
+            onClick={() => {
+              if (pathname !== "/") {
+                triggerNavigation();
+                router.push("/");
+              }
+            }}
           >
             <Image
               alt="Protoplast Logo"
@@ -129,6 +135,7 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-4 lg:gap-8">
             <Link
               href="/"
+              onClick={() => pathname !== "/" && triggerNavigation()}
               className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
                 pathname === "/" ? "text-green-600" : "text-gray-600 hover:text-black"
               }`}
@@ -153,6 +160,7 @@ export default function Header() {
                 <Link
                   key={item.id}
                   href={`/#${item.id}`}
+                  onClick={() => triggerNavigation()}
                   className="text-xs lg:text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
                 >
                   {item.label}
@@ -161,6 +169,7 @@ export default function Header() {
             ))}
             <Link
               href="/products"
+              onClick={() => pathname !== "/products" && triggerNavigation()}
               className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
                 pathname?.startsWith("/products") ? "text-green-600" : "text-gray-600 hover:text-black"
               }`}
@@ -173,7 +182,9 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-4 lg:gap-8">
             <SignedOut>
               <SignUpButton>
-                <button className="text-xs lg:text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors">
+                <button 
+                  className="text-xs lg:text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors"
+                >
                   Sign Up
                 </button>
               </SignUpButton>
@@ -182,7 +193,11 @@ export default function Header() {
             <SignedIn>
               <div className="flex items-center gap-4 lg:gap-8">
                 {role === "admin" && (
-                  <Link href="/dashboard" className="group flex items-center gap-1.5 lg:gap-2">
+                  <Link 
+                    href="/dashboard" 
+                    onClick={() => !pathname?.startsWith("/dashboard") && triggerNavigation()}
+                    className="group flex items-center gap-1.5 lg:gap-2"
+                  >
                     <LayoutDashboard className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${
                       pathname?.startsWith("/dashboard") ? "text-green-600" : "text-gray-600 group-hover:text-black"
                     }`} />
@@ -193,7 +208,11 @@ export default function Header() {
                     </span>
                   </Link>
                 )}
-                <Link href="/orders" className="group flex items-center gap-1.5 lg:gap-2">
+                <Link 
+                  href="/orders" 
+                  onClick={() => pathname !== "/orders" && triggerNavigation()}
+                  className="group flex items-center gap-1.5 lg:gap-2"
+                >
                   <ShoppingBag className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${
                     pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
                   }`} />
@@ -204,7 +223,11 @@ export default function Header() {
                   </span>
                 </Link>
 
-                <Link href="/cart" className="relative group flex items-center gap-1.5 lg:gap-2">
+                <Link 
+                  href="/cart" 
+                  onClick={() => pathname !== "/cart" && triggerNavigation()}
+                  className="relative group flex items-center gap-1.5 lg:gap-2"
+                >
                   <ShoppingCart className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${
                     pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
                   }`} />
@@ -236,7 +259,15 @@ export default function Header() {
           <div className="flex md:hidden items-center gap-4">
             <SignedIn>
               {role === "admin" && (
-                <Link href="/dashboard" className="p-2 text-gray-600 hover:text-green-600 transition-colors">
+                <Link 
+                  href="/dashboard" 
+                  onClick={() => {
+                    if (!pathname?.startsWith("/dashboard")) {
+                      triggerNavigation();
+                    }
+                  }}
+                  className="p-2 text-gray-600 hover:text-green-600 transition-colors"
+                >
                   <LayoutDashboard className="w-5 h-5" />
                 </Link>
               )}
@@ -257,9 +288,18 @@ export default function Header() {
             <div className="flex flex-col gap-6">
               <SignedIn>
                 {role === "admin" && (
-                  <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 py-2 border-b border-gray-50 bg-green-50/30 -mx-6 px-6 ${
-                    pathname?.startsWith("/dashboard") ? "text-green-600" : "text-black hover:text-green-600"
-                  }`}>
+                  <Link 
+                    href="/dashboard" 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      if (!pathname?.startsWith("/dashboard")) {
+                        triggerNavigation();
+                      }
+                    }} 
+                    className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 py-2 border-b border-gray-50 bg-green-50/30 -mx-6 px-6 ${
+                      pathname?.startsWith("/dashboard") ? "text-green-600" : "text-black hover:text-green-600"
+                    }`}
+                  >
                     <LayoutDashboard className="w-6 h-6 text-green-600" />
                     Admin Dashboard
                   </Link>
@@ -267,7 +307,12 @@ export default function Header() {
               </SignedIn>
               <Link
                 href="/"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  if (pathname !== "/") {
+                    triggerNavigation();
+                  }
+                }}
                 className={`text-2xl font-medium uppercase tracking-tighter ${
                   pathname === "/" ? "text-green-600" : "text-black hover:text-green-600"
                 }`}
@@ -293,7 +338,10 @@ export default function Header() {
                   <Link
                     key={item.id}
                     href={`/#${item.id}`}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      triggerNavigation();
+                    }}
                     className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
                   >
                     {item.label}
@@ -302,7 +350,12 @@ export default function Header() {
               ))}
               <Link
                 href="/products"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  if (pathname !== "/products") {
+                    triggerNavigation();
+                  }
+                }}
                 className={`text-2xl font-medium uppercase tracking-tighter ${
                   pathname?.startsWith("/products") ? "text-green-600" : "text-black hover:text-green-600"
                 }`}
@@ -313,16 +366,34 @@ export default function Header() {
 
             <SignedIn>
               <div className="flex flex-col gap-6 mt-10 pt-10 border-t border-gray-100">
-                <Link href="/orders" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${
-                  pathname === "/orders" ? "text-green-600" : "text-black hover:text-green-600"
-                }`}>
+                <Link 
+                  href="/orders" 
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    if (pathname !== "/orders") {
+                      triggerNavigation();
+                    }
+                  }} 
+                  className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${
+                    pathname === "/orders" ? "text-green-600" : "text-black hover:text-green-600"
+                  }`}
+                >
                   <ShoppingBag className="w-6 h-6" />
                   Orders
                 </Link>
 
-                <Link href="/cart" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${
-                  pathname === "/cart" ? "text-green-600" : "text-black hover:text-green-600"
-                }`}>
+                <Link 
+                  href="/cart" 
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    if (pathname !== "/cart") {
+                      triggerNavigation();
+                    }
+                  }} 
+                  className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${
+                    pathname === "/cart" ? "text-green-600" : "text-black hover:text-green-600"
+                  }`}
+                >
                   <div className="flex items-center gap-3">
                     <ShoppingCart className="w-6 h-6" />
                     Cart
