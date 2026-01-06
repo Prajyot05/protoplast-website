@@ -42,7 +42,7 @@ export default function Services() {
   ];
 
   return (
-    <section id="services" className="py-24 bg-white">
+    <section id="services" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="mb-16">

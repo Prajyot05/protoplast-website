@@ -6,7 +6,7 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Menu, X, ShoppingBag , Package, Users, ArrowUpDown, Globe } from "lucide-react"
+import { X, ShoppingBag , Package, Users, ArrowUpDown, Globe } from "lucide-react"
 
 const links = [
   { label: "Inventory", href: "/dashboard", icon: Package },
@@ -22,11 +22,17 @@ export default function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
+    const handleToggle = () => setIsOpen((prev) => !prev)
+    window.addEventListener("toggle-admin-sidebar", handleToggle)
+    return () => {
+      window.removeEventListener("toggle-admin-sidebar", handleToggle)
+      document.body.style.overflow = "auto"
+    }
+  }, [])
+
+  useEffect(() => {
     if (isMobile) {
       document.body.style.overflow = isOpen ? "hidden" : "auto"
-    }
-    return () => {
-      document.body.style.overflow = "auto"
     }
   }, [isOpen, isMobile])
 
@@ -90,18 +96,20 @@ export default function AdminSidebar() {
   if (isMobile) {
     return (
       <>
-        <button
-          className="fixed top-24 left-6 z-[60] bg-black text-white shadow-2xl p-4 rounded-2xl hover:scale-105 active:scale-95 transition-all border border-white/10"
-          onClick={() => setIsOpen((prev) => !prev)}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
         {isOpen && (
-          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setIsOpen(false)}>
+          <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setIsOpen(false)}>
             <aside 
               className="w-80 h-full bg-white text-black border-r border-gray-100 shadow-2xl animate-in slide-in-from-left duration-500"
               onClick={(e) => e.stopPropagation()}
             >
+              <div className="flex justify-end p-4">
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 rounded-xl bg-gray-50 text-gray-400 hover:text-black transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
               {sidebarContent}
             </aside>
           </div>

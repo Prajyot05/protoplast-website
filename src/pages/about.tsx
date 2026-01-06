@@ -14,10 +14,10 @@ export default function About() {
 
 
   return (
-    <section id="about" className="py-24 bg-white">
+    <section id="about" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-6">
         {/* Manifesto / Vision */}
-        <div className="py-24 border-t border-gray-200">
+        <div className="py-16 md:py-24 border-t border-gray-200">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <p className="text-sm md:text-base text-green-600 font-medium uppercase tracking-widest">
               The Vision
@@ -32,10 +32,10 @@ export default function About() {
         </div>
 
         {/* Our Story - Sticky Layout */}
-        <div className="py-24 border-t border-gray-200">
+        <div className="py-16 md:py-24 border-t border-gray-200">
           <div className="grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-4">
-              <div className="sticky top-32">
+              <div className="lg:sticky top-32">
                 <h3 className="text-6xl md:text-8xl font-bold text-gray-100 mb-4 -ml-1">01</h3>
                 <h3 className="text-2xl font-medium text-black mb-4">Our Journey</h3>
                 <p className="text-gray-500 leading-relaxed">

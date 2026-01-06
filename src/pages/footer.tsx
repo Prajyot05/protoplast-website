@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 relative overflow-hidden pt-24 pb-8">
+    <footer className="bg-white border-t border-gray-200 relative overflow-hidden pt-16 md:pt-24 pb-8">
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start mb-32">
           {/* Left Side: Logo, Slogan, Social */}

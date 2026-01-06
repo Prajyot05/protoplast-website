@@ -30,10 +30,10 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen bg-white">
-      <div className="container mx-auto px-6 relative z-10 pt-2">
+    <section className="relative min-h-screen bg-white flex flex-col pt-16 md:pt-20">
+      <div className="container mx-auto px-6 relative z-10 flex-grow flex flex-col justify-center">
         {/* Main Hero Content */}
-        <div className="flex flex-col items-center text-center justify-center min-h-[calc(100vh-5rem)] py-12">
+        <div className="flex flex-col items-center text-center py-12">
           {/* Content */}
           <div className="space-y-8 max-w-4xl">
             <div className="inline-block px-3 py-1 border border-green-500/30 rounded-full bg-green-500/10 backdrop-blur-sm">
@@ -61,7 +61,7 @@ export default function Hero() {
                 </button>
               </Link>
               <Link href="#services">
-                <button className="btn-outline bg-white/50 backdrop-blur-sm hover:bg-white">
+                <button className="btn-outline bg-white hover:bg-gray-50">
                   Our Services
                 </button>
               </Link>
@@ -70,15 +70,15 @@ export default function Hero() {
         </div>
 
         {/* Service Quick Links */}
-        <div className="absolute bottom-10 left-0 w-full hidden md:block">
-          <div className="flex flex-wrap justify-center gap-3">
+        <div className="w-full mt-12 md:mt-20 pb-10">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
             {services.map((service) => (
               <button
                 key={service.id}
                 onClick={() => handleOpen(service.id as ServiceKey)}
-                className="px-8 py-4 border border-gray-200 text-gray-800 text-lg font-medium 
+                className="px-4 py-3 md:px-8 md:py-4 border border-gray-200 text-gray-800 text-sm md:text-lg font-medium 
                          hover:border-green-500 hover:text-green-600 hover:bg-white transition-all duration-300
-                         bg-white/40 backdrop-blur-md rounded-none"
+                         bg-white rounded-none"
               >
                 {service.label}
               </button>
