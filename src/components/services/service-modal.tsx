@@ -39,7 +39,7 @@ export default function ServiceModal({
   if (!data) return null;
 
   return (
-    <div className="relative bg-white max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+    <div className="relative bg-white max-w-4xl w-full max-h-[90vh] md:max-h-[85vh] flex flex-col overflow-hidden rounded-t-[2rem] sm:rounded-3xl">
       {/* Close Button */}
       <Button
         onClick={onClose}
@@ -48,9 +48,9 @@ export default function ServiceModal({
         <X className="w-5 h-5" />
       </Button>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0">
         {/* Content */}
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
           <DialogTitle className="text-2xl font-medium text-black mb-6 border-b border-gray-200 pb-4">
             {data.title}
           </DialogTitle>

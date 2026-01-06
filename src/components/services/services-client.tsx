@@ -80,12 +80,12 @@ export default function ServicesClient({ services }: ServicesClientProps) {
 
       {/* Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl p-0 overflow-hidden">
           <DialogTitle className="sr-only">Service Details</DialogTitle>
           <DialogDescription className="sr-only">
             Detailed information about our services.
           </DialogDescription>
-          <div className="text-sm text-muted-foreground">
+          <div className="">
             {activeServiceId && (
               <ServiceModal
                 serviceId={activeServiceId}
