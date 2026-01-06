@@ -89,7 +89,7 @@ export default function Hero() {
 
       {/* Service Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="max-w-4xl bg-white border-gray-200">
+        <DialogContent className="max-w-4xl bg-white border-gray-200 p-0 overflow-hidden">
           <DialogTitle className="sr-only">Service Details</DialogTitle>
           <DialogDescription className="sr-only">
             Detailed information about our manufacturing services.
