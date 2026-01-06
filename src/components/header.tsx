@@ -10,7 +10,7 @@ import {
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ShoppingBag, ShoppingCart } from "lucide-react";
+import { ShoppingBag, ShoppingCart, LayoutDashboard, Menu } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -60,9 +60,19 @@ export default function Header() {
   if (isLoaded && isAdminPath && role === "admin") {
     return (
       <header className="fixed top-0 left-0 md:left-72 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="px-8 py-4">
-          <div className="flex items-center justify-end">
-            <div className="flex items-center gap-4">
+        <div className="px-6 md:px-8 py-4">
+          <div className="flex items-center justify-between">
+            {/* Mobile Sidebar Toggle */}
+            <div className="md:hidden">
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("toggle-admin-sidebar"))}
+                className="p-2.5 rounded-xl bg-gray-50 border border-gray-100 text-gray-500 hover:text-black hover:bg-gray-100 transition-all active:scale-95"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 ml-auto">
               <div className="hidden lg:flex items-center gap-3">
                 <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -116,10 +126,10 @@ export default function Header() {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-4 lg:gap-8">
             <Link
               href="/"
-              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
                 pathname === "/" ? "text-green-600" : "text-gray-600 hover:text-black"
               }`}
             >
@@ -134,7 +144,7 @@ export default function Header() {
                   smooth={true}
                   offset={-100}
                   duration={100}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                  className="text-xs lg:text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
                   activeClass="text-green-600"
                 >
                   {item.label}
@@ -143,7 +153,7 @@ export default function Header() {
                 <Link
                   key={item.id}
                   href={`/#${item.id}`}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                  className="text-xs lg:text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
                 >
                   {item.label}
                 </Link>
@@ -151,7 +161,7 @@ export default function Header() {
             ))}
             <Link
               href="/products"
-              className={`text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
                 pathname?.startsWith("/products") ? "text-green-600" : "text-gray-600 hover:text-black"
               }`}
             >
@@ -160,33 +170,45 @@ export default function Header() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-4 lg:gap-8">
             <SignedOut>
               <SignUpButton>
-                <button className="text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors">
+                <button className="text-xs lg:text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors">
                   Sign Up
                 </button>
               </SignUpButton>
             </SignedOut>
 
             <SignedIn>
-              <div className="flex items-center gap-8">
-                <Link href="/orders" className="group flex items-center gap-2">
-                  <ShoppingBag className={`w-4 h-4 transition-colors ${
+              <div className="flex items-center gap-4 lg:gap-8">
+                {role === "admin" && (
+                  <Link href="/dashboard" className="group flex items-center gap-1.5 lg:gap-2">
+                    <LayoutDashboard className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${
+                      pathname?.startsWith("/dashboard") ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                    }`} />
+                    <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${
+                      pathname?.startsWith("/dashboard") ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                    }`}>
+                      Admin
+                    </span>
+                  </Link>
+                )}
+                <Link href="/orders" className="group flex items-center gap-1.5 lg:gap-2">
+                  <ShoppingBag className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${
                     pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
                   }`} />
-                  <span className={`text-sm font-medium uppercase tracking-tight transition-colors ${
+                  <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${
                     pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
                   }`}>
                     Orders
                   </span>
                 </Link>
 
-                <Link href="/cart" className="relative group flex items-center gap-2">
-                  <ShoppingCart className={`w-4 h-4 transition-colors ${
+                <Link href="/cart" className="relative group flex items-center gap-1.5 lg:gap-2">
+                  <ShoppingCart className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${
                     pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
                   }`} />
-                  <span className={`text-sm font-medium uppercase tracking-tight transition-colors ${
+                  <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${
                     pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
                   }`}>
                     Cart
@@ -202,7 +224,7 @@ export default function Header() {
                   appearance={{
                     elements: {
                       avatarBox:
-                        "w-8 h-8 border border-gray-100 hover:border-green-500 transition-colors",
+                        "w-7 h-7 lg:w-8 lg:h-8 border border-gray-100 hover:border-green-500 transition-colors",
                     },
                   }}
                 />
@@ -211,19 +233,38 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-xs font-bold tracking-widest uppercase p-2"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? "Close" : "Menu"}
-          </button>
+          <div className="flex md:hidden items-center gap-4">
+            <SignedIn>
+              {role === "admin" && (
+                <Link href="/dashboard" className="p-2 text-gray-600 hover:text-green-600 transition-colors">
+                  <LayoutDashboard className="w-5 h-5" />
+                </Link>
+              )}
+            </SignedIn>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-xs font-bold tracking-widest uppercase p-2 border border-gray-100 rounded-md"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? "Close" : "Menu"}
+            </button>
+          </div>
         </nav>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-10 border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="md:hidden py-10 border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto max-h-[calc(100vh-80px)]">
             <div className="flex flex-col gap-6">
+              <SignedIn>
+                {role === "admin" && (
+                  <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 py-2 border-b border-gray-50 bg-green-50/30 -mx-6 px-6 ${
+                    pathname?.startsWith("/dashboard") ? "text-green-600" : "text-black hover:text-green-600"
+                  }`}>
+                    <LayoutDashboard className="w-6 h-6 text-green-600" />
+                    Admin Dashboard
+                  </Link>
+                )}
+              </SignedIn>
               <Link
                 href="/"
                 onClick={() => setIsMenuOpen(false)}

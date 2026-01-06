@@ -132,95 +132,95 @@ export default function AdminDashboard() {
       </div>
 
       {/* Header Section */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-10 md:py-20 px-6 bg-white">
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10">
             <div className="max-w-4xl">
-              <h1 className="text-black text-6xl md:text-8xl font-medium leading-[0.9] tracking-tighter mb-8">
+              <h1 className="text-black text-4xl sm:text-6xl md:text-8xl font-medium leading-[1.1] md:leading-[0.9] tracking-tighter mb-4 md:mb-8">
                 Product <br />
                 <span className="text-green-600 italic">Inventory.</span>
               </h1>
-              <p className="text-gray-500 text-xl md:text-2xl leading-relaxed max-w-2xl font-light">
+              <p className="text-gray-500 text-lg md:text-2xl leading-relaxed max-w-2xl font-light">
                 Manage your store&apos;s catalog, track stock levels, and update product details with precision.
               </p>
             </div>
-            <div className="mb-2">
+            <div className="mb-2 w-full md:w-auto">
               <CreateProductInline />
             </div>
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 pb-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 md:pb-32">
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20 border-y border-gray-100 py-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12 mb-12 md:mb-20 border-y border-gray-100 py-8 md:py-12">
           <div className="group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Total Products</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.length}</h3>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-green-600 transition-colors">Total Products</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.length}</h3>
           </div>
-          <div className="md:border-l border-gray-100 md:pl-12 group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">In Stock</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.stock > 0).length}</h3>
+          <div className="border-l border-gray-100 pl-4 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-green-600 transition-colors">In Stock</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.stock > 0).length}</h3>
           </div>
-          <div className="border-l border-gray-100 pl-12 group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-red-600 transition-colors">Out of Stock</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.stock === 0).length}</h3>
+          <div className="lg:border-l border-gray-100 lg:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-red-600 transition-colors">Out of Stock</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.stock === 0).length}</h3>
           </div>
-          <div className="border-l border-gray-100 pl-12 group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Featured</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.featured).length}</h3>
+          <div className="border-l border-gray-100 pl-4 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-green-600 transition-colors">Featured</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{products.filter(p => p.featured).length}</h3>
           </div>
         </div>
 
         {/* Filters & Search */}
-        <div className="mb-16 space-y-8">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="mb-12 md:mb-16 space-y-6 md:space-y-8">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
             <div className="relative flex-grow group">
               <Search className="w-5 h-5 absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-300 group-focus-within:text-green-600 transition-colors" />
               <Input
                 placeholder="Search inventory..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-xl placeholder:text-gray-300"
+                className="h-14 md:h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-lg md:text-xl placeholder:text-gray-300"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
               <Select value={stockFilter} onValueChange={setStockFilter}>
-                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                <SelectTrigger className="h-14 md:h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[150px] text-sm md:text-base font-medium">
                   <SelectValue placeholder="Stock Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-gray-100 p-2">
-                  <SelectItem value="all" className="rounded-xl py-3">All Stock</SelectItem>
-                  <SelectItem value="in-stock" className="rounded-xl py-3">In Stock</SelectItem>
-                  <SelectItem value="low-stock" className="rounded-xl py-3">Low Stock (&lt;5)</SelectItem>
-                  <SelectItem value="out-of-stock" className="rounded-xl py-3">Out of Stock</SelectItem>
+                  <SelectItem value="all" className="rounded-xl py-2 md:py-3 text-sm">All Stock</SelectItem>
+                  <SelectItem value="in-stock" className="rounded-xl py-2 md:py-3 text-sm">In Stock</SelectItem>
+                  <SelectItem value="low-stock" className="rounded-xl py-2 md:py-3 text-sm">Low Stock (&lt;5)</SelectItem>
+                  <SelectItem value="out-of-stock" className="rounded-xl py-2 md:py-3 text-sm">Out of Stock</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={featuredFilter} onValueChange={setFeaturedFilter}>
-                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                <SelectTrigger className="h-14 md:h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[150px] text-sm md:text-base font-medium">
                   <SelectValue placeholder="Featured" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-gray-100 p-2">
-                  <SelectItem value="all" className="rounded-xl py-3">All Products</SelectItem>
-                  <SelectItem value="featured" className="rounded-xl py-3">Featured Only</SelectItem>
-                  <SelectItem value="not-featured" className="rounded-xl py-3">Not Featured</SelectItem>
+                  <SelectItem value="all" className="rounded-xl py-2 md:py-3 text-sm">All Products</SelectItem>
+                  <SelectItem value="featured" className="rounded-xl py-2 md:py-3 text-sm">Featured Only</SelectItem>
+                  <SelectItem value="not-featured" className="rounded-xl py-2 md:py-3 text-sm">Not Featured</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                <SelectTrigger className="h-14 md:h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[150px] text-sm md:text-base font-medium">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-gray-100 p-2">
-                  <SelectItem value="date-desc" className="rounded-xl py-3">Newest First</SelectItem>
-                  <SelectItem value="date-asc" className="rounded-xl py-3">Oldest First</SelectItem>
-                  <SelectItem value="price-desc" className="rounded-xl py-3">Highest Price</SelectItem>
-                  <SelectItem value="price-asc" className="rounded-xl py-3">Lowest Price</SelectItem>
-                  <SelectItem value="name-asc" className="rounded-xl py-3">Title A-Z</SelectItem>
-                  <SelectItem value="name-desc" className="rounded-xl py-3">Title Z-A</SelectItem>
-                  <SelectItem value="stock-desc" className="rounded-xl py-3">Highest Stock</SelectItem>
-                  <SelectItem value="stock-asc" className="rounded-xl py-3">Lowest Stock</SelectItem>
+                  <SelectItem value="date-desc" className="rounded-xl py-2 md:py-3 text-sm">Newest First</SelectItem>
+                  <SelectItem value="date-asc" className="rounded-xl py-2 md:py-3 text-sm">Oldest First</SelectItem>
+                  <SelectItem value="price-desc" className="rounded-xl py-2 md:py-3 text-sm">Highest Price</SelectItem>
+                  <SelectItem value="price-asc" className="rounded-xl py-2 md:py-3 text-sm">Lowest Price</SelectItem>
+                  <SelectItem value="name-asc" className="rounded-xl py-2 md:py-3 text-sm">Title A-Z</SelectItem>
+                  <SelectItem value="name-desc" className="rounded-xl py-2 md:py-3 text-sm">Title Z-A</SelectItem>
+                  <SelectItem value="stock-desc" className="rounded-xl py-2 md:py-3 text-sm">Highest Stock</SelectItem>
+                  <SelectItem value="stock-asc" className="rounded-xl py-2 md:py-3 text-sm">Lowest Stock</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -228,11 +228,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* Products Grid */}
-        <div className="space-y-12">
-          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
-            <div className="flex items-baseline gap-4">
-              <h2 className="text-4xl font-medium text-black tracking-tight">Catalog</h2>
-              <span className="text-xl text-green-600 font-medium tabular-nums">
+        <div className="space-y-8 md:space-y-12">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-4 md:pb-6">
+            <div className="flex items-baseline gap-2 md:gap-4">
+              <h2 className="text-2xl md:text-4xl font-medium text-black tracking-tight">Catalog</h2>
+              <span className="text-lg md:text-xl text-green-600 font-medium tabular-nums">
                 ({filteredAndSortedProducts.length})
               </span>
             </div>

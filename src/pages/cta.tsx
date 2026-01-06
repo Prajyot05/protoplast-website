@@ -24,7 +24,7 @@ const CTA = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-neutral-100">
+    <section id="contact" className="py-16 md:py-24 bg-neutral-100">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16">
           {/* Left Content */}

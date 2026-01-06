@@ -115,15 +115,15 @@ export default function TransactionClientView({ transactions }: Props) {
       </div>
 
       {/* Header Section */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-10 md:py-20 px-6 bg-white">
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10">
             <div className="max-w-4xl">
-              <h1 className="text-black text-6xl md:text-8xl font-medium leading-[0.9] tracking-tighter mb-8">
+              <h1 className="text-black text-4xl sm:text-6xl md:text-8xl font-medium leading-[1.1] md:leading-[0.9] tracking-tighter mb-4 md:mb-8">
                 Financial <br />
                 <span className="text-green-600 italic">Records.</span>
               </h1>
-              <p className="text-gray-500 text-xl md:text-2xl leading-relaxed max-w-2xl font-light">
+              <p className="text-gray-500 text-lg md:text-2xl leading-relaxed max-w-2xl font-light">
                 Monitor all incoming and outgoing payments, track transaction statuses, and view detailed logs with precision.
               </p>
             </div>
@@ -131,82 +131,82 @@ export default function TransactionClientView({ transactions }: Props) {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 pb-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 md:pb-32">
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20 border-y border-gray-100 py-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12 mb-12 md:mb-20 border-y border-gray-100 py-8 md:py-12">
           <div className="group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Total Transactions</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.length}</h3>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-green-600 transition-colors">Total Transactions</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.length}</h3>
           </div>
-          <div className="md:border-l border-gray-100 md:pl-12 group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-green-600 transition-colors">Successful</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.filter(t => ["captured", "success", "completed"].includes(t.status.toLowerCase())).length}</h3>
+          <div className="border-l border-gray-100 pl-4 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-green-600 transition-colors">Successful</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.filter(t => ["captured", "success", "completed"].includes(t.status.toLowerCase())).length}</h3>
           </div>
-          <div className="border-l border-gray-100 pl-12 group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-yellow-600 transition-colors">Pending</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.filter(t => t.status.toLowerCase() === "pending").length}</h3>
+          <div className="lg:border-l border-gray-100 lg:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-yellow-600 transition-colors">Pending</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.filter(t => t.status.toLowerCase() === "pending").length}</h3>
           </div>
-          <div className="border-l border-gray-100 pl-12 group cursor-default">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 group-hover:text-red-600 transition-colors">Failed</p>
-            <h3 className="text-5xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.filter(t => ["failed", "cancelled"].includes(t.status.toLowerCase())).length}</h3>
+          <div className="border-l border-gray-100 pl-4 md:pl-12 group cursor-default">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2 md:mb-4 group-hover:text-red-600 transition-colors">Failed</p>
+            <h3 className="text-3xl md:text-7xl font-medium text-black tracking-tighter group-hover:translate-x-2 transition-transform duration-500">{transactions.filter(t => ["failed", "cancelled"].includes(t.status.toLowerCase())).length}</h3>
           </div>
         </div>
 
         {/* Filters & Search */}
-        <div className="mb-16 space-y-8">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="mb-12 md:mb-16 space-y-6 md:space-y-8">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
             <div className="relative flex-grow group">
               <Search className="w-5 h-5 absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-300 group-focus-within:text-green-600 transition-colors" />
               <Input
                 placeholder="Search transactions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-xl placeholder:text-gray-300"
+                className="h-14 md:h-16 pl-14 pr-6 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all text-lg md:text-xl placeholder:text-gray-300"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                <SelectTrigger className="h-14 md:h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[150px] text-sm md:text-base font-medium">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-gray-100 p-2">
-                  <SelectItem value="all" className="rounded-xl py-3">All Status</SelectItem>
-                  <SelectItem value="completed" className="rounded-xl py-3">Completed</SelectItem>
-                  <SelectItem value="pending" className="rounded-xl py-3">Pending</SelectItem>
-                  <SelectItem value="failed" className="rounded-xl py-3">Failed</SelectItem>
-                  <SelectItem value="cancelled" className="rounded-xl py-3">Cancelled</SelectItem>
+                  <SelectItem value="all" className="rounded-xl py-2 md:py-3 text-sm">All Status</SelectItem>
+                  <SelectItem value="completed" className="rounded-xl py-2 md:py-3 text-sm">Completed</SelectItem>
+                  <SelectItem value="pending" className="rounded-xl py-2 md:py-3 text-sm">Pending</SelectItem>
+                  <SelectItem value="failed" className="rounded-xl py-2 md:py-3 text-sm">Failed</SelectItem>
+                  <SelectItem value="cancelled" className="rounded-xl py-2 md:py-3 text-sm">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                <SelectTrigger className="h-14 md:h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[150px] text-sm md:text-base font-medium">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-gray-100 p-2">
-                  <SelectItem value="all" className="rounded-xl py-3">All Types</SelectItem>
-                  <SelectItem value="credit" className="rounded-xl py-3">Credit</SelectItem>
-                  <SelectItem value="debit" className="rounded-xl py-3">Debit</SelectItem>
-                  <SelectItem value="transfer" className="rounded-xl py-3">Transfer</SelectItem>
+                  <SelectItem value="all" className="rounded-xl py-2 md:py-3 text-sm">All Types</SelectItem>
+                  <SelectItem value="credit" className="rounded-xl py-2 md:py-3 text-sm">Credit</SelectItem>
+                  <SelectItem value="debit" className="rounded-xl py-2 md:py-3 text-sm">Debit</SelectItem>
+                  <SelectItem value="transfer" className="rounded-xl py-2 md:py-3 text-sm">Transfer</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[180px] text-base font-medium">
+                <SelectTrigger className="h-14 md:h-16 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-green-500/5 focus:border-green-500/20 transition-all min-w-[150px] text-sm md:text-base font-medium">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-gray-100 p-2">
-                  <SelectItem value="date-desc" className="rounded-xl py-3">Newest First</SelectItem>
-                  <SelectItem value="date-asc" className="rounded-xl py-3">Oldest First</SelectItem>
-                  <SelectItem value="amount-desc" className="rounded-xl py-3">Highest Amount</SelectItem>
-                  <SelectItem value="amount-asc" className="rounded-xl py-3">Lowest Amount</SelectItem>
+                  <SelectItem value="date-desc" className="rounded-xl py-2 md:py-3 text-sm">Newest First</SelectItem>
+                  <SelectItem value="date-asc" className="rounded-xl py-2 md:py-3 text-sm">Oldest First</SelectItem>
+                  <SelectItem value="amount-desc" className="rounded-xl py-2 md:py-3 text-sm">Highest Amount</SelectItem>
+                  <SelectItem value="amount-asc" className="rounded-xl py-2 md:py-3 text-sm">Lowest Amount</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
         </div>
 
-        {/* Transactions Table */}
-        <div className="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-2xl shadow-black/5">
+        {/* Desktop Table - Hidden on Phone */}
+        <div className="hidden md:block bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-2xl shadow-black/5">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -277,6 +277,59 @@ export default function TransactionClientView({ transactions }: Props) {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Mobile View - Cards */}
+        <div className="md:hidden space-y-4">
+          {filteredAndSortedTransactions.length === 0 ? (
+            <div className="px-8 py-20 text-center bg-gray-50 rounded-[2rem] border border-dashed border-gray-200">
+              <p className="text-gray-400">No transactions found.</p>
+            </div>
+          ) : (
+            filteredAndSortedTransactions.map((tx) => (
+              <div 
+                key={tx._id} 
+                onClick={() => openTransactionModal(tx)}
+                className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm active:scale-[0.98] transition-all"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <div className="text-xs font-mono text-gray-400 uppercase tracking-widest">#{tx._id.slice(-8)}</div>
+                    <div className="text-sm font-medium text-black mt-1">
+                      {new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge className={cn("rounded-full px-3 py-1 text-[8px] font-bold uppercase tracking-widest border shadow-none", getStatusColor(tx.status))}>
+                      {tx.status}
+                    </Badge>
+                    {tx.type && (
+                      <Badge className={cn("rounded-full px-3 py-1 text-[8px] font-bold uppercase tracking-widest border shadow-none", getTransactionTypeColor(tx.type))}>
+                        {tx.type}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <div className="text-lg font-bold text-black">{smartField(tx.sender, tx.metadata, "contact")}</div>
+                  {tx.metadata?.email && <div className="text-xs text-gray-500">{tx.metadata.email}</div>}
+                </div>
+
+                <div className="flex justify-between items-end pt-4 border-t border-gray-50">
+                  <div>
+                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Amount</div>
+                    <div className="text-xl font-bold text-black tracking-tighter">₹{tx.amount.toLocaleString()}</div>
+                  </div>
+                  <div className="text-right">
+                    <Button variant="ghost" size="sm" className="h-8 px-2 text-green-600 text-xs font-bold uppercase tracking-widest">
+                      View Details
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

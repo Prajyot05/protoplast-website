@@ -155,7 +155,8 @@ export default function OrderDetailModal({ open, onClose, order }: Props) {
               <h3 className="text-sm font-bold uppercase tracking-widest">Products ({totalItems} items)</h3>
             </div>
 
-            <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden">
+            {/* Desktop View */}
+            <div className="hidden md:block bg-white rounded-3xl border border-gray-100 overflow-hidden">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-50/50 border-b border-gray-100">
@@ -194,6 +195,23 @@ export default function OrderDetailModal({ open, onClose, order }: Props) {
                   </tr>
                 </tfoot>
               </table>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden space-y-4">
+              {order.products.map((item, index) => (
+                <div key={index} className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                  <div className="text-sm font-bold text-black mb-2">{item.product.title}</div>
+                  <div className="flex justify-between items-center text-xs text-gray-500 mb-2">
+                    <span>{item.quantity} x ₹{item.priceAtPurchase.toLocaleString()}</span>
+                    <span className="font-bold text-black">₹{(item.quantity * item.priceAtPurchase).toLocaleString()}</span>
+                  </div>
+                </div>
+              ))}
+              <div className="flex justify-between items-center p-4 bg-black text-white rounded-2xl">
+                <span className="text-xs font-bold uppercase tracking-widest">Grand Total</span>
+                <span className="text-xl font-bold tracking-tighter">₹{order.totalAmount.toLocaleString()}</span>
+              </div>
             </div>
           </div>
         </div>
