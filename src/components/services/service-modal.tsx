@@ -3,7 +3,6 @@ import { serviceDetails, pricingDetails } from "@/lib/service-data";
 import { ServiceKey } from "@/types/service";
 import { DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
 
 interface Section {
   title: string;
@@ -39,7 +38,7 @@ export default function ServiceModal({
   if (!data) return null;
 
   return (
-    <div className="relative bg-white max-w-4xl w-full max-h-[90vh] md:max-h-[85vh] flex flex-col overflow-hidden rounded-t-[2rem] sm:rounded-3xl">
+    <div className="relative bg-white w-full flex-1 flex flex-col overflow-hidden min-h-0">
       {/* Close Button */}
       <Button
         onClick={onClose}
@@ -48,7 +47,7 @@ export default function ServiceModal({
         <X className="w-5 h-5" />
       </Button>
 
-      <ScrollArea className="flex-1 min-h-0">
+      <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
         {/* Content */}
         <div className="p-6 sm:p-8">
           <DialogTitle className="text-2xl font-medium text-black mb-6 border-b border-gray-200 pb-4">
@@ -122,7 +121,7 @@ export default function ServiceModal({
             ))}
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
