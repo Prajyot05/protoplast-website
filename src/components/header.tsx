@@ -262,7 +262,9 @@ export default function Header() {
                 <Link 
                   href="/dashboard" 
                   onClick={() => {
-                    !pathname?.startsWith("/dashboard") && triggerNavigation();
+                    if (!pathname?.startsWith("/dashboard")) {
+                      triggerNavigation();
+                    }
                   }}
                   className="p-2 text-gray-600 hover:text-green-600 transition-colors"
                 >
@@ -290,7 +292,9 @@ export default function Header() {
                     href="/dashboard" 
                     onClick={() => {
                       setIsMenuOpen(false);
-                      !pathname?.startsWith("/dashboard") && triggerNavigation();
+                      if (!pathname?.startsWith("/dashboard")) {
+                        triggerNavigation();
+                      }
                     }} 
                     className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 py-2 border-b border-gray-50 bg-green-50/30 -mx-6 px-6 ${
                       pathname?.startsWith("/dashboard") ? "text-green-600" : "text-black hover:text-green-600"
@@ -305,7 +309,9 @@ export default function Header() {
                 href="/"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  pathname !== "/" && triggerNavigation();
+                  if (pathname !== "/") {
+                    triggerNavigation();
+                  }
                 }}
                 className={`text-2xl font-medium uppercase tracking-tighter ${
                   pathname === "/" ? "text-green-600" : "text-black hover:text-green-600"
@@ -346,7 +352,9 @@ export default function Header() {
                 href="/products"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  pathname !== "/products" && triggerNavigation();
+                  if (pathname !== "/products") {
+                    triggerNavigation();
+                  }
                 }}
                 className={`text-2xl font-medium uppercase tracking-tighter ${
                   pathname?.startsWith("/products") ? "text-green-600" : "text-black hover:text-green-600"
@@ -362,7 +370,9 @@ export default function Header() {
                   href="/orders" 
                   onClick={() => {
                     setIsMenuOpen(false);
-                    pathname !== "/orders" && triggerNavigation();
+                    if (pathname !== "/orders") {
+                      triggerNavigation();
+                    }
                   }} 
                   className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${
                     pathname === "/orders" ? "text-green-600" : "text-black hover:text-green-600"
@@ -376,7 +386,9 @@ export default function Header() {
                   href="/cart" 
                   onClick={() => {
                     setIsMenuOpen(false);
-                    pathname !== "/cart" && triggerNavigation();
+                    if (pathname !== "/cart") {
+                      triggerNavigation();
+                    }
                   }} 
                   className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${
                     pathname === "/cart" ? "text-green-600" : "text-black hover:text-green-600"

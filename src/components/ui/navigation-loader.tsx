@@ -17,7 +17,6 @@ export function NavigationLoader() {
   // Listen for the custom "navigation-start" event
   useEffect(() => {
     const handleStart = () => setIsLoading(true);
-    const handleStop = () => setIsLoading(false);
 
     window.addEventListener("navigation-start", handleStart);
     // Standard link clicks and router.push won't trigger this by default, 
