@@ -24,6 +24,7 @@ export default function Header() {
   const { user, isLoaded } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
   const isMobile = useIsMobile();
   const totalItems = useLocalProduct((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
@@ -32,7 +33,9 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      setIsAtTop(window.scrollY < 100);
     };
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -137,7 +140,7 @@ export default function Header() {
               href="/"
               onClick={() => pathname !== "/" && triggerNavigation()}
               className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
-                pathname === "/" ? "text-green-600" : "text-gray-600 hover:text-black"
+                pathname === "/" && isAtTop ? "text-green-600" : "text-gray-600 hover:text-black"
               }`}
             >
               Home
@@ -175,6 +178,15 @@ export default function Header() {
               }`}
             >
               Products
+            </Link>
+            <Link
+              href="/courses"
+              onClick={() => pathname !== "/courses" && triggerNavigation()}
+              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${
+                pathname?.startsWith("/courses") ? "text-green-600" : "text-gray-600 hover:text-black"
+              }`}
+            >
+              Courses
             </Link>
           </div>
 
@@ -314,7 +326,7 @@ export default function Header() {
                   }
                 }}
                 className={`text-2xl font-medium uppercase tracking-tighter ${
-                  pathname === "/" ? "text-green-600" : "text-black hover:text-green-600"
+                  pathname === "/" && isAtTop ? "text-green-600" : "text-black hover:text-green-600"
                 }`}
               >
                 Home
@@ -361,6 +373,20 @@ export default function Header() {
                 }`}
               >
                 Products
+              </Link>
+              <Link
+                href="/courses"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  if (pathname !== "/courses") {
+                    triggerNavigation();
+                  }
+                }}
+                className={`text-2xl font-medium uppercase tracking-tighter ${
+                  pathname?.startsWith("/courses") ? "text-green-600" : "text-black hover:text-green-600"
+                }`}
+              >
+                Courses
               </Link>
             </div>
 
