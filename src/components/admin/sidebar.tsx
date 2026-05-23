@@ -6,7 +6,7 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { X, ShoppingBag , Package, Users, ArrowUpDown, Globe } from "lucide-react"
+import { X, ShoppingBag , Package, Users, ArrowUpDown, Globe, BookOpen } from "lucide-react"
 import { triggerNavigation } from "@/components/ui/navigation-loader"
 
 const links = [
@@ -14,6 +14,7 @@ const links = [
   { label: "Transactions", href: "/dashboard/transactions", icon: ArrowUpDown },
   { label: "User Directory", href: "/dashboard/users", icon: Users },
   { label: "Order Logs", href: "/dashboard/orders", icon: ShoppingBag },
+  { label: "Course Batches", href: "/dashboard/courses", icon: BookOpen },
 ]
 
 export default function AdminSidebar() {

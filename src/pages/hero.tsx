@@ -70,7 +70,7 @@ export default function Hero() {
         </div>
 
         {/* Service Quick Links */}
-        <div className="w-full mt-12 md:mt-20 pb-10">
+        {/* <div className="w-full mt-12 md:mt-20 pb-10">
           <div className="flex flex-wrap justify-center gap-2 md:gap-3">
             {services.map((service) => (
               <button
@@ -84,7 +84,7 @@ export default function Hero() {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Service Modal */}
