@@ -3,12 +3,19 @@
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { ServiceKey } from "@/types/service";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 
 export default function Services() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeServiceId, setActiveServiceId] = useState<ServiceKey | null>(null);
+  const [activeServiceId, setActiveServiceId] = useState<ServiceKey | null>(
+    null,
+  );
 
   const handleOpen = (serviceId: ServiceKey) => {
     setActiveServiceId(serviceId);
@@ -33,12 +40,12 @@ export default function Services() {
       description:
         "Custom circuit board design, prototyping, and production for electronics projects of all scales.",
     },
-    {
-      id: "cnc-cutting",
-      title: "CNC Machining",
-      description:
-        "Precision cutting for metals, plastics, and composites for both personal and commercial projects.",
-    },
+    // {
+    //   id: "cnc-cutting",
+    //   title: "CNC Machining",
+    //   description:
+    //     "Precision cutting for metals, plastics, and composites for both personal and commercial projects.",
+    // },
   ];
 
   return (
@@ -47,11 +54,10 @@ export default function Services() {
         {/* Section Header */}
         <div className="mb-16">
           <div className="section-label mb-4">OUR SERVICES</div>
-          <h2 className="text-black mb-6">
-            Our Capabilities
-          </h2>
+          <h2 className="text-black mb-6">Our Capabilities</h2>
           <p className="text-gray-600 max-w-2xl leading-relaxed">
-            Comprehensive manufacturing solutions tailored to your project&apos;s needs, from initial prototype to final production.
+            Comprehensive manufacturing solutions tailored to your
+            project&apos;s needs, from initial prototype to final production.
           </p>
         </div>
 
@@ -85,8 +91,10 @@ export default function Services() {
 
                 {/* Arrow */}
                 <div className="md:col-span-2 flex justify-end">
-                  <div className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center 
-                                group-hover:bg-green-500 group-hover:border-green-500 group-hover:text-white transition-all duration-300">
+                  <div
+                    className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center 
+                                group-hover:bg-green-500 group-hover:border-green-500 group-hover:text-white transition-all duration-300"
+                  >
                     <ArrowUpRight className="w-5 h-5 transform group-hover:rotate-45 transition-transform duration-300" />
                   </div>
                 </div>

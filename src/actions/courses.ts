@@ -13,7 +13,7 @@ export async function getBatches() {
 
 export async function getActiveBatch(courseType: string) {
   await connectDB();
-  const batch = await CourseBatch.findOne({ courseType, status: "active" }).lean();
+  const batch = await CourseBatch.findOne({ courseType }).sort({ createdAt: -1 }).lean();
   return JSON.parse(JSON.stringify(batch));
 }
 
@@ -29,6 +29,7 @@ export async function createBatch(data: {
   endDate: string;
   timing: string;
   maxSeats: number;
+  price: number;
 }) {
   try {
     await connectDB();
@@ -38,6 +39,7 @@ export async function createBatch(data: {
       endDate: new Date(data.endDate),
       timing: data.timing,
       maxSeats: data.maxSeats,
+      price: data.price,
       status: "upcoming",
     });
     revalidatePath("/dashboard/courses");
@@ -60,8 +62,57 @@ export async function updateBatchStatus(batchId: string, status: string) {
   }
 }
 
+export async function updateBatch(batchId: string, data: {
+  courseType: string;
+  startDate: string;
+  endDate: string;
+  timing: string;
+  maxSeats: number;
+  price: number;
+}) {
+  try {
+    await connectDB();
+    const batch = await CourseBatch.findByIdAndUpdate(
+      batchId,
+      {
+        courseType: data.courseType,
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+        timing: data.timing,
+        maxSeats: data.maxSeats,
+        price: data.price,
+      },
+      { new: true }
+    );
+    revalidatePath("/dashboard/courses");
+    revalidatePath("/courses");
+    return { success: true, data: JSON.parse(JSON.stringify(batch)) };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 export async function getRegistrationsForBatch(batchId: string) {
   await connectDB();
   const registrations = await CourseRegistration.find({ batchId, paymentStatus: "paid" }).lean();
   return JSON.parse(JSON.stringify(registrations));
+}
+
+export async function getUserRegistrations(userId: string) {
+  if (!userId) return [];
+  await connectDB();
+  const registrations = await CourseRegistration.find({ user: userId, paymentStatus: "paid" }).lean();
+  return JSON.parse(JSON.stringify(registrations));
+}
+
+export async function deleteBatch(batchId: string) {
+  try {
+    await connectDB();
+    await CourseBatch.findByIdAndDelete(batchId);
+    revalidatePath("/dashboard/courses");
+    revalidatePath("/courses");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
 }

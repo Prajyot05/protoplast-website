@@ -8,12 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Users, Clock, Calendar } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/pages/footer";
-import { getActiveBatch } from "@/actions/courses";
+import { useAuth } from "@clerk/nextjs";
+import { getActiveBatch, getUserRegistrations } from "@/actions/courses";
+import { toast } from "sonner";
 
 export default function CoursesLandingPage() {
   const router = useRouter();
+  const { userId } = useAuth();
   const [hardwareBatch, setHardwareBatch] = useState<any>(null);
   const [softwareBatch, setSoftwareBatch] = useState<any>(null);
+  const [userRegistrations, setUserRegistrations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,6 +27,11 @@ export default function CoursesLandingPage() {
         const sw = await getActiveBatch("software");
         setHardwareBatch(hw);
         setSoftwareBatch(sw);
+
+        if (userId) {
+          const regs = await getUserRegistrations(userId);
+          setUserRegistrations(regs);
+        }
       } catch (error) {
         console.error("Failed to fetch batches", error);
       } finally {
@@ -30,7 +39,7 @@ export default function CoursesLandingPage() {
       }
     }
     fetchBatches();
-  }, []);
+  }, [userId]);
 
   const renderCourseCard = (
     title: string,
@@ -40,24 +49,28 @@ export default function CoursesLandingPage() {
     image: string
   ) => {
     const isFull = batch ? batch.currentRegistrations >= batch.maxSeats : false;
-    const isAvailable = !!batch && !isFull && batch.status === "active";
+    const isRegistered = batch ? userRegistrations.some(r => r.batchId === batch._id) : false;
+    const isCompleted = batch ? batch.status === "completed" : false;
+    const isAvailable = !!batch && !isFull && batch.status === "active" && !isRegistered && !isCompleted;
 
     return (
       <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-xl shadow-black/5 flex flex-col transition-all hover:shadow-2xl hover:shadow-black/10">
         <div className="relative w-full h-48 mb-6 rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-           {/* Placeholder for Course Illustration */}
-           <div className="text-gray-300 font-bold uppercase tracking-widest">{type} Track</div>
+          {/* Placeholder for Course Illustration */}
+          <div className="text-gray-300 font-bold uppercase tracking-widest">{type} Track</div>
         </div>
-        
+
         <div className="flex justify-between items-start mb-4">
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100 rounded-full px-4 py-1">
+          <Badge className="bg-green-100 text-green-700 hover:bg-green-100 rounded-full px-4 py-1 font-bold">
             {type.toUpperCase()}
           </Badge>
-          {isFull && <Badge variant="destructive" className="rounded-full">BATCH FULL</Badge>}
+          {isFull ? (
+            <Badge variant="destructive" className="rounded-full font-bold px-3 py-1">BATCH FULL</Badge>
+          ) : null}
         </div>
 
         <h3 className="text-3xl font-bold text-black tracking-tight mb-2">{title}</h3>
-        
+
         <div className="space-y-3 mb-8 flex-grow mt-4">
           {batch ? (
             <>
@@ -77,6 +90,9 @@ export default function CoursesLandingPage() {
                   {batch.maxSeats - batch.currentRegistrations} seats remaining
                 </span>
               </div>
+              <div className="mt-2 text-xl font-bold text-black">
+                ₹{batch.price || 4999}
+              </div>
             </>
           ) : (
             <div className="text-gray-500 italic text-sm py-4">No active batches available currently.</div>
@@ -93,11 +109,26 @@ export default function CoursesLandingPage() {
         </ul>
 
         <Button
-          disabled={!isAvailable}
-          onClick={() => router.push(`/courses/${batch._id}/register`)}
-          className="w-full h-14 rounded-2xl bg-black text-white hover:bg-green-600 transition-all group font-bold tracking-widest uppercase"
+          disabled={isRegistered || isCompleted || !isAvailable}
+          onClick={() => {
+            if (isAvailable) {
+              router.push(`/courses/${batch._id}/register`);
+            }
+          }}
+          className={`w-full h-14 rounded-2xl transition-all group font-bold tracking-widest uppercase ${isRegistered
+              ? "bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-100 disabled:cursor-not-allowed"
+              : isCompleted
+                ? "bg-gray-200 text-gray-400 disabled:opacity-100 disabled:cursor-not-allowed"
+                : isAvailable
+                  ? "bg-black text-white hover:bg-green-600"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            }`}
         >
-          {isAvailable ? (
+          {isRegistered ? (
+            "REGISTERED"
+          ) : isCompleted ? (
+            "Completed"
+          ) : isAvailable ? (
             <>
               Register Now <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </>
