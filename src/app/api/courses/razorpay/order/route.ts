@@ -27,8 +27,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "This batch is full." }, { status: 400 });
     }
 
-    // The course fee is fixed at ₹4,999
-    const courseFeeAmount = 4999;
+    // The course fee is dynamic based on the batch
+    const courseFeeAmount = batch.price || 4999;
     const totalPaisa = courseFeeAmount * 100;
 
     // Create Razorpay order

@@ -29,6 +29,7 @@ export default function CourseRegistrationPage() {
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -160,7 +161,8 @@ export default function CourseRegistrationPage() {
 
             if (verifyRes.ok) {
               toast.success("Registration Successful!");
-              router.push("/thankyou");
+              setIsSuccess(true);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
               toast.error("Payment verification failed");
             }
@@ -227,7 +229,7 @@ export default function CourseRegistrationPage() {
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl font-medium text-white mb-2 tracking-tight">
-                Student Registration
+                {isSuccess ? "Registration Complete" : "Student Registration"}
               </h1>
               <p className="text-gray-400 text-sm md:text-base font-medium">
                 {batch.timing} | {new Date(batch.startDate).toLocaleDateString()}
@@ -235,9 +237,23 @@ export default function CourseRegistrationPage() {
             </div>
 
             <div className="bg-white border-x border-b border-gray-200 p-8 md:p-12 rounded-b-3xl shadow-2xl">
-              <StepIndicator />
-
-              <form onSubmit={step === 4 ? handleSubmit : (e) => e.preventDefault()} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {isSuccess ? (
+                <div className="text-center py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle2 className="w-12 h-12 text-green-600" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-black mb-4">You're all set!</h2>
+                  <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                    Your registration for the <strong className="text-black">{batch.courseType.toUpperCase()}</strong> track is confirmed. We've sent a receipt to your email.
+                  </p>
+                  <Button onClick={() => router.push("/courses")} className="h-14 px-8 rounded-xl bg-black text-white hover:bg-gray-800 font-bold uppercase tracking-widest">
+                    Return to Courses
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <StepIndicator />
+                  <form onSubmit={step === 4 ? handleSubmit : (e) => e.preventDefault()} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
                 {/* Step 1: Personal & Contact */}
                 {step === 1 && (
@@ -482,7 +498,7 @@ export default function CourseRegistrationPage() {
                     <h2 className="text-2xl font-medium tracking-tight mb-6">Review & Payment</h2>
 
                     <div className="bg-green-50/50 border border-green-100 rounded-2xl p-6 mb-8">
-                      <h3 className="font-bold text-black mb-2">Program Fee: ₹4,999</h3>
+                      <h3 className="font-bold text-black mb-2">Program Fee: ₹{batch.price || 4999}</h3>
                       <p className="text-sm text-gray-600">
                         Payment will be processed securely via Razorpay upon form submission to confirm your seat immediately in the <strong>{batch.courseType.toUpperCase()}</strong> batch.
                       </p>
@@ -496,7 +512,7 @@ export default function CourseRegistrationPage() {
                         onChange={(e) => handleChange("consent", e.target.checked)}
                       />
                       <span className="text-sm text-gray-600 leading-relaxed">
-                        I confirm that all the information provided above is accurate. I understand that <strong className="text-black">seats are strictly limited</strong> and my registration is subject to successful payment of <strong className="text-black">₹4,999</strong>.
+                        I confirm that all the information provided above is accurate. I understand that <strong className="text-black">seats are strictly limited</strong> and my registration is subject to successful payment of <strong className="text-black">₹{batch.price || 4999}</strong>.
                       </span>
                     </label>
                   </div>
@@ -527,9 +543,11 @@ export default function CourseRegistrationPage() {
                   )}
                 </div>
               </form>
-            </div>
-          </div>
-        </main>
+            </>
+          )}
+        </div>
+      </div>
+    </main>
 
         <Footer />
       </div>

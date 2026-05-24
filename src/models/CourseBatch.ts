@@ -7,6 +7,7 @@ export interface ICourseBatch extends Document {
   timing: string;
   maxSeats: number;
   currentRegistrations: number;
+  price: number;
   status: "upcoming" | "active" | "full" | "completed";
   createdAt: Date;
 }
@@ -19,6 +20,7 @@ const CourseBatchSchema = new Schema<ICourseBatch>(
     timing: { type: String, required: true },
     maxSeats: { type: Number, required: true, default: 4 },
     currentRegistrations: { type: Number, required: true, default: 0 },
+    price: { type: Number, required: true, default: 4999 },
     status: {
       type: String,
       enum: ["upcoming", "active", "full", "completed"],
