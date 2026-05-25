@@ -3,26 +3,20 @@
 import Link from "next/link";
 import type { ServiceKey } from "@/types/service";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 import { ArrowUpRight } from "lucide-react";
 
 export default function Hero() {
-  const services = [
-    { id: "3d-printing", label: "3D Printing" },
-    { id: "cnc-cutting", label: "CNC Cutting" },
-    { id: "cad-modeling", label: "CAD Modeling" },
-    { id: "pcb-design", label: "PCB Design" },
-    { id: "rapid-prototyping", label: "Rapid Prototyping" },
-  ];
-
   const [isOpen, setIsOpen] = useState(false);
-  const [activeServiceId, setActiveServiceId] = useState<ServiceKey | null>(null);
-
-  const handleOpen = (serviceId: ServiceKey) => {
-    setActiveServiceId(serviceId);
-    setIsOpen(true);
-  };
+  const [activeServiceId, setActiveServiceId] = useState<ServiceKey | null>(
+    null,
+  );
 
   const handleClose = () => {
     setIsOpen(false);
@@ -44,13 +38,13 @@ export default function Hero() {
 
             <h1 className="text-black text-5xl md:text-7xl font-medium leading-tight tracking-tight">
               Engineering the <br />
-              <span className="text-green-600">
-                Future of Manufacturing
-              </span>
+              <span className="text-green-600">Future of Manufacturing</span>
             </h1>
 
             <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-              Protoplast bridges the gap between imagination and industrial reality. We empower innovators with high-precision manufacturing delivering excellence in every layer, cut, and circuit.
+              Protoplast bridges the gap between imagination and industrial
+              reality. We empower innovators with high-precision manufacturing
+              delivering excellence in every layer, cut, and circuit.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 pt-4">
