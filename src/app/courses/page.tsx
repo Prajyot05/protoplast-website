@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Users, Clock, Calendar } from "lucide-react";
@@ -10,7 +9,6 @@ import Header from "@/components/header";
 import Footer from "@/pages/footer";
 import { useAuth } from "@clerk/nextjs";
 import { getActiveBatch, getUserRegistrations } from "@/actions/courses";
-import { toast } from "sonner";
 
 export default function CoursesLandingPage() {
   const router = useRouter();
@@ -46,18 +44,26 @@ export default function CoursesLandingPage() {
     type: "hardware" | "software",
     batch: any,
     features: string[],
-    image: string
   ) => {
     const isFull = batch ? batch.currentRegistrations >= batch.maxSeats : false;
-    const isRegistered = batch ? userRegistrations.some(r => r.batchId === batch._id) : false;
+    const isRegistered = batch
+      ? userRegistrations.some((r) => r.batchId === batch._id)
+      : false;
     const isCompleted = batch ? batch.status === "completed" : false;
-    const isAvailable = !!batch && !isFull && batch.status === "active" && !isRegistered && !isCompleted;
+    const isAvailable =
+      !!batch &&
+      !isFull &&
+      batch.status === "active" &&
+      !isRegistered &&
+      !isCompleted;
 
     return (
       <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-xl shadow-black/5 flex flex-col transition-all hover:shadow-2xl hover:shadow-black/10">
         <div className="relative w-full h-48 mb-6 rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
           {/* Placeholder for Course Illustration */}
-          <div className="text-gray-300 font-bold uppercase tracking-widest">{type} Track</div>
+          <div className="text-gray-300 font-bold uppercase tracking-widest">
+            {type} Track
+          </div>
         </div>
 
         <div className="flex justify-between items-start mb-4">
@@ -65,11 +71,18 @@ export default function CoursesLandingPage() {
             {type.toUpperCase()}
           </Badge>
           {isFull ? (
-            <Badge variant="destructive" className="rounded-full font-bold px-3 py-1">BATCH FULL</Badge>
+            <Badge
+              variant="destructive"
+              className="rounded-full font-bold px-3 py-1"
+            >
+              BATCH FULL
+            </Badge>
           ) : null}
         </div>
 
-        <h3 className="text-3xl font-bold text-black tracking-tight mb-2">{title}</h3>
+        <h3 className="text-3xl font-bold text-black tracking-tight mb-2">
+          {title}
+        </h3>
 
         <div className="space-y-3 mb-8 flex-grow mt-4">
           {batch ? (
@@ -81,7 +94,8 @@ export default function CoursesLandingPage() {
               <div className="flex items-center text-gray-600 gap-3 text-sm">
                 <Calendar className="w-4 h-4 text-green-600" />
                 <span className="font-medium">
-                  {new Date(batch.startDate).toLocaleDateString()} - {new Date(batch.endDate).toLocaleDateString()}
+                  {new Date(batch.startDate).toLocaleDateString()} -{" "}
+                  {new Date(batch.endDate).toLocaleDateString()}
                 </span>
               </div>
               <div className="flex items-center text-gray-600 gap-3 text-sm">
@@ -95,13 +109,18 @@ export default function CoursesLandingPage() {
               </div>
             </>
           ) : (
-            <div className="text-gray-500 italic text-sm py-4">No active batches available currently.</div>
+            <div className="text-gray-500 italic text-sm py-4">
+              No active batches available currently.
+            </div>
           )}
         </div>
 
         <ul className="space-y-2 mb-8">
           {features.map((f, i) => (
-            <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
+            <li
+              key={i}
+              className="flex items-center gap-2 text-sm text-gray-600"
+            >
               <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
               {f}
             </li>
@@ -115,14 +134,15 @@ export default function CoursesLandingPage() {
               router.push(`/courses/${batch._id}/register`);
             }
           }}
-          className={`w-full h-14 rounded-2xl transition-all group font-bold tracking-widest uppercase ${isRegistered
+          className={`w-full h-14 rounded-2xl transition-all group font-bold tracking-widest uppercase ${
+            isRegistered
               ? "bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-100 disabled:cursor-not-allowed"
               : isCompleted
                 ? "bg-gray-200 text-gray-400 disabled:opacity-100 disabled:cursor-not-allowed"
                 : isAvailable
                   ? "bg-black text-white hover:bg-green-600"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
-            }`}
+          }`}
         >
           {isRegistered ? (
             "REGISTERED"
@@ -130,7 +150,8 @@ export default function CoursesLandingPage() {
             "Completed"
           ) : isAvailable ? (
             <>
-              Register Now <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              Register Now{" "}
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </>
           ) : isFull ? (
             "Registration Closed"
@@ -153,7 +174,8 @@ export default function CoursesLandingPage() {
               Industrial <span className="text-green-600">Training</span>
             </h1>
             <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto">
-              Join our 30-Day Hands-On Industrial Training Programs and master the skills needed to build production-ready systems.
+              Join our 30-Day Hands-On Industrial Training Programs and master
+              the skills needed to build production-ready systems.
             </p>
           </div>
 
@@ -173,7 +195,6 @@ export default function CoursesLandingPage() {
                   "2-Year Fusion 360 License",
                   "Verified Training Certificate",
                 ],
-                "/hw-course.jpg"
               )}
               {renderCourseCard(
                 "Software Architecture",
@@ -185,7 +206,6 @@ export default function CoursesLandingPage() {
                   "Production-Ready GitHub Portfolio",
                   "Verified Training Certificate",
                 ],
-                "/sw-course.jpg"
               )}
             </div>
           )}

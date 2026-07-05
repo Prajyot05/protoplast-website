@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+
 import { ServiceKey } from "@/types/service";
 import {
   Dialog,
@@ -17,10 +17,7 @@ export default function Services() {
     null,
   );
 
-  const handleOpen = (serviceId: ServiceKey) => {
-    setActiveServiceId(serviceId);
-    setIsOpen(true);
-  };
+
 
   const handleClose = () => {
     setIsOpen(false);
@@ -66,7 +63,7 @@ export default function Services() {
           {services.map((service, index) => (
             <div
               key={service.id}
-              onClick={() => handleOpen(service.id as ServiceKey)}
+              // onClick={() => handleOpen(service.id as ServiceKey)}
               className="group cursor-pointer border-t border-gray-200 py-12 hover:bg-gray-50 transition-colors duration-300"
             >
               <div className="grid md:grid-cols-12 gap-8 items-center">
@@ -90,14 +87,14 @@ export default function Services() {
                 </div>
 
                 {/* Arrow */}
-                <div className="md:col-span-2 flex justify-end">
+                {/* <div className="md:col-span-2 flex justify-end">
                   <div
                     className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center 
                                 group-hover:bg-green-500 group-hover:border-green-500 group-hover:text-white transition-all duration-300"
                   >
                     <ArrowUpRight className="w-5 h-5 transform group-hover:rotate-45 transition-transform duration-300" />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}

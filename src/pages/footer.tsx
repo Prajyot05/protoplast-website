@@ -1,6 +1,6 @@
 "use client";
 
-import { Linkedin, Instagram } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -15,14 +15,20 @@ export default function Footer() {
                 Precision Manufacturing for the Next Generation of Innovation.
               </p>
               <div className="space-y-2">
-                <a 
-                  href="mailto:protoplaststudio@gmail.com" 
+                {/* <a
+                  href="mailto:protoplaststudio@gmail.com"
                   className="block text-gray-600 hover:text-green-600 transition-colors text-sm"
                 >
                   protoplaststudio@gmail.com
+                </a> */}
+                <a
+                  href="mailto:engineering@protoplast.in"
+                  className="block text-gray-600 hover:text-green-600 transition-colors text-sm"
+                >
+                  engineering@protoplast.in
                 </a>
-                <a 
-                  href="tel:+919404570482" 
+                <a
+                  href="tel:+919404570482"
                   className="block text-gray-600 hover:text-green-600 transition-colors text-sm"
                 >
                   +91 94045 70482
@@ -38,20 +44,20 @@ export default function Footer() {
               >
                 <Linkedin className="w-5 h-5" />
               </Link>
-              <Link
+              {/* <Link
                 href="https://instagram.com/protoplast.3d/profilecard/?igsh=MXIzdm9oOHA3Y2kzdA=="
                 target="_blank"
                 className="inline-flex items-center justify-center w-10 h-10 border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 <Instagram className="w-5 h-5" />
-              </Link>
+              </Link> */}
               <Link
                 href="https://x.com/Protoplast_3D?t=DUonkFrHINhUm_Zd2y1dWQ&s=09"
                 target="_blank"
                 className="inline-flex items-center justify-center w-10 h-10 border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153zM17.61 20.644h2.039L6.486 3.24H4.298L17.61 20.644z"/>
+                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153zM17.61 20.644h2.039L6.486 3.24H4.298L17.61 20.644z" />
                 </svg>
               </Link>
             </div>
