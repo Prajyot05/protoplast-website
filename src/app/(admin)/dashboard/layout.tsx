@@ -5,6 +5,8 @@ import Header from "@/components/header"
 import AdminSidebar from "@/components/admin/sidebar"
 import { syncClerkUserToDB } from "@/actions/sync-user"
 
+export const dynamic = "force-dynamic"
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser()
   await syncClerkUserToDB()

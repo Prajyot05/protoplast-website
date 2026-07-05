@@ -30,11 +30,11 @@ export default function Hero() {
         <div className="flex flex-col items-center text-center py-12">
           {/* Content */}
           <div className="space-y-8 max-w-4xl">
-            <div className="inline-block px-3 py-1 border border-green-500/30 rounded-full bg-green-500/10 backdrop-blur-sm">
+            {/* <div className="inline-block px-3 py-1 border border-green-500/30 rounded-full bg-green-500/10 backdrop-blur-sm">
               <span className="text-xs font-medium text-green-700 tracking-wider uppercase">
                 Featured Project
               </span>
-            </div>
+            </div> */}
 
             <h1 className="text-black text-5xl md:text-7xl font-medium leading-tight tracking-tight">
               Engineering the <br />
