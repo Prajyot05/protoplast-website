@@ -34,23 +34,19 @@ export default function Hero() {
           {/* Text Content */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 lg:w-1/2">
             <div className="space-y-3 w-full">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-semibold tracking-tighter leading-[0.95] text-black">
-                {/* Line 1: Prototyping made */}
-                <span className="block whitespace-nowrap">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-semibold tracking-tighter leading-[1.05] md:leading-[0.95] text-black">
+                {/* Line 1 Group */}
+                <span className="md:block">
                   Prototyping <span className="text-gray-400 font-normal">made</span>
-                </span>
-                {/* Line 1 Break: easy. */}
-                <span className="block text-gray-400 font-normal mt-1">
-                  easy.
+                  {/* On small screens, this is an inline space. On large screens, it breaks to a new line. */}
+                  <span className="inline md:block text-gray-400 font-normal md:mt-1"> easy.</span>
                 </span>
 
-                {/* Line 2: Innovation made */}
-                <span className="block text-green-600 font-bold mt-6 xl:mt-8 whitespace-nowrap">
+                {/* Line 2 Group */}
+                <span className="block text-green-600 font-bold mt-4 md:mt-6 xl:mt-8">
                   Innovation <span className="text-gray-400 font-normal">made</span>
-                </span>
-                {/* Line 2 Break: real. */}
-                <span className="block text-gray-400 font-normal mt-1">
-                  real.
+                  {/* On small screens, this is an inline space. On large screens, it breaks to a new line. */}
+                  <span className="inline md:block text-gray-400 font-normal md:mt-1"> real.</span>
                 </span>
               </h1>
             </div>
@@ -70,8 +66,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* 3D Model Content */}
-          <div className="w-full lg:w-1/2 relative z-0 flex items-center justify-center min-h-[400px]">
+          <div className="w-full lg:w-1/2 relative z-0 flex items-center justify-center">
             {/* <HeroModel /> */}
             <HeroVideo />
           </div>
@@ -98,7 +93,7 @@ export default function Hero() {
       <CustomersCarousel />
 
       {/* Service Modal */}
-      <Dialog open={isOpen} onOpenChange={handleClose}>
+      {/* <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="max-w-4xl bg-white border-gray-200 p-0 overflow-hidden max-h-[90dvh] w-[95vw] flex flex-col rounded-[2rem] sm:rounded-3xl">
           <DialogTitle className="sr-only">Service Details</DialogTitle>
           <DialogDescription className="sr-only">
@@ -112,7 +107,7 @@ export default function Hero() {
             />
           )}
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </section>
   );
 }
