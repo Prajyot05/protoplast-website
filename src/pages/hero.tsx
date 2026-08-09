@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 import { ArrowUpRight } from "lucide-react";
-import HeroModel from "@/components/hero-model";
+import HeroVideo from "@/components/hero-video";
+import CustomersCarousel from "@/components/customers-carousel";
 
 export default function Hero() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,19 +30,30 @@ export default function Hero() {
       <div className="container mx-auto px-6 relative z-10 flex-grow flex flex-col justify-center">
         {/* Main Hero Content */}
         <div className="flex flex-col lg:flex-row items-center justify-between py-12 gap-12 lg:gap-8">
-          
+
           {/* Text Content */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 lg:w-1/2">
-            <h1 className="text-black text-5xl md:text-7xl font-medium leading-tight tracking-tight">
-              Engineering the <br />
-              <span className="text-green-600">Future of Manufacturing</span>
-            </h1>
+            <div className="space-y-3 w-full">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-semibold tracking-tighter leading-[0.95] text-black">
+                {/* Line 1: Prototyping made */}
+                <span className="block whitespace-nowrap">
+                  Prototyping <span className="text-gray-400 font-normal">made</span>
+                </span>
+                {/* Line 1 Break: easy. */}
+                <span className="block text-gray-400 font-normal mt-1">
+                  easy.
+                </span>
 
-            <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-xl">
-              Protoplast bridges the gap between imagination and industrial
-              reality. We empower innovators with high-precision manufacturing
-              delivering excellence in every layer, cut, and circuit.
-            </p>
+                {/* Line 2: Innovation made */}
+                <span className="block text-green-600 font-bold mt-6 xl:mt-8 whitespace-nowrap">
+                  Innovation <span className="text-gray-400 font-normal">made</span>
+                </span>
+                {/* Line 2 Break: real. */}
+                <span className="block text-gray-400 font-normal mt-1">
+                  real.
+                </span>
+              </h1>
+            </div>
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
               <Link href="/products">
@@ -60,7 +72,8 @@ export default function Hero() {
 
           {/* 3D Model Content */}
           <div className="w-full lg:w-1/2 relative z-0 flex items-center justify-center min-h-[400px]">
-            <HeroModel />
+            {/* <HeroModel /> */}
+            <HeroVideo />
           </div>
         </div>
 
@@ -81,6 +94,8 @@ export default function Hero() {
           </div>
         </div> */}
       </div>
+
+      <CustomersCarousel />
 
       {/* Service Modal */}
       <Dialog open={isOpen} onOpenChange={handleClose}>
