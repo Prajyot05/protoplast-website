@@ -1,6 +1,6 @@
 export default function HeroVideo() {
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div className="relative w-full h-[30vh] md:h-[40vh] lg:h-[80vh] overflow-hidden">
             {/*
         Optimized Video Element
         - playsInline: Essential for iOS Safari to play inline instead of forcing fullscreen.
@@ -21,7 +21,7 @@ export default function HeroVideo() {
                 {/* Add an AV1/HEVC source here if you have one */}
 
                 {/* Universal fallback format (H.264) */}
-                <source src="/videos/hero-video.mp4" type="video/mp4" />
+                <source src="/videos/hero-video.webm" type="video/mp4" />
 
                 {/* Legacy browser fallback text */}
                 Your browser does not support the video tag.

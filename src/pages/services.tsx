@@ -49,6 +49,13 @@ export default function Services() {
     }
   ];
 
+  const handleRowClick = (index: number) => {
+    // Only toggle/select on smaller viewports where clicking matters
+    if (window.innerWidth < 1024) {
+      setActiveIndex(activeIndex === index ? -1 : index);
+    }
+  };
+
   return (
     <section id="services" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-6">
@@ -62,40 +69,62 @@ export default function Services() {
         {/* Dynamic Structural Grid */}
         <div className="grid lg:grid-cols-12 gap-16 items-start">
 
-          {/* Left Side: Professional Vertical Stack */}
+          {/* Left Side: Professional Vertical Stack + Mobile Accordion Injection */}
           <div className="lg:col-span-7 border-b border-gray-200">
-            {services.map((service, index) => (
-              <div
-                key={service.id}
-                onMouseEnter={() => setActiveIndex(index)}
-                className={`group py-8 px-4 -mx-4 transition-all duration-200 border-t border-gray-200 flex items-center justify-between ${activeIndex === index ? 'bg-gray-50/70' : 'bg-transparent'
-                  }`}
-              >
-                <div className="flex items-center gap-8">
-                  <span className={`text-sm font-medium transition-colors duration-200 w-6 ${activeIndex === index ? 'text-green-600' : 'text-gray-300'
-                    }`}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className={`text-xl md:text-2xl font-medium transition-colors duration-200 ${activeIndex === index ? 'text-green-600' : 'text-black'
-                    }`}>
-                    {service.title}
-                  </h3>
-                </div>
+            {services.map((service, index) => {
+              const isCurrentActive = activeIndex === index;
 
-                {/* Aesthetic Arrow Indicator */}
-                <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200 ${activeIndex === index
-                    ? 'bg-green-600 border-green-600 text-white'
-                    : 'border-gray-200 text-gray-400'
-                  }`}>
-                  <ArrowUpRight className={`w-4 h-4 transition-transform duration-200 ${activeIndex === index ? 'rotate-45' : ''
-                    }`} />
+              return (
+                <div key={service.id} className="border-t border-gray-200">
+                  {/* Service Header Row */}
+                  <div
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onClick={() => handleRowClick(index)}
+                    className={`group py-8 px-4 -mx-4 transition-all duration-200 flex items-center justify-between cursor-pointer lg:cursor-default ${isCurrentActive ? 'bg-gray-50/70' : 'bg-transparent'
+                      }`}
+                  >
+                    <div className="flex items-center gap-8">
+                      <span className={`text-sm font-medium transition-colors duration-200 w-6 ${isCurrentActive ? 'text-green-600' : 'text-gray-300'
+                        }`}>
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className={`text-xl md:text-2xl font-medium transition-colors duration-200 ${isCurrentActive ? 'text-green-600' : 'text-black'
+                        }`}>
+                        {service.title}
+                      </h3>
+                    </div>
+
+                    {/* Aesthetic Arrow Indicator */}
+                    <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200 ${isCurrentActive
+                        ? 'bg-green-600 border-green-600 text-white'
+                        : 'border-gray-200 text-gray-400'
+                      }`}>
+                      <ArrowUpRight className={`w-4 h-4 transition-transform duration-200 ${isCurrentActive ? 'rotate-45' : ''
+                        }`} />
+                    </div>
+                  </div>
+
+                  {/* Mobile Accordion Container (Hidden on lg desktop viewports) */}
+                  <div
+                    className={`grid lg:hidden transition-all duration-300 ease-in-out ${isCurrentActive ? 'grid-rows-[1fr] opacity-100 pb-6' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                      }`}
+                  >
+                    <div className="overflow-hidden px-4 space-y-3">
+                      {service.features.map((feature, fIdx) => (
+                        <div key={fIdx} className="flex items-start gap-3 text-sm text-gray-600">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0 mt-2" />
+                          <span className="leading-tight font-normal">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Right Side: Corporate Editorial Display Dock */}
-          <div className="lg:col-span-5 lg:sticky lg:top-32">
+          {/* Right Side: Corporate Editorial Display Dock (Hidden on mobile/tablet viewports) */}
+          <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-32">
             <div className="bg-white border border-gray-200 rounded-xl p-8 min-h-[420px] flex flex-col justify-between shadow-sm">
 
               <div>
@@ -106,7 +135,7 @@ export default function Services() {
 
                 {/* Dynamic Content Frame */}
                 <div className="space-y-4">
-                  {services[activeIndex].features.map((feature, fIdx) => (
+                  {services[activeIndex] && services[activeIndex].features.map((feature, fIdx) => (
                     <div
                       key={`${activeIndex}-${fIdx}`}
                       className="flex items-start gap-3 text-sm text-gray-600 animate-[fadeIn_0.3s_ease-out_forwards]"
@@ -121,7 +150,7 @@ export default function Services() {
 
               {/* Bottom System Metadata Anchor */}
               <div className="mt-8 pt-4 border-t border-gray-100 flex justify-between items-center text-xs text-gray-400 font-medium tracking-wide">
-                <span>0{activeIndex + 1} &mdash; Overview</span>
+                <span>0{(activeIndex >= 0 ? activeIndex + 1 : 1).toString().padStart(2, "0")} &mdash; Overview</span>
                 <span className="text-gray-400 font-normal">Hover rows to cycle breakdown</span>
               </div>
 
