@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import ServiceModal from "@/components/services/service-modal";
 import { ArrowUpRight } from "lucide-react";
-import HeroModel from "@/components/hero-model";
 import HeroVideo from "@/components/hero-video";
 import CustomersCarousel from "@/components/customers-carousel";
 
