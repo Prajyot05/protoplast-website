@@ -1,6 +1,6 @@
 export default function HeroVideo() {
     return (
-        <div className="relative w-full h-[30vh] md:h-[40vh] lg:h-[80vh] overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden">
             {/*
         Optimized Video Element
         - playsInline: Essential for iOS Safari to play inline instead of forcing fullscreen.
@@ -31,11 +31,11 @@ export default function HeroVideo() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
             {/* Visual Content Placed Over Video */}
-            <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+            {/* <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
                 <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-md">
                     Next-Gen Manufacturing
                 </h1>
-            </div>
+            </div> */}
         </div>
     );
 }
