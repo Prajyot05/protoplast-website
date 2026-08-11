@@ -4,8 +4,8 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   useUser,
   SignUpButton,
-  SignedOut,
   SignedIn,
+  SignedOut,
   UserButton,
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
@@ -109,7 +109,9 @@ export default function Header() {
   // --- Landing Page Header ---
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${(isScrolled || !isLandingPage) ? "bg-white shadow-sm" : "bg-white/80 backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || !isLandingPage
+        ? "bg-[#0b0f0d]/50 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+        : "bg-[#0b0f0d]/35 backdrop-blur-xl backdrop-saturate-150 border-b border-white/10"
         }`}
     >
       <div className="container mx-auto px-6">
@@ -126,10 +128,10 @@ export default function Header() {
           >
             <Image
               alt="Protoplast Logo"
-              src="/logo-text-black-fixed.svg"
+              src="/logo-text-white.svg"
               width={isMobile ? 120 : 280}
               height={100}
-              className="h-20 md:h-24 w-auto -mt-2"
+              className="h-10 md:h-12 w-auto"
             />
           </div>
 
@@ -138,7 +140,7 @@ export default function Header() {
             <Link
               href="/"
               onClick={() => pathname !== "/" && triggerNavigation()}
-              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${pathname === "/" && isAtTop ? "text-green-600" : "text-gray-600 hover:text-black"
+              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${pathname === "/" && isAtTop ? "text-green-600" : "text-white/70 hover:text-white"
                 }`}
             >
               Home
@@ -152,7 +154,7 @@ export default function Header() {
                   smooth={true}
                   offset={-100}
                   duration={100}
-                  className="text-xs lg:text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                  className="text-xs lg:text-sm font-medium text-white/70 hover:text-white transition-colors cursor-pointer uppercase tracking-tight"
                   activeClass="text-green-600"
                 >
                   {item.label}
@@ -162,7 +164,7 @@ export default function Header() {
                   key={item.id}
                   href={`/#${item.id}`}
                   onClick={() => triggerNavigation()}
-                  className="text-xs lg:text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer uppercase tracking-tight"
+                  className="text-xs lg:text-sm font-medium text-white/70 hover:text-white transition-colors cursor-pointer uppercase tracking-tight"
                 >
                   {item.label}
                 </Link>
@@ -171,7 +173,7 @@ export default function Header() {
             <Link
               href="/products"
               onClick={() => pathname !== "/products" && triggerNavigation()}
-              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${pathname?.startsWith("/products") ? "text-green-600" : "text-gray-600 hover:text-black"
+              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${pathname?.startsWith("/products") ? "text-green-600" : "text-white/70 hover:text-white"
                 }`}
             >
               Products
@@ -179,7 +181,7 @@ export default function Header() {
             <Link
               href="/courses"
               onClick={() => pathname !== "/courses" && triggerNavigation()}
-              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${pathname?.startsWith("/courses") ? "text-green-600" : "text-gray-600 hover:text-black"
+              className={`text-xs lg:text-sm font-medium transition-colors cursor-pointer uppercase tracking-tight ${pathname?.startsWith("/courses") ? "text-green-600" : "text-white/70 hover:text-white"
                 }`}
             >
               Courses
@@ -191,7 +193,7 @@ export default function Header() {
             <SignedOut>
               <SignUpButton>
                 <button
-                  className="text-xs lg:text-sm font-medium uppercase tracking-tight hover:text-green-600 transition-colors"
+                  className="text-xs lg:text-sm font-medium uppercase tracking-tight text-white/70 hover:text-white transition-colors"
                 >
                   Sign Up
                 </button>
@@ -206,9 +208,9 @@ export default function Header() {
                     onClick={() => !pathname?.startsWith("/dashboard") && triggerNavigation()}
                     className="group flex items-center gap-1.5 lg:gap-2"
                   >
-                    <LayoutDashboard className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${pathname?.startsWith("/dashboard") ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                    <LayoutDashboard className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${pathname?.startsWith("/dashboard") ? "text-green-600" : "text-white/70 group-hover:text-white"
                       }`} />
-                    <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${pathname?.startsWith("/dashboard") ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                    <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${pathname?.startsWith("/dashboard") ? "text-green-600" : "text-white/70 group-hover:text-white"
                       }`}>
                       Admin
                     </span>
@@ -219,9 +221,9 @@ export default function Header() {
                   onClick={() => pathname !== "/orders" && triggerNavigation()}
                   className="group flex items-center gap-1.5 lg:gap-2"
                 >
-                  <ShoppingBag className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  <ShoppingBag className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${pathname === "/orders" ? "text-green-600" : "text-white/70 group-hover:text-white"
                     }`} />
-                  <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${pathname === "/orders" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${pathname === "/orders" ? "text-green-600" : "text-white/70 group-hover:text-white"
                     }`}>
                     Orders
                   </span>
@@ -232,9 +234,9 @@ export default function Header() {
                   onClick={() => pathname !== "/cart" && triggerNavigation()}
                   className="relative group flex items-center gap-1.5 lg:gap-2"
                 >
-                  <ShoppingCart className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  <ShoppingCart className={`w-3.5 h-3.5 lg:w-4 lg:h-4 transition-colors ${pathname === "/cart" ? "text-green-600" : "text-white/70 group-hover:text-white"
                     }`} />
-                  <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${pathname === "/cart" ? "text-green-600" : "text-gray-600 group-hover:text-black"
+                  <span className={`text-xs lg:text-sm font-medium uppercase tracking-tight transition-colors ${pathname === "/cart" ? "text-green-600" : "text-white/70 group-hover:text-white"
                     }`}>
                     Cart
                     {totalItems > 0 && (
@@ -249,7 +251,7 @@ export default function Header() {
                   appearance={{
                     elements: {
                       avatarBox:
-                        "w-7 h-7 lg:w-8 lg:h-8 border border-gray-100 hover:border-green-500 transition-colors",
+                        "w-7 h-7 lg:w-8 lg:h-8 border border-white/20 hover:border-green-500 transition-colors",
                     },
                   }}
                 />
@@ -268,7 +270,7 @@ export default function Header() {
                       triggerNavigation();
                     }
                   }}
-                  className="p-2 text-gray-600 hover:text-green-600 transition-colors"
+                  className="p-2 text-white/70 hover:text-green-600 transition-colors"
                 >
                   <LayoutDashboard className="w-5 h-5" />
                 </Link>
@@ -276,7 +278,7 @@ export default function Header() {
             </SignedIn>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-xs font-bold tracking-widest uppercase p-2 border border-gray-100 rounded-md"
+              className="text-xs font-bold tracking-widest uppercase p-2 border border-white/20 text-white rounded-md transition-colors hover:bg-white/10"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? "Close" : "Menu"}
@@ -286,7 +288,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-10 border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto max-h-[calc(100vh-80px)]">
+          <div className="md:hidden py-10 border-t border-white/10 animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto max-h-[calc(100vh-80px)]">
             <div className="flex flex-col gap-6">
               <SignedIn>
                 {role === "admin" && (
@@ -298,7 +300,7 @@ export default function Header() {
                         triggerNavigation();
                       }
                     }}
-                    className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 py-2 border-b border-gray-50 bg-green-50/30 -mx-6 px-6 ${pathname?.startsWith("/dashboard") ? "text-green-600" : "text-black hover:text-green-600"
+                    className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 py-2 border-b border-white/10 bg-green-950/20 -mx-6 px-6 ${pathname?.startsWith("/dashboard") ? "text-green-600" : "text-white hover:text-green-600"
                       }`}
                   >
                     <LayoutDashboard className="w-6 h-6 text-green-600" />
@@ -314,7 +316,7 @@ export default function Header() {
                     triggerNavigation();
                   }
                 }}
-                className={`text-2xl font-medium uppercase tracking-tighter ${pathname === "/" && isAtTop ? "text-green-600" : "text-black hover:text-green-600"
+                className={`text-2xl font-medium uppercase tracking-tighter ${pathname === "/" && isAtTop ? "text-green-600" : "text-white hover:text-green-600"
                   }`}
               >
                 Home
@@ -329,7 +331,7 @@ export default function Header() {
                     offset={-70}
                     duration={500}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
+                    className="text-2xl font-medium text-white hover:text-green-600 transition-colors uppercase tracking-tighter"
                     activeClass="text-green-600"
                   >
                     {item.label}
@@ -342,7 +344,7 @@ export default function Header() {
                       setIsMenuOpen(false);
                       triggerNavigation();
                     }}
-                    className="text-2xl font-medium text-black hover:text-green-600 transition-colors uppercase tracking-tighter"
+                    className="text-2xl font-medium text-white hover:text-green-600 transition-colors uppercase tracking-tighter"
                   >
                     {item.label}
                   </Link>
@@ -356,7 +358,7 @@ export default function Header() {
                     triggerNavigation();
                   }
                 }}
-                className={`text-2xl font-medium uppercase tracking-tighter ${pathname?.startsWith("/products") ? "text-green-600" : "text-black hover:text-green-600"
+                className={`text-2xl font-medium uppercase tracking-tighter ${pathname?.startsWith("/products") ? "text-green-600" : "text-white hover:text-green-600"
                   }`}
               >
                 Products
@@ -369,7 +371,7 @@ export default function Header() {
                     triggerNavigation();
                   }
                 }}
-                className={`text-2xl font-medium uppercase tracking-tighter ${pathname?.startsWith("/courses") ? "text-green-600" : "text-black hover:text-green-600"
+                className={`text-2xl font-medium uppercase tracking-tighter ${pathname?.startsWith("/courses") ? "text-green-600" : "text-white hover:text-green-600"
                   }`}
               >
                 Courses
@@ -377,7 +379,7 @@ export default function Header() {
             </div>
 
             <SignedIn>
-              <div className="flex flex-col gap-6 mt-10 pt-10 border-t border-gray-100">
+              <div className="flex flex-col gap-6 mt-10 pt-10 border-t border-white/10">
                 <Link
                   href="/orders"
                   onClick={() => {
@@ -386,7 +388,7 @@ export default function Header() {
                       triggerNavigation();
                     }
                   }}
-                  className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${pathname === "/orders" ? "text-green-600" : "text-black hover:text-green-600"
+                  className={`text-2xl font-medium uppercase tracking-tighter flex items-center gap-3 ${pathname === "/orders" ? "text-green-600" : "text-white hover:text-green-600"
                     }`}
                 >
                   <ShoppingBag className="w-6 h-6" />
@@ -401,7 +403,7 @@ export default function Header() {
                       triggerNavigation();
                     }
                   }}
-                  className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${pathname === "/cart" ? "text-green-600" : "text-black hover:text-green-600"
+                  className={`text-2xl font-medium uppercase tracking-tighter flex items-center justify-between ${pathname === "/cart" ? "text-green-600" : "text-white hover:text-green-600"
                     }`}
                 >
                   <div className="flex items-center gap-3">
@@ -414,11 +416,11 @@ export default function Header() {
                 </Link>
 
                 <div className="flex items-center justify-between mt-4">
-                  <span className="text-sm text-gray-500 uppercase tracking-widest">Account</span>
+                  <span className="text-sm text-white/50 uppercase tracking-widest">Account</span>
                   <UserButton
                     appearance={{
                       elements: {
-                        avatarBox: "w-10 h-10 border border-gray-100",
+                        avatarBox: "w-10 h-10 border border-white/20",
                       },
                     }}
                   />
@@ -427,9 +429,9 @@ export default function Header() {
             </SignedIn>
 
             <SignedOut>
-              <div className="mt-10 pt-10 border-t border-gray-100">
+              <div className="mt-10 pt-10 border-t border-white/10">
                 <SignUpButton>
-                  <button className="w-full bg-black text-white text-xl font-medium py-5 uppercase tracking-tighter">
+                  <button className="w-full bg-white text-black text-xl font-medium py-5 uppercase tracking-tighter transition-colors hover:bg-white/90">
                     Sign Up
                   </button>
                 </SignUpButton>
