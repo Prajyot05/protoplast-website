@@ -21,7 +21,7 @@ export default function HeroVideo() {
                 {/* Add an AV1/HEVC source here if you have one */}
 
                 {/* Universal fallback format (H.264) */}
-                <source src="/videos/hero-video.webm" type="video/mp4" />
+                <source src="/videos/hero-video.webm" type="video/webm" />
 
                 {/* Legacy browser fallback text */}
                 Your browser does not support the video tag.
