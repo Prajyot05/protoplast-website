@@ -15,12 +15,6 @@ export default function Footer() {
                 Precision Manufacturing for the Next Generation of Innovation.
               </p>
               <div className="space-y-2">
-                {/* <a
-                  href="mailto:protoplaststudio@gmail.com"
-                  className="block text-gray-600 hover:text-green-600 transition-colors text-sm"
-                >
-                  protoplaststudio@gmail.com
-                </a> */}
                 <a
                   href="mailto:engineering@protoplast.in"
                   className="block text-gray-600 hover:text-green-600 transition-colors text-sm"
@@ -40,23 +34,23 @@ export default function Footer() {
               <Link
                 href="https://www.linkedin.com/company/protoplast-3d/"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-10 h-10 border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 <Linkedin className="w-5 h-5" />
               </Link>
-              {/* <Link
-                href="https://instagram.com/protoplast.3d/profilecard/?igsh=MXIzdm9oOHA3Y2kzdA=="
-                target="_blank"
-                className="inline-flex items-center justify-center w-10 h-10 border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </Link> */}
               <Link
-                href="https://x.com/Protoplast_3D?t=DUonkFrHINhUm_Zd2y1dWQ&s=09"
+                href="https://x.com/Protoplast_3D"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-10 h-10 border border-gray-200 rounded-sm text-gray-600 hover:bg-gray-50 transition-colors"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153zM17.61 20.644h2.039L6.486 3.24H4.298L17.61 20.644z" />
                 </svg>
               </Link>
@@ -65,11 +59,14 @@ export default function Footer() {
 
           {/* Right Side: Information */}
           <div className="mt-12 md:mt-0">
-            <h4 className="text-black font-medium mb-6">Information</h4>
+            <h4 className="text-black font-medium mb-6">
+              Information
+            </h4>
+
             <ul className="space-y-4">
               <li>
                 <Link
-                  href="#"
+                  href="/legal-notice"
                   className="text-gray-500 hover:text-black transition-colors text-sm"
                 >
                   Legal Notice
@@ -77,7 +74,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/cookie-policy"
                   className="text-gray-500 hover:text-black transition-colors text-sm"
                 >
                   Cookie Policy
@@ -89,7 +86,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-gray-400 text-xs">
-          © 2025 Protoplast | All rights reserved
+          © {new Date().getFullYear()} Protoplast | All rights reserved
         </div>
       </div>
 
@@ -98,8 +95,10 @@ export default function Footer() {
         <h1
           className="text-[18vw] font-bold text-gray-100 tracking-tighter translate-y-[35%]"
           style={{
-            maskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to bottom, black 40%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, black 40%, transparent 100%)",
           }}
         >
           Protoplast
