@@ -28,7 +28,7 @@ export default function LegalNoticePage() {
                             </h2>
 
                             <p className="mb-4">
-                                This website, protoplast.in (the "Site"), is owned and
+                                This website, protoplast.in (the &quot;Site&quot;), is owned and
                                 operated by:
                             </p>
 

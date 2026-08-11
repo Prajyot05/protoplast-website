@@ -24,8 +24,8 @@ export default function CookiePolicyPage() {
                     <div className="space-y-12 text-gray-700 leading-7">
                         <p>
                             This Cookie Policy explains how Protoplast Studio LLP
-                            ("Protoplast," "we," "us," or "our") uses cookies and similar
-                            technologies on protoplast.in (the "Site").
+                            (&quot;Protoplast,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) uses cookies and similar
+                            technologies on protoplast.in (the &quot;Site&quot;).
                         </p>
 
                         <section>
